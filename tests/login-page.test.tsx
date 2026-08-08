@@ -8,6 +8,9 @@ import LoginPage from "@/app/login/page";
 // way to unit-test a component that calls a server action: replace the
 // action with a fake function and assert the component reacts correctly
 // to its return value.
+
+vi.mock("server-only", () => ({}));
+
 vi.mock("@/server/auth/actions", () => ({
   requestOtpAction: vi.fn(),
   verifyOtpAction: vi.fn(),
