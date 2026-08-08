@@ -1,69 +1,213 @@
-import Image from "next/image";
+// /**
+//  * ============================================================================
+//  * PAGE: / (root/home)
+//  * ============================================================================
+//  * TEMPORARY placeholder for Module 1 testing. Real homepage (product grid,
+//  * search/filter, stories bar) is built in the Products module.
+//  *
+//  * RENDERING (future): Server Component for SEO (product listing needs to be
+//  * crawlable/indexable — this is explicitly why we're using Next.js SSR here
+//  * instead of a SPA).
+//  * ============================================================================
+//  */
+// import Link from "next/link";
+// import { getCurrentUser } from "@/server/user/get-current-user";
 
-export default function Home() {
+// export default async function HomePage() {
+//   const user = await getCurrentUser();
+
+//   return (
+//     <main dir="rtl" style={{ maxWidth: 480, margin: "40px auto", fontFamily: "sans-serif" }}>
+//       <h1>صفحه اصلی (موقت)</h1>
+
+//       {user ? (
+//         <div>
+//           <p>
+//             وارد شده‌اید به عنوان: {user.phoneNumber} ({user.role})
+//           </p>
+//           <Link href="/dashboard/profile">پروفایل</Link>
+//           {user.role === "ADMIN" && (
+//             <>
+//               {" | "}
+//               <Link href="/admin/users">پنل مدیریت کاربران</Link>
+//             </>
+//           )}
+//         </div>
+//       ) : (
+//         <Link href="/login">ورود / ثبت‌نام</Link>
+//       )}
+//     </main>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+/**
+ * ============================================================================
+ * PAGE: / (home — product listing)
+ * ============================================================================
+ * RENDERING: Server Component for the initial render (SEO — product pages
+ * need to be crawlable/indexable, this was explicitly your requirement).
+ * Search/filter/pagination is done via URL search params (plain GET form),
+ * so results stay linkable/shareable and the page stays server-rendered —
+ * no client JS required for the core browsing flow.
+ *
+ * DATA SOURCE: listProductsAction() (see src/server/product/actions.ts)
+ *   input:  { page?, pageSize?, search?, categoryId?, minPrice?, maxPrice? }
+ *   output: PaginatedResult<ProductListItemDTO> (see src/types/product.ts)
+ *     ProductListItemDTO = {
+ *       id, title, slug, productCode, mainImageUrl, categoryId, categoryTitle,
+ *       isDeleted, createdAt, minPrice, maxPrice, totalStock
+ *     }
+ *
+ * ALSO SHOWS: current login state + links into profile/admin (kept from
+ * Module 1 for easy manual testing — the design agent can drop this part).
+ *
+ * NOTE: the Instagram-style "stories" bar you mentioned for this page is
+ * its own future module — not built yet, will slot in above the product grid.
+ *
+ * UI NOTE FOR DESIGN AGENT: product grid/cards (image, title, price range if
+ * variants differ, stock badge), search box, category filter (2-level,
+ * see CategoryTreeDTO), price range filter, pagination. Each card links to
+ * /products/[slug].
+ * ============================================================================
+ */
+import Link from "next/link";
+import { listProductsAction } from "@/server/product/actions";
+import { getCategoryTreeAction } from "@/server/category/actions";
+import { getCurrentUser } from "@/server/user/get-current-user";
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const params = await searchParams;
+  const page = params.page ? Number(params.page) : 1;
+
+  const [productsResult, categoriesResult, user] = await Promise.all([
+    listProductsAction({
+      page,
+      search: params.search,
+      categoryId: params.categoryId,
+      minPrice: params.minPrice,
+      maxPrice: params.maxPrice,
+    }),
+    getCategoryTreeAction(),
+    getCurrentUser(),
+  ]);
+
+  const products = productsResult.success ? productsResult.data : null;
+  const categories = categoriesResult.success ? categoriesResult.data : [];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main dir="rtl" style={{ maxWidth: 900, margin: "40px auto", fontFamily: "sans-serif" }}>
+      <div style={{ marginBottom: 16, fontSize: 14 }}>
+        {user ? (
+          <>
+            وارد شده‌اید به عنوان: {user.phoneNumber} ({user.role}) |{" "}
+            <Link href="/dashboard/profile">پروفایل</Link>
+            {user.role === "ADMIN" && (
+              <>
+                {" | "}
+                <Link href="/admin/products">مدیریت محصولات</Link>
+                {" | "}
+                <Link href="/admin/categories">مدیریت دسته‌ها</Link>
+                {" | "}
+                <Link href="/admin/users">مدیریت کاربران</Link>
+              </>
+            )}
+          </>
+        ) : (
+          <Link href="/logic">ورود / ثبت‌نام</Link>
+        )}
+      </div>
+
+      <h1>محصولات</h1>
+
+      <form method="get" style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+        <input type="text" name="search" placeholder="جستجو..." defaultValue={params.search} />
+        <select name="categoryId" defaultValue={params.categoryId ?? ""}>
+          <option value="">همه دسته‌ها</option>
+          {categories.map((cat) => (
+            <optgroup key={cat.id} label={cat.title}>
+              <option value={cat.id}>{cat.title}</option>
+              {cat.children.map((child) => (
+                <option key={child.id} value={child.id}>
+                  &nbsp;&nbsp;{child.title}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <input type="number" name="minPrice" placeholder="حداقل قیمت" defaultValue={params.minPrice} />
+        <input type="number" name="maxPrice" placeholder="حداکثر قیمت" defaultValue={params.maxPrice} />
+        <button type="submit">اعمال فیلتر</button>
+      </form>
+
+      {!products && <p style={{ color: "red" }}>خطا در دریافت محصولات</p>}
+
+      {products && (
+        <>
+          {products.items.length === 0 && <p>محصولی یافت نشد.</p>}
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+              gap: 16,
+            }}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {products.items.map((p) => (
+              <Link
+                key={p.id}
+                href={`/products/${p.slug}`}
+                style={{ border: "1px solid #ddd", padding: 12, display: "block", color: "inherit" }}
+              >
+                {p.mainImageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.mainImageUrl}
+                    alt={p.title}
+                    style={{ width: "100%", height: 140, objectFit: "cover" }}
+                  />
+                )}
+                <p>{p.title}</p>
+                <p>
+                  {p.minPrice === p.maxPrice
+                    ? `${p.minPrice.toLocaleString("fa-IR")} تومان`
+                    : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومان`}
+                </p>
+                <p>{p.totalStock > 0 ? `موجودی: ${p.totalStock}` : "ناموجود"}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 24, display: "flex", gap: 8 }}>
+            {page > 1 && (
+              <Link href={`/?${new URLSearchParams({ ...params, page: String(page - 1) })}`}>
+                صفحه قبل
+              </Link>
+            )}
+            <span>
+              صفحه {products.page} از {products.totalPages}
+            </span>
+            {page < products.totalPages && (
+              <Link href={`/?${new URLSearchParams({ ...params, page: String(page + 1) })}`}>
+                صفحه بعد
+              </Link>
+            )}
+          </div>
+        </>
+      )}
+    </main>
   );
 }
+
