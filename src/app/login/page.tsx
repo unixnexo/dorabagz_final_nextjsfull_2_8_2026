@@ -159,7 +159,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { requestOtpAction, verifyOtpAction } from "@/server/auth/actions";
-import { mergeGuestCartAction } from "@/server/cart/actions";
+// import { mergeGuestCartAction } from "@/server/cart/actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
 
 type Step = "PHONE" | "OTP";
@@ -192,7 +192,13 @@ export default function LoginPage() {
     setError(null);
     setIsSubmitting(true);
 
-    const result = await verifyOtpAction({ phoneNumber, code });
+    // const result = await verifyOtpAction({ phoneNumber, code });
+    const guestItems = useGuestCartStore.getState().items;
+
+    const result = await verifyOtpAction(
+      { phoneNumber, code },
+      { items: guestItems }
+    );
 
     setIsSubmitting(false);
     if (!result.success) {
@@ -202,11 +208,13 @@ export default function LoginPage() {
 
     // Merge any items the visitor added to their cart before logging in.
     // See src/store/guest-cart-store.ts and src/server/cart/actions.ts.
-    const guestItems = useGuestCartStore.getState().items;
-    if (guestItems.length > 0) {
-      await mergeGuestCartAction({ items: guestItems });
-      useGuestCartStore.getState().clear();
-    }
+    // const guestItems = useGuestCartStore.getState().items;
+    // if (guestItems.length > 0) {
+    //   await mergeGuestCartAction({ items: guestItems });
+    //   useGuestCartStore.getState().clear();
+    // }
+
+    useGuestCartStore.getState().clear();
 
     router.push("/");
     router.refresh();

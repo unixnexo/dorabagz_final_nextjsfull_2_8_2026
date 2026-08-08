@@ -48,8 +48,13 @@ export default async function ProductDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  // const { slug } = await params;
+  // const result = await getProductBySlugAction(slug);
+
   const { slug } = await params;
-  const result = await getProductBySlugAction(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const result = await getProductBySlugAction(decodedSlug);
+
   if (!result.success) notFound();
 
   const product = result.data;

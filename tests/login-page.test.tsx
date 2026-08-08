@@ -102,10 +102,19 @@ describe("LoginPage", () => {
     await user.click(screen.getByRole("button", { name: "ورود" }));
 
     await waitFor(() => {
-      expect(verifyOtpAction).toHaveBeenCalledWith({
-        phoneNumber: "09123456789",
-        code: "482913",
-      });
+      // expect(verifyOtpAction).toHaveBeenCalledWith({
+      //   phoneNumber: "09123456789",
+      //   code: "482913",
+      // });
+      expect(verifyOtpAction).toHaveBeenCalledWith(
+        {
+          phoneNumber: "09123456789",
+          code: "482913",
+        },
+        {
+          items: [],
+        }
+      );
     });
   });
 });

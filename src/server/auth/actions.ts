@@ -7,6 +7,7 @@ import { generateOtp, hashOtp, verifyOtp } from "./otp";
 import { getSmsProvider } from "@/server/sms/sms-provider";
 import { createSessionToken, setSessionCookie } from "./session";
 import { toUserDTO } from "@/server/user/user-mapper";
+import { mergeGuestCartSchema } from "@/lib/validations/cart";
 import {
   OTP_EXPIRY_MINUTES,
   MAX_FAILED_OTP_ATTEMPTS,
@@ -71,8 +72,12 @@ export async function requestOtpAction(
 // ---------------------------------------------------------------------------
 // Step 2: verify OTP -> create session -> log the user in.
 // ---------------------------------------------------------------------------
+// export async function verifyOtpAction(
+//   input: unknown
+// ): Promise<ActionResult<{ user: UserDTO }>> {
 export async function verifyOtpAction(
-  input: unknown
+  input: unknown,
+  guestCart?: unknown
 ): Promise<ActionResult<{ user: UserDTO }>> {
   const parsed = verifyOtpSchema.safeParse(input);
   if (!parsed.success) {
@@ -151,6 +156,53 @@ export async function verifyOtpAction(
     role: updatedUser.role,
   });
   await setSessionCookie(token);
+
+  if (guestCart) {
+    const parsedGuestCart = mergeGuestCartSchema.safeParse(guestCart);
+
+    if (parsedGuestCart.success) {
+      for (const guestItem of parsedGuestCart.data.items) {
+        const variant = await prisma.productVariant.findUnique({
+          where: { id: guestItem.variantId },
+        });
+
+        if (!variant) continue;
+
+        const existing = await prisma.cartItem.findUnique({
+          where: {
+            userId_variantId: {
+              userId: updatedUser.id,
+              variantId: variant.id,
+            },
+          },
+        });
+
+        const desiredQuantity =
+          (existing?.quantity ?? 0) + guestItem.quantity;
+
+        const cappedQuantity = Math.min(desiredQuantity, variant.stock);
+
+        if (cappedQuantity <= 0) continue;
+
+        await prisma.cartItem.upsert({
+          where: {
+            userId_variantId: {
+              userId: updatedUser.id,
+              variantId: variant.id,
+            },
+          },
+          update: {
+            quantity: cappedQuantity,
+          },
+          create: {
+            userId: updatedUser.id,
+            variantId: variant.id,
+            quantity: cappedQuantity,
+          },
+        });
+      }
+    }
+  }
 
   return { success: true, data: { user: toUserDTO(updatedUser) } };
 }
