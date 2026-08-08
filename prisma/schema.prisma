@@ -1,3 +1,240 @@
+// // ============================================================================
+// // PRISMA SCHEMA — Module 1: Auth & Users
+// // More models (Product, Order, Story, etc.) will be added in later modules.
+// // ============================================================================
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+// enum Role {
+//   USER
+//   ADMIN
+// }
+
+// model User {
+//   id String @id @default(cuid())
+
+//   // --- Identity ---
+//   phoneNumber String  @unique // e.g. 09123456789 — required, unique across app
+//   fullName    String?
+//   nationalCode String? // Iranian کد ملی, validated in app layer (checksum)
+//   birthDate   DateTime? // stored as UTC date, no time component needed
+//   email       String?
+//   profilePicUrl String? // e.g. /uploads/profile-pics/xxxx.jpg (served from /public)
+//   ipAddress   String? // last known IP, updated on login
+
+//   role     Role    @default(USER)
+//   isActive Boolean @default(true) // admin can deactivate a user
+
+//   // --- OTP login flow ---
+//   otpCodeHash     String? // bcrypt hash of current OTP, never store plain
+//   otpExpiresAt    DateTime?
+//   otpPurpose      OtpPurpose? // LOGIN or PHONE_CHANGE — same fields, different purpose
+//   pendingPhoneNumber String? // new number waiting for OTP confirmation (phone change flow)
+
+//   // --- Lockout after failed OTP attempts ---
+//   failedOtpAttempts Int       @default(0)
+//   lockedUntil       DateTime? // null = not locked
+
+//   // --- Timestamps ---
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   lastLoginAt DateTime?
+
+//   // --- Relations ---
+//   impersonationsAsAdmin  ImpersonationLog[] @relation("AdminImpersonations")
+//   impersonationsAsTarget ImpersonationLog[] @relation("TargetImpersonations")
+
+//   @@index([phoneNumber])
+//   @@index([role])
+// }
+
+// enum OtpPurpose {
+//   LOGIN
+//   PHONE_CHANGE
+// }
+
+// // Records every time an admin impersonates a user, for accountability.
+// model ImpersonationLog {
+//   id String @id @default(cuid())
+
+//   adminId String
+//   admin   User   @relation("AdminImpersonations", fields: [adminId], references: [id])
+
+//   targetUserId String
+//   targetUser   User   @relation("TargetImpersonations", fields: [targetUserId], references: [id])
+
+//   startedAt DateTime  @default(now())
+//   endedAt   DateTime? // set when admin returns to admin panel / token expires
+
+//   @@index([adminId])
+//   @@index([targetUserId])
+// }
+
+// // ============================================================================
+// // MODULE 2 — Categories & Products
+// // ============================================================================
+
+// // Two-level tree: a category with parentId = null is a "top-level" category.
+// // A category with parentId set is a child (max depth enforced in app logic,
+// // not in the schema — Prisma can't express "depth <= 2" declaratively).
+// model Category {
+//   id    String  @id @default(cuid())
+//   title String
+//   imageUrl String?
+
+//   parentId String?
+//   parent   Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+//   children Category[] @relation("CategoryChildren")
+
+//   products Product[]
+
+//   isDeleted Boolean @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([parentId])
+// }
+
+// model Product {
+//   id String @id @default(cuid())
+
+//   title       String
+//   description String?
+//   slug        String @unique // slugify(title) + "-" + productCode, generated on create
+//   productCode String @unique // auto-generated, e.g. "PRD-8F3K2L"
+
+//   videoUrl String? // one optional video, up to 30s, size-limited (no server compression yet)
+
+//   categoryId String?
+//   category   Category? @relation(fields: [categoryId], references: [id])
+
+//   images        ProductImage[]
+//   specifications ProductSpecification[]
+//   options       ProductOption[]
+//   variants      ProductVariant[]
+
+//   isDeleted Boolean @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([categoryId])
+//   @@index([isDeleted])
+// }
+
+// // Up to 5 additional images + 1 main image, distinguished by isMain.
+// // All images (including main) are compressed to WebP on upload.
+// model ProductImage {
+//   id  String @id @default(cuid())
+//   url String
+
+//   isMain    Boolean @default(false)
+//   sortOrder Int     @default(0)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   @@index([productId])
+// }
+
+// // Free-form key/value specs, e.g. "جنس بدنه" -> "آلومینیوم". Stored as rows
+// // (not JSON) so they're editable as a normal repeating form and stay ordered.
+// model ProductSpecification {
+//   id    String @id @default(cuid())
+//   key   String
+//   value String
+//   sortOrder Int @default(0)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   @@index([productId])
+// }
+
+// // A dynamic option type for a product, e.g. "Size" or "Color".
+// // Different products can have completely different option sets.
+// model ProductOption {
+//   id   String @id @default(cuid())
+//   name String // e.g. "Size", "Color", "رنگ"
+//   sortOrder Int @default(0)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   values ProductOptionValue[]
+
+//   @@index([productId])
+// }
+
+// // A specific value for an option, e.g. "Red", "SM".
+// model ProductOptionValue {
+//   id    String @id @default(cuid())
+//   value String // e.g. "Red", "SM"
+//   sortOrder Int @default(0)
+
+//   optionId String
+//   option   ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+//   variantLinks VariantOptionValue[]
+
+//   @@index([optionId])
+// }
+
+// // One purchasable SKU. Every product has at least one variant, even if it
+// // has no real options (e.g. a glass) — in that case the variant simply has
+// // no linked option values. This keeps Cart/Order logic uniform: they always
+// // reference a variantId, never a bare productId.
+// model ProductVariant {
+//   id String @id @default(cuid())
+
+//   price Int // Toman, integer, no decimals
+//   stock Int @default(0)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   optionValues VariantOptionValue[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([productId])
+// }
+
+// // Join table: which option values make up a given variant
+// // (e.g. variant #1 = {Size: SM} + {Color: Red}).
+// model VariantOptionValue {
+//   id String @id @default(cuid())
+
+//   variantId String
+//   variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+//   optionValueId String
+//   optionValue   ProductOptionValue @relation(fields: [optionValueId], references: [id], onDelete: Cascade)
+
+//   @@unique([variantId, optionValueId])
+//   @@index([variantId])
+//   @@index([optionValueId])
+// }
+
+
+
+
+
+
+
+
+
+
+
 // ============================================================================
 // PRISMA SCHEMA — Module 1: Auth & Users
 // More models (Product, Order, Story, etc.) will be added in later modules.
@@ -50,6 +287,9 @@ model User {
   // --- Relations ---
   impersonationsAsAdmin  ImpersonationLog[] @relation("AdminImpersonations")
   impersonationsAsTarget ImpersonationLog[] @relation("TargetImpersonations")
+
+  favorites Favorite[]
+  cartItems CartItem[]
 
   @@index([phoneNumber])
   @@index([role])
@@ -120,6 +360,7 @@ model Product {
   specifications ProductSpecification[]
   options       ProductOption[]
   variants      ProductVariant[]
+  favorites     Favorite[]
 
   isDeleted Boolean @default(false)
 
@@ -202,6 +443,7 @@ model ProductVariant {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   optionValues VariantOptionValue[]
+  cartItems    CartItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -224,3 +466,51 @@ model VariantOptionValue {
   @@index([variantId])
   @@index([optionValueId])
 }
+
+// ============================================================================
+// MODULE 3 — Favorites & Cart
+// ============================================================================
+
+// Favorites reference the PRODUCT (not a specific variant) — per your spec,
+// "favorite" is about the product itself, not a size/color pick.
+model Favorite {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId]) // a user can only favorite a product once
+  @@index([userId])
+  @@index([productId])
+}
+
+// Cart items always reference a VARIANT (never a bare product) — this keeps
+// checkout logic uniform, per the design established in Module 2. Cart
+// itself never reserves/locks stock; that only happens at Order/payment
+// time (future module).
+model CartItem {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  quantity Int @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, variantId]) // one row per user+variant, quantity accumulates
+  @@index([userId])
+  @@index([variantId])
+}
+
+
+

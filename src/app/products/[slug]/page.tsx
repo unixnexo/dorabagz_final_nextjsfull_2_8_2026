@@ -5,8 +5,8 @@
  * RENDERING: Server Component — product detail pages are prime SEO real
  * estate (title, description, price shown to search engines/crawlers).
  * The "add to cart / add to favorite" buttons are a small client island
- * (they need interactivity + will need cart/favorite state once those
- * modules exist — for now they're stubbed, see note below).
+ * (src/app/products/[slug]/product-actions.tsx) since they need interactivity
+ * and Zustand/TanStack Query access.
  *
  * DATA SOURCE: getProductBySlugAction(slug) (see src/server/product/actions.ts)
  *   output: ProductDetailDTO (see src/types/product.ts)
@@ -26,17 +26,21 @@
  * If `options` is empty, there is exactly one variant with no optionValues —
  * skip the picker entirely and use that variant directly.
  *
- * NOTE: Add-to-cart / Add-to-favorite are STUBBED here (console.log) —
- * real wiring happens in the Cart/Favorites modules.
+ * CART: add-to-cart works for guests too (stored in browser, merged into
+ * DB on login) — see src/hooks/use-cart.ts and src/store/guest-cart-store.ts.
+ * FAVORITES: requires login — a guest clicking it is told to log in.
  *
  * UI NOTE FOR DESIGN AGENT: image gallery (images[], mark isMain first),
  * optional video player (videoUrl), title/description, spec table
  * (specifications[]), variant picker built from options[] + variants[],
- * price + stock of the selected variant, add-to-cart / add-to-favorite buttons.
+ * quantity input (capped at selected variant's stock), price + stock of the
+ * selected variant, add-to-cart / add-to-favorite (heart icon) buttons.
  * ============================================================================
  */
 import { notFound } from "next/navigation";
 import { getProductBySlugAction } from "@/server/product/actions";
+import { getCurrentUser } from "@/server/user/get-current-user";
+import { getFavoritedProductIdsAction } from "@/server/favorite/actions";
 import { ProductActions } from "./product-actions";
 
 export default async function ProductDetailPage({
@@ -49,6 +53,11 @@ export default async function ProductDetailPage({
   if (!result.success) notFound();
 
   const product = result.data;
+
+  const currentUser = await getCurrentUser();
+  const favoritedIdsResult = await getFavoritedProductIdsAction([product.id]);
+  const initiallyFavorited =
+    favoritedIdsResult.success && favoritedIdsResult.data.includes(product.id);
 
   return (
     <main dir="rtl" style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>
@@ -93,7 +102,7 @@ export default async function ProductDetailPage({
         </table>
       )}
 
-      <ProductActions product={product} />
+      <ProductActions product={product} currentUser={currentUser} initiallyFavorited={initiallyFavorited} />
     </main>
   );
 }

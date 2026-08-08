@@ -1,22 +1,40 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useCart } from "@/hooks/use-cart";
+import { toggleFavoriteAction } from "@/server/favorite/actions";
 import type { ProductDetailDTO } from "@/types/product";
+import type { UserDTO } from "@/types/user";
 
 /**
- * Variant picker + add-to-cart/favorite buttons. Cart/Favorites modules
- * don't exist yet, so those two actions are stubbed with console.log —
- * this component's job for now is just to prove the variant-matching
- * logic works, which the Cart module will reuse as-is.
+ * Variant picker + add-to-cart/favorite buttons.
+ *
+ * Add-to-cart works for BOTH logged-in and guest users (see useCart —
+ * guests get written to the Zustand localStorage store, logged-in users
+ * get written straight to the DB).
+ *
+ * Add-to-favorite requires login (favorites were never spec'd as a guest
+ * feature) — if a guest clicks it, they're told to log in.
  */
-export function ProductActions({ product }: { product: ProductDetailDTO }) {
+export function ProductActions({
+  product,
+  currentUser,
+  initiallyFavorited,
+}: {
+  product: ProductDetailDTO;
+  currentUser: UserDTO | null;
+  initiallyFavorited: boolean;
+}) {
   const [selected, setSelected] = useState<Record<string, string>>({});
+  const [quantity, setQuantity] = useState(1);
+  const [isFavorited, setIsFavorited] = useState(initiallyFavorited);
+  const [message, setMessage] = useState<string | null>(null);
+  const { addToCart } = useCart(currentUser);
 
   const selectedVariant = useMemo(() => {
     if (product.options.length === 0) {
       return product.variants[0] ?? null;
     }
-    // Only match once every option has a selected value.
     if (Object.keys(selected).length !== product.options.length) return null;
 
     return (
@@ -25,6 +43,26 @@ export function ProductActions({ product }: { product: ProductDetailDTO }) {
       ) ?? null
     );
   }, [selected, product]);
+
+  async function handleAddToCart() {
+    if (!selectedVariant) return;
+    setMessage(null);
+    const result = await addToCart(selectedVariant.id, quantity);
+    setMessage(result.success ? "به سبد خرید اضافه شد." : result.error);
+  }
+
+  async function handleToggleFavorite() {
+    if (!currentUser) {
+      setMessage("برای افزودن به علاقه‌مندی‌ها ابتدا وارد شوید.");
+      return;
+    }
+    const result = await toggleFavoriteAction({ productId: product.id });
+    if (result.success) {
+      setIsFavorited(result.data.isFavorited);
+    } else {
+      setMessage(result.error);
+    }
+  }
 
   return (
     <div style={{ marginTop: 16 }}>
@@ -51,22 +89,29 @@ export function ProductActions({ product }: { product: ProductDetailDTO }) {
             قیمت: {selectedVariant.price.toLocaleString("fa-IR")} تومان | موجودی:{" "}
             {selectedVariant.stock}
           </p>
-          <button
-            disabled={selectedVariant.stock === 0}
-            onClick={() => console.log("TODO cart module: add variant", selectedVariant.id)}
-          >
+
+          <input
+            type="number"
+            min={1}
+            max={selectedVariant.stock}
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Math.min(selectedVariant.stock, Number(e.target.value))))}
+            style={{ width: 60 }}
+          />
+
+          <button disabled={selectedVariant.stock === 0} onClick={handleAddToCart} style={{ marginRight: 8 }}>
             افزودن به سبد خرید
           </button>
-          <button
-            onClick={() => console.log("TODO favorites module: toggle product", product.id)}
-            style={{ marginRight: 8 }}
-          >
-            افزودن به علاقه‌مندی‌ها
+
+          <button onClick={handleToggleFavorite} style={{ marginRight: 8 }}>
+            {isFavorited ? "❤ حذف از علاقه‌مندی‌ها" : "🤍 افزودن به علاقه‌مندی‌ها"}
           </button>
         </div>
       ) : (
         product.options.length > 0 && <p>لطفاً همه گزینه‌ها را انتخاب کنید</p>
       )}
+
+      {message && <p>{message}</p>}
     </div>
   );
 }
