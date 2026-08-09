@@ -51,6 +51,9 @@
 //   impersonationsAsAdmin  ImpersonationLog[] @relation("AdminImpersonations")
 //   impersonationsAsTarget ImpersonationLog[] @relation("TargetImpersonations")
 
+//   favorites Favorite[]
+//   cartItems CartItem[]
+
 //   @@index([phoneNumber])
 //   @@index([role])
 // }
@@ -120,6 +123,7 @@
 //   specifications ProductSpecification[]
 //   options       ProductOption[]
 //   variants      ProductVariant[]
+//   favorites     Favorite[]
 
 //   isDeleted Boolean @default(false)
 
@@ -202,6 +206,7 @@
 //   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
 //   optionValues VariantOptionValue[]
+//   cartItems    CartItem[]
 
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
@@ -224,6 +229,61 @@
 //   @@index([variantId])
 //   @@index([optionValueId])
 // }
+
+// // ============================================================================
+// // MODULE 3 — Favorites & Cart
+// // ============================================================================
+
+// // Favorites reference the PRODUCT (not a specific variant) — per your spec,
+// // "favorite" is about the product itself, not a size/color pick.
+// model Favorite {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now())
+
+//   @@unique([userId, productId]) // a user can only favorite a product once
+//   @@index([userId])
+//   @@index([productId])
+// }
+
+// // Cart items always reference a VARIANT (never a bare product) — this keeps
+// // checkout logic uniform, per the design established in Module 2. Cart
+// // itself never reserves/locks stock; that only happens at Order/payment
+// // time (future module).
+// model CartItem {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   variantId String
+//   variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+//   quantity Int @default(1)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([userId, variantId]) // one row per user+variant, quantity accumulates
+//   @@index([userId])
+//   @@index([variantId])
+// }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -291,6 +351,11 @@ model User {
   favorites Favorite[]
   cartItems CartItem[]
 
+  address        Address?
+  orders         Order[]
+  couponUsages   CouponUsage[]
+  assignedCoupons Coupon[] @relation("AssignedCoupons")
+
   @@index([phoneNumber])
   @@index([role])
 }
@@ -334,6 +399,7 @@ model Category {
   children Category[] @relation("CategoryChildren")
 
   products Product[]
+  couponCategories CouponCategory[]
 
   isDeleted Boolean @default(false)
 
@@ -361,6 +427,7 @@ model Product {
   options       ProductOption[]
   variants      ProductVariant[]
   favorites     Favorite[]
+  couponProducts CouponProduct[]
 
   isDeleted Boolean @default(false)
 
@@ -444,6 +511,7 @@ model ProductVariant {
 
   optionValues VariantOptionValue[]
   cartItems    CartItem[]
+  orderItems   OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -512,5 +580,226 @@ model CartItem {
   @@index([variantId])
 }
 
+// ============================================================================
+// MODULE 4 — Address, Coupons, Orders, Payment
+// ============================================================================
+
+// Per your spec: only ONE address per user, always overwritten in place
+// (no address book / history). Enforced by @@unique([userId]) below.
+model Address {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  receiverFullName String
+  receiverPhone    String
+  province         String // استان
+  city             String // شهر — "شیراز" triggers Snapp Box courier, else Tipax
+  fullAddress      String // متن کامل آدرس
+  postalCode       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+enum CouponScope {
+  ENTIRE_CART
+  SPECIFIC_PRODUCTS
+  SPECIFIC_CATEGORIES
+}
+
+model Coupon {
+  id   String @id @default(cuid())
+  code String @unique // admin-typed or auto-generated if left blank
+
+  type  CouponType
+  value Int // percent (1-100) if PERCENT, Toman amount if FIXED
+
+  // Only meaningful when type = PERCENT — caps the discount so a big cart
+  // doesn't get an unbounded percentage-off. Null = uncapped.
+  maxDiscountAmount Int?
+
+  scope CouponScope @default(ENTIRE_CART)
+  // When scope = SPECIFIC_PRODUCTS / SPECIFIC_CATEGORIES, the discount only
+  // applies to the matching items' subtotal (per your confirmed spec) —
+  // matches are stored in the join tables below.
+  products   CouponProduct[]
+  categories CouponCategory[]
+
+  minOrderAmount Int? // optional: cart total (Toman) must be >= this to apply
+
+  maxUsesPerUser Int  @default(1) // almost always 1, but kept configurable
+  maxTotalUsage  Int? // null = unlimited across all users ("first 10 people" case)
+
+  assignedUserId String? // if set, ONLY this user may use the coupon
+  assignedUser   User?   @relation("AssignedCoupons", fields: [assignedUserId], references: [id])
+
+  expiresAt DateTime
+
+  isDeleted Boolean @default(false)
+
+  usages CouponUsage[]
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([assignedUserId])
+}
+
+model CouponProduct {
+  id String @id @default(cuid())
+
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([couponId, productId])
+  @@index([couponId])
+  @@index([productId])
+}
+
+model CouponCategory {
+  id String @id @default(cuid())
+
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([couponId, categoryId])
+  @@index([couponId])
+  @@index([categoryId])
+}
+
+// One row per successful redemption — this is what "is used" really means
+// once more than one user (and more than one use-per-user in theory) is
+// possible. Also gives us a natural audit trail.
+model CouponUsage {
+  id String @id @default(cuid())
+
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  usedAt DateTime @default(now())
+
+  @@index([couponId])
+  @@index([userId])
+}
+
+enum OrderStatus {
+  PENDING // order row created, awaiting payment
+  CONFIRMED // payment succeeded, stock deducted — irreversible by the user from here
+  COMPLETED // admin marked as sent/delivered
+  CANCELLED // admin cancelled (only path once CONFIRMED); or auto-cancelled if payment never completed
+}
+
+enum CourierType {
+  SNAPP_BOX // شیراز
+  TIPAX // everywhere else
+}
+
+// Snapshot-style order: item price/title are copied at order time so later
+// product edits/deletions never change historical order data.
+model Order {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  status OrderStatus @default(PENDING)
+
+  // Address snapshot (copied from the user's Address at checkout time, so
+  // editing their saved address later doesn't rewrite past orders).
+  receiverFullName String
+  receiverPhone    String
+  province         String
+  city             String
+  fullAddress      String
+  postalCode       String
+
+  courierType CourierType // derived from city at checkout time, stored for admin fulfillment
+
+  items OrderItem[]
+
+  subtotal        Int // sum of item price*qty, before discount
+  discountAmount  Int @default(0)
+  totalAmount     Int // subtotal - discountAmount — this is what's charged via ZarinPal
+
+  couponId String?
+  coupon   Coupon? @relation(fields: [couponId], references: [id])
+  couponUsage CouponUsage?
+
+  payment Payment?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Snapshot of what was purchased — never references live price/title, so
+// the order stays accurate even if the product/variant is edited or
+// deleted later.
+model OrderItem {
+  id String @id @default(cuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  variantId String? // nullable: kept even if the variant is later deleted
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  productTitle  String // snapshot
+  optionSummary String? // snapshot, e.g. "Size: SM / Color: Red"
+  unitPrice     Int // snapshot, Toman
+  quantity      Int
+
+  @@index([orderId])
+  @@index([variantId])
+}
+
+enum PaymentStatus {
+  PENDING // redirected to ZarinPal, awaiting callback
+  SUCCESS
+  FAILED
+}
+
+// One-to-one with Order. Re-payment (per your spec: user can retry if
+// payment failed) reuses the same Payment row — authority/refId get
+// overwritten with each attempt, which is fine since we only care about
+// the latest attempt's outcome.
+model Payment {
+  id String @id @default(cuid())
+
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  status PaymentStatus @default(PENDING)
+
+  amount Int // Toman, should equal order.totalAmount
+
+  authority String? // ZarinPal "Authority" token for this attempt
+  refId     String? // ZarinPal "RefID" returned on success
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 
