@@ -10,6 +10,7 @@ import {
   toAdminUserListItemDTO,
   toAdminUserDetailDTO,
 } from "./user-mapper";
+import { notifyAccountUnlocked } from "@/server/notification/events";
 import type { ActionResult } from "@/server/auth/actions";
 import type {
   AdminUserListItemDTO,
@@ -160,5 +161,6 @@ export async function unlockUserAction(
     where: { id: userId },
     data: { lockedUntil: null, failedOtpAttempts: 0 },
   });
+  await notifyAccountUnlocked(userId);
   return { success: true, data: { unlocked: true } };
 }

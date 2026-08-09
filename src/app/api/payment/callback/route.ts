@@ -27,6 +27,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyZarinpalPayment } from "@/server/payment/zarinpal";
+import {
+  notifyOrderPlaced,
+  notifyPaymentSucceeded,
+  notifyPaymentFailed,
+} from "@/server/notification/events";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -61,6 +66,7 @@ export async function GET(request: NextRequest) {
       where: { id: order.payment.id },
       data: { status: "FAILED" },
     });
+    await notifyPaymentFailed(order.userId, order.id, order.id.slice(0, 8));
     return NextResponse.redirect(`${appUrl}/dashboard/orders/${order.id}`);
   }
 
@@ -74,6 +80,7 @@ export async function GET(request: NextRequest) {
       where: { id: order.payment.id },
       data: { status: "FAILED" },
     });
+    await notifyPaymentFailed(order.userId, order.id, order.id.slice(0, 8));
     return NextResponse.redirect(`${appUrl}/dashboard/orders/${order.id}`);
   }
 
@@ -119,6 +126,10 @@ export async function GET(request: NextRequest) {
     await prisma.order.update({ where: { id: order.id }, data: { status: "CANCELLED" } });
     return NextResponse.redirect(`${appUrl}/dashboard/orders/${order.id}?stockIssue=1`);
   }
+
+  const orderShortId = order.id.slice(0, 8);
+  await notifyPaymentSucceeded(order.userId, order.id, orderShortId);
+  await notifyOrderPlaced(order.id, orderShortId);
 
   return NextResponse.redirect(`${appUrl}/dashboard/orders/${order.id}?success=1`);
 }

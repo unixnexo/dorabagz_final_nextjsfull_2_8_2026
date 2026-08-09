@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getEffectiveIdentity, getSession } from "@/server/auth/session";
 import { requestZarinpalPayment } from "@/server/payment/zarinpal";
+import { notifyOrderStatusChanged } from "@/server/notification/events";
 import { toOrderListItemDTO, toOrderDetailDTO, fullOrderInclude } from "./order-mapper";
 import type { ActionResult } from "@/server/auth/actions";
 import type { OrderListItemDTO, OrderDetailDTO } from "@/types/order";
@@ -210,6 +211,14 @@ export async function adminUpdateOrderStatusAction(
   const session = await getSession();
   if (!session || session.role !== "ADMIN") return { success: false, error: "دسترسی غیرمجاز." };
 
-  await prisma.order.update({ where: { id: orderId }, data: { status } });
+  const order = await prisma.order.update({ where: { id: orderId }, data: { status } });
+
+  // Notify the customer for any status change that's actually meaningful
+  // to them — not PENDING (that's the starting state, nothing "changed"
+  // from their perspective yet).
+  if (status === "CONFIRMED" || status === "COMPLETED" || status === "CANCELLED") {
+    await notifyOrderStatusChanged(order.userId, order.id, order.id.slice(0, 8), status);
+  }
+
   return { success: true, data: { status } };
 }

@@ -54,6 +54,11 @@
 //   favorites Favorite[]
 //   cartItems CartItem[]
 
+//   address        Address?
+//   orders         Order[]
+//   couponUsages   CouponUsage[]
+//   assignedCoupons Coupon[] @relation("AssignedCoupons")
+
 //   @@index([phoneNumber])
 //   @@index([role])
 // }
@@ -97,6 +102,7 @@
 //   children Category[] @relation("CategoryChildren")
 
 //   products Product[]
+//   couponCategories CouponCategory[]
 
 //   isDeleted Boolean @default(false)
 
@@ -124,6 +130,7 @@
 //   options       ProductOption[]
 //   variants      ProductVariant[]
 //   favorites     Favorite[]
+//   couponProducts CouponProduct[]
 
 //   isDeleted Boolean @default(false)
 
@@ -207,6 +214,7 @@
 
 //   optionValues VariantOptionValue[]
 //   cartItems    CartItem[]
+//   orderItems   OrderItem[]
 
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
@@ -275,17 +283,227 @@
 //   @@index([variantId])
 // }
 
+// // ============================================================================
+// // MODULE 4 — Address, Coupons, Orders, Payment
+// // ============================================================================
 
+// // Per your spec: only ONE address per user, always overwritten in place
+// // (no address book / history). Enforced by @@unique([userId]) below.
+// model Address {
+//   id String @id @default(cuid())
 
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+//   receiverFullName String
+//   receiverPhone    String
+//   province         String // استان
+//   city             String // شهر — "شیراز" triggers Snapp Box courier, else Tipax
+//   fullAddress      String // متن کامل آدرس
+//   postalCode       String
 
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
+// enum CouponType {
+//   PERCENT
+//   FIXED
+// }
 
+// enum CouponScope {
+//   ENTIRE_CART
+//   SPECIFIC_PRODUCTS
+//   SPECIFIC_CATEGORIES
+// }
 
+// model Coupon {
+//   id   String @id @default(cuid())
+//   code String @unique // admin-typed or auto-generated if left blank
 
+//   type  CouponType
+//   value Int // percent (1-100) if PERCENT, Toman amount if FIXED
 
+//   // Only meaningful when type = PERCENT — caps the discount so a big cart
+//   // doesn't get an unbounded percentage-off. Null = uncapped.
+//   maxDiscountAmount Int?
 
+//   scope CouponScope @default(ENTIRE_CART)
+//   // When scope = SPECIFIC_PRODUCTS / SPECIFIC_CATEGORIES, the discount only
+//   // applies to the matching items' subtotal (per your confirmed spec) —
+//   // matches are stored in the join tables below.
+//   products   CouponProduct[]
+//   categories CouponCategory[]
 
+//   minOrderAmount Int? // optional: cart total (Toman) must be >= this to apply
+
+//   maxUsesPerUser Int  @default(1) // almost always 1, but kept configurable
+//   maxTotalUsage  Int? // null = unlimited across all users ("first 10 people" case)
+
+//   assignedUserId String? // if set, ONLY this user may use the coupon
+//   assignedUser   User?   @relation("AssignedCoupons", fields: [assignedUserId], references: [id])
+
+//   expiresAt DateTime
+
+//   isDeleted Boolean @default(false)
+
+//   usages CouponUsage[]
+//   orders Order[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([assignedUserId])
+// }
+
+// model CouponProduct {
+//   id String @id @default(cuid())
+
+//   couponId String
+//   coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   @@unique([couponId, productId])
+//   @@index([couponId])
+//   @@index([productId])
+// }
+
+// model CouponCategory {
+//   id String @id @default(cuid())
+
+//   couponId String
+//   coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+//   categoryId String
+//   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+//   @@unique([couponId, categoryId])
+//   @@index([couponId])
+//   @@index([categoryId])
+// }
+
+// // One row per successful redemption — this is what "is used" really means
+// // once more than one user (and more than one use-per-user in theory) is
+// // possible. Also gives us a natural audit trail.
+// model CouponUsage {
+//   id String @id @default(cuid())
+
+//   couponId String
+//   coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   orderId String @unique
+//   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+//   usedAt DateTime @default(now())
+
+//   @@index([couponId])
+//   @@index([userId])
+// }
+
+// enum OrderStatus {
+//   PENDING // order row created, awaiting payment
+//   CONFIRMED // payment succeeded, stock deducted — irreversible by the user from here
+//   COMPLETED // admin marked as sent/delivered
+//   CANCELLED // admin cancelled (only path once CONFIRMED); or auto-cancelled if payment never completed
+// }
+
+// enum CourierType {
+//   SNAPP_BOX // شیراز
+//   TIPAX // everywhere else
+// }
+
+// // Snapshot-style order: item price/title are copied at order time so later
+// // product edits/deletions never change historical order data.
+// model Order {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   status OrderStatus @default(PENDING)
+
+//   // Address snapshot (copied from the user's Address at checkout time, so
+//   // editing their saved address later doesn't rewrite past orders).
+//   receiverFullName String
+//   receiverPhone    String
+//   province         String
+//   city             String
+//   fullAddress      String
+//   postalCode       String
+
+//   courierType CourierType // derived from city at checkout time, stored for admin fulfillment
+
+//   items OrderItem[]
+
+//   subtotal        Int // sum of item price*qty, before discount
+//   discountAmount  Int @default(0)
+//   totalAmount     Int // subtotal - discountAmount — this is what's charged via ZarinPal
+
+//   couponId String?
+//   coupon   Coupon? @relation(fields: [couponId], references: [id])
+//   couponUsage CouponUsage?
+
+//   payment Payment?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([userId])
+//   @@index([status])
+// }
+
+// // Snapshot of what was purchased — never references live price/title, so
+// // the order stays accurate even if the product/variant is edited or
+// // deleted later.
+// model OrderItem {
+//   id String @id @default(cuid())
+
+//   orderId String
+//   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+//   variantId String? // nullable: kept even if the variant is later deleted
+//   variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+//   productTitle  String // snapshot
+//   optionSummary String? // snapshot, e.g. "Size: SM / Color: Red"
+//   unitPrice     Int // snapshot, Toman
+//   quantity      Int
+
+//   @@index([orderId])
+//   @@index([variantId])
+// }
+
+// enum PaymentStatus {
+//   PENDING // redirected to ZarinPal, awaiting callback
+//   SUCCESS
+//   FAILED
+// }
+
+// // One-to-one with Order. Re-payment (per your spec: user can retry if
+// // payment failed) reuses the same Payment row — authority/refId get
+// // overwritten with each attempt, which is fine since we only care about
+// // the latest attempt's outcome.
+// model Payment {
+//   id String @id @default(cuid())
+
+//   orderId String @unique
+//   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+//   status PaymentStatus @default(PENDING)
+
+//   amount Int // Toman, should equal order.totalAmount
+
+//   authority String? // ZarinPal "Authority" token for this attempt
+//   refId     String? // ZarinPal "RefID" returned on success
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 
 
@@ -355,6 +573,9 @@ model User {
   orders         Order[]
   couponUsages   CouponUsage[]
   assignedCoupons Coupon[] @relation("AssignedCoupons")
+
+  pushSubscriptions PushSubscription[]
+  notifications     Notification[]
 
   @@index([phoneNumber])
   @@index([role])
@@ -800,6 +1021,59 @@ model Payment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ============================================================================
+// MODULE 5 — Notifications (Web Push + SMS) & PWA
+// ============================================================================
+
+// A browser's Web Push subscription. One user can have multiple (different
+// devices/browsers) — all get pushed to when a notification fires.
+model PushSubscription {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  endpoint String @unique
+  p256dh   String // encryption key, part of the browser's subscription object
+  auth     String // auth secret, part of the browser's subscription object
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum NotificationChannel {
+  PUSH // browser push only
+  SMS // SMS only
+  BOTH // both push and SMS were sent for this event
+}
+
+// One row per notification "event" delivered to ONE specific recipient
+// (a user, or an admin — admin is just a User with role=ADMIN, same
+// table). This is also what powers the /notifications page (read/unread,
+// read-all) — it's the source of truth, not just a delivery log.
+model Notification {
+  id String @id @default(cuid())
+
+  userId String // recipient — a normal user OR an admin
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title   String
+  body    String
+  channel NotificationChannel
+
+  // Optional deep link so tapping the notification/row can jump straight
+  // to the relevant page (e.g. an order detail page).
+  linkUrl String?
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, isRead])
 }
 
 

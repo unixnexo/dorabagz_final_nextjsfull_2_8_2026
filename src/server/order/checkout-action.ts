@@ -8,6 +8,7 @@ import { priceCoupon, type CartLineForPricing } from "@/server/coupon/coupon-pri
 import { computeOrderTotals } from "./order-pricing";
 import { resolveCourierType } from "@/lib/courier";
 import { requestZarinpalPayment } from "@/server/payment/zarinpal";
+import { notifyCouponLimitReached } from "@/server/notification/events";
 import type { ActionResult } from "@/server/auth/actions";
 import type { CheckoutResultDTO } from "@/types/order";
 
@@ -60,6 +61,9 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
   // --- Coupon (optional) ---
   let couponId: string | null = null;
   let discountAmount = 0;
+  let couponCodeForNotify: string | null = null;
+  let couponMaxTotalUsage: number | null = null;
+  let couponUsageCountBefore = 0;
 
   if (parsed.data.couponCode?.trim()) {
     const coupon = await prisma.coupon.findUnique({
@@ -113,6 +117,9 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
 
     couponId = coupon.id;
     discountAmount = priced.discountAmount;
+    couponCodeForNotify = coupon.code;
+    couponMaxTotalUsage = coupon.maxTotalUsage;
+    couponUsageCountBefore = coupon.usages.length;
   }
 
   const {
@@ -170,6 +177,16 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
 
     return created;
   });
+
+  // Heads-up to admin if this order's coupon use just exhausted its total
+  // usage limit (your "first N people" case) — informational only, doesn't
+  // block anything, the limit itself was already enforced by priceCoupon().
+  if (couponCodeForNotify && couponMaxTotalUsage !== null) {
+    const usageCountNow = couponUsageCountBefore + 1;
+    if (usageCountNow >= couponMaxTotalUsage) {
+      await notifyCouponLimitReached(couponCodeForNotify);
+    }
+  }
 
   // Request the ZarinPal payment session.
   const paymentResult = await requestZarinpalPayment({
