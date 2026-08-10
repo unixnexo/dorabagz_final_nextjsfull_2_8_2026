@@ -46,6 +46,12 @@ export type OrderDetailDTO = {
   paymentStatus: PaymentStatus | null;
   paymentRefId: string | null;
 
+  /** Whether this order already has a review submitted — used to show/
+   *  hide the review form on the order detail page (Module 7). A review
+   *  is locked once submitted, no edit/delete exists, so this is a
+   *  one-way flag. */
+  hasReview: boolean;
+
   createdAt: string;
   updatedAt: string;
 };

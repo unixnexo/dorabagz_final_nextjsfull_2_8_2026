@@ -1,10 +1,11 @@
-import type { Order, OrderItem, Payment, Coupon } from "@prisma/client";
+import type { Order, OrderItem, Payment, Coupon, ProductReview } from "@prisma/client";
 import type { OrderListItemDTO, OrderDetailDTO, OrderItemDTO } from "@/types/order";
 
 type FullOrder = Order & {
   items: OrderItem[];
   payment: Payment | null;
   coupon: Coupon | null;
+  review: ProductReview | null;
 };
 
 function toOrderItemDTO(item: OrderItem): OrderItemDTO {
@@ -48,6 +49,7 @@ export function toOrderDetailDTO(order: FullOrder): OrderDetailDTO {
     couponCode: order.coupon?.code ?? null,
     paymentStatus: order.payment?.status ?? null,
     paymentRefId: order.payment?.refId ?? null,
+    hasReview: !!order.review,
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
   };
@@ -58,4 +60,5 @@ export const fullOrderInclude = {
   items: true,
   payment: true,
   coupon: true,
+  review: true,
 } as const;

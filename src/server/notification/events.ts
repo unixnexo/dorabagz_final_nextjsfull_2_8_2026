@@ -85,6 +85,35 @@ export async function notifyAccountUnlocked(userId: string) {
 }
 
 // ---------------------------------------------------------------------------
+// Reviews (called from src/server/review/*)
+// ---------------------------------------------------------------------------
+
+/** Sent once an order moves to COMPLETED — nudges the buyer to review it.
+ *  Push only (not SMS — this is a nice-to-have prompt, not the "important
+ *  event" tier you asked to reserve SMS for). */
+export async function notifyPleaseReviewOrder(userId: string, orderId: string) {
+  await notify({
+    userId,
+    title: "نظر شما برای ما مهم است",
+    body: "سفارش شما تحویل داده شد. لطفاً چند لحظه وقت بگذارید و به آن امتیاز دهید.",
+    linkUrl: `/dashboard/orders/${orderId}`,
+    channel: "PUSH",
+  });
+}
+
+/** Sent to all admins when a review WITH TEXT is submitted and needs
+ *  approval before going public (rating-only reviews skip this entirely
+ *  — they're auto-approved, per your spec). */
+export async function notifyReviewPendingApproval() {
+  await notifyAllAdmins({
+    title: "نظر جدید در انتظار تایید",
+    body: "یک نظر جدید ثبت شده و منتظر تایید شماست.",
+    linkUrl: `/admin/reviews`,
+    channel: "PUSH",
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Coupons (called from src/server/coupon/*) — admin-facing heads-up
 // ---------------------------------------------------------------------------
 

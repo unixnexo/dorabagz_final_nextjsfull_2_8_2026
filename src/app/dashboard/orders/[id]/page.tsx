@@ -38,6 +38,8 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { getMyOrderAction } from "@/server/order/actions";
 import { OrderActions } from "./order-actions";
+import { SiteSatisfactionPopup } from "@/components/site-satisfaction-popup";
+import { OrderReviewForm } from "./order-review-form";
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "در انتظار پرداخت",
@@ -72,6 +74,10 @@ export default async function OrderDetailPage({
   return (
     <main dir="rtl" style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>
       <h1>سفارش #{order.id.slice(0, 8)}</h1>
+
+      {/* Per your spec, this is the ONE trigger point for the site-
+          satisfaction popup: right after a successful payment redirect. */}
+      {success === "1" && <SiteSatisfactionPopup />}
 
       {success === "1" && (
         <p style={{ background: "#d4edda", padding: 12 }}>پرداخت با موفقیت انجام شد.</p>
@@ -121,6 +127,8 @@ export default async function OrderDetailPage({
       <p>روش ارسال: {COURIER_LABELS[order.courierType]}</p>
 
       <OrderActions orderId={order.id} status={order.status} paymentStatus={order.paymentStatus} />
+
+      {order.status === "COMPLETED" && !order.hasReview && <OrderReviewForm orderId={order.id} />}
     </main>
   );
 }

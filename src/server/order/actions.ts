@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getEffectiveIdentity, getSession } from "@/server/auth/session";
 import { requestZarinpalPayment } from "@/server/payment/zarinpal";
-import { notifyOrderStatusChanged } from "@/server/notification/events";
+import { notifyOrderStatusChanged, notifyPleaseReviewOrder } from "@/server/notification/events";
 import { toOrderListItemDTO, toOrderDetailDTO, fullOrderInclude } from "./order-mapper";
 import type { ActionResult } from "@/server/auth/actions";
 import type { OrderListItemDTO, OrderDetailDTO } from "@/types/order";
@@ -218,6 +218,11 @@ export async function adminUpdateOrderStatusAction(
   // from their perspective yet).
   if (status === "CONFIRMED" || status === "COMPLETED" || status === "CANCELLED") {
     await notifyOrderStatusChanged(order.userId, order.id, order.id.slice(0, 8), status);
+  }
+
+  // Per your spec: nudge the buyer to review once the order is delivered.
+  if (status === "COMPLETED") {
+    await notifyPleaseReviewOrder(order.userId, order.id);
   }
 
   return { success: true, data: { status } };

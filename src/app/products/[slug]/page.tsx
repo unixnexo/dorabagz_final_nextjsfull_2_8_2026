@@ -42,19 +42,15 @@ import { getProductBySlugAction } from "@/server/product/actions";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { getFavoritedProductIdsAction } from "@/server/favorite/actions";
 import { ProductActions } from "./product-actions";
+import { ProductReviews } from "./product-reviews";
 
 export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  // const { slug } = await params;
-  // const result = await getProductBySlugAction(slug);
-
   const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
-  const result = await getProductBySlugAction(decodedSlug);
-
+  const result = await getProductBySlugAction(slug);
   if (!result.success) notFound();
 
   const product = result.data;
@@ -108,6 +104,8 @@ export default async function ProductDetailPage({
       )}
 
       <ProductActions product={product} currentUser={currentUser} initiallyFavorited={initiallyFavorited} />
+
+      <ProductReviews productId={product.id} />
     </main>
   );
 }

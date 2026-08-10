@@ -83,6 +83,8 @@
 //                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
 //                 {" | "}
 //                 <Link href="/admin/orders">مدیریت سفارش‌ها</Link>
+//                 {" | "}
+//                 <Link href="/admin/reports">گزارش‌ها</Link>
 //               </>
 //             )}
 //           </>
@@ -184,6 +186,7 @@
 
 
 
+
 /**
  * ============================================================================
  * PAGE: / (home — product listing)
@@ -218,6 +221,7 @@ import Link from "next/link";
 import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import { getCurrentUser } from "@/server/user/get-current-user";
+import { ReviewPromptBanner } from "@/components/review-prompt-banner";
 
 export default async function HomePage({
   searchParams,
@@ -271,6 +275,8 @@ export default async function HomePage({
                 <Link href="/admin/orders">مدیریت سفارش‌ها</Link>
                 {" | "}
                 <Link href="/admin/reports">گزارش‌ها</Link>
+                {" | "}
+                <Link href="/admin/reviews">مدیریت نظرات</Link>
               </>
             )}
           </>
@@ -279,6 +285,7 @@ export default async function HomePage({
         )}
       </div>
 
+      {user && <ReviewPromptBanner />}
 
       <h1>محصولات</h1>
 

@@ -59,6 +59,9 @@
 //   couponUsages   CouponUsage[]
 //   assignedCoupons Coupon[] @relation("AssignedCoupons")
 
+//   pushSubscriptions PushSubscription[]
+//   notifications     Notification[]
+
 //   @@index([phoneNumber])
 //   @@index([role])
 // }
@@ -505,6 +508,62 @@
 //   updatedAt DateTime @updatedAt
 // }
 
+// // ============================================================================
+// // MODULE 5 — Notifications (Web Push + SMS) & PWA
+// // ============================================================================
+
+// // A browser's Web Push subscription. One user can have multiple (different
+// // devices/browsers) — all get pushed to when a notification fires.
+// model PushSubscription {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   endpoint String @unique
+//   p256dh   String // encryption key, part of the browser's subscription object
+//   auth     String // auth secret, part of the browser's subscription object
+
+//   createdAt DateTime @default(now())
+
+//   @@index([userId])
+// }
+
+// enum NotificationChannel {
+//   PUSH // browser push only
+//   SMS // SMS only
+//   BOTH // both push and SMS were sent for this event
+// }
+
+// // One row per notification "event" delivered to ONE specific recipient
+// // (a user, or an admin — admin is just a User with role=ADMIN, same
+// // table). This is also what powers the /notifications page (read/unread,
+// // read-all) — it's the source of truth, not just a delivery log.
+// model Notification {
+//   id String @id @default(cuid())
+
+//   userId String // recipient — a normal user OR an admin
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   title   String
+//   body    String
+//   channel NotificationChannel
+
+//   // Optional deep link so tapping the notification/row can jump straight
+//   // to the relevant page (e.g. an order detail page).
+//   linkUrl String?
+
+//   isRead Boolean @default(false)
+
+//   createdAt DateTime @default(now())
+
+//   @@index([userId])
+//   @@index([userId, isRead])
+// }
+
+
+
+
 
 
 
@@ -576,6 +635,10 @@ model User {
 
   pushSubscriptions PushSubscription[]
   notifications     Notification[]
+
+  productReviews           ProductReview[]
+  siteSatisfactionRatings  SiteSatisfactionRating[]
+  popupDismissals          PopupDismissal[]
 
   @@index([phoneNumber])
   @@index([role])
@@ -967,6 +1030,7 @@ model Order {
   couponUsage CouponUsage?
 
   payment Payment?
+  review  ProductReview?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1074,6 +1138,80 @@ model Notification {
 
   @@index([userId])
   @@index([userId, isRead])
+}
+
+// ============================================================================
+// MODULE 7 — Reviews (product reviews + site-satisfaction popup)
+// ============================================================================
+
+// One review per whole order (per your spec), not per product/item.
+// Rating always required; text is optional. Reviews with text go through
+// admin approval before being publicly visible; a rejected review is
+// deleted outright (per your spec — "delete it, don't tell anyone").
+// A review with NO text never needed approval in the first place — see
+// the approval logic note on ReviewStatus below.
+enum ReviewStatus {
+  PENDING // has text, awaiting admin approval
+  APPROVED // visible on the product detail page(s) for this order's products
+}
+
+model ProductReview {
+  id String @id @default(cuid())
+
+  orderId String @unique // one review per whole order
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rating Int // 1-5
+  text   String? // optional — presence of text is what triggers the approval flow
+
+  status ReviewStatus @default(APPROVED) // see note: text-less reviews are auto-approved
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Rating-only (+ optional text, per your final answer) site-satisfaction
+// popup. Admin-only visibility — never shown publicly anywhere.
+model SiteSatisfactionRating {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rating Int // 1-5
+  text   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Tracks which popups a user has permanently dismissed, per popup type
+// (per your confirmed spec: dismissing one type doesn't silence the
+// other). Once a row exists for (userId, popupType), never show that
+// popup to that user again.
+enum PopupType {
+  ORDER_REVIEW_PROMPT
+  SITE_SATISFACTION
+}
+
+model PopupDismissal {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  popupType PopupType
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, popupType])
+  @@index([userId])
 }
 
 
