@@ -63,6 +63,14 @@
 //           <>
 //             وارد شده‌اید به عنوان: {user.phoneNumber} ({user.role}) |{" "}
 //             <Link href="/dashboard/profile">پروفایل</Link>
+//             {" | "}
+//             <Link href="/cart">سبد خرید</Link>
+//             {" | "}
+//             <Link href="/favorite">علاقه‌مندی‌ها</Link>
+//             {" | "}
+//             <Link href="/dashboard/orders">سفارش‌های من</Link>
+//             {" | "}
+//             <Link href="/notifications">اعلان‌ها</Link>
 //             {user.role === "ADMIN" && (
 //               <>
 //                 {" | "}
@@ -71,6 +79,10 @@
 //                 <Link href="/admin/categories">مدیریت دسته‌ها</Link>
 //                 {" | "}
 //                 <Link href="/admin/users">مدیریت کاربران</Link>
+//                 {" | "}
+//                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
+//                 {" | "}
+//                 <Link href="/admin/orders">مدیریت سفارش‌ها</Link>
 //               </>
 //             )}
 //           </>
@@ -78,6 +90,7 @@
 //           <Link href="/logic">ورود / ثبت‌نام</Link>
 //         )}
 //       </div>
+
 
 //       <h1>محصولات</h1>
 
@@ -159,7 +172,6 @@
 //     </main>
 //   );
 // }
-
 
 
 
@@ -257,6 +269,8 @@ export default async function HomePage({
                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
                 {" | "}
                 <Link href="/admin/orders">مدیریت سفارش‌ها</Link>
+                {" | "}
+                <Link href="/admin/reports">گزارش‌ها</Link>
               </>
             )}
           </>
