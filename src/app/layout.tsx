@@ -28,6 +28,10 @@ import type { Metadata, Viewport } from "next";
 import { QueryProvider } from "@/components/query-provider";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "فروشگاه",
@@ -45,7 +49,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body>
         <QueryProvider>
           <ServiceWorkerRegistration />

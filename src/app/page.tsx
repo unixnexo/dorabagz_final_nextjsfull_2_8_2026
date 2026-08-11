@@ -32,6 +32,7 @@
 // import { listProductsAction } from "@/server/product/actions";
 // import { getCategoryTreeAction } from "@/server/category/actions";
 // import { getCurrentUser } from "@/server/user/get-current-user";
+// import { ReviewPromptBanner } from "@/components/review-prompt-banner";
 
 // export default async function HomePage({
 //   searchParams,
@@ -85,6 +86,8 @@
 //                 <Link href="/admin/orders">مدیریت سفارش‌ها</Link>
 //                 {" | "}
 //                 <Link href="/admin/reports">گزارش‌ها</Link>
+//                 {" | "}
+//                 <Link href="/admin/reviews">مدیریت نظرات</Link>
 //               </>
 //             )}
 //           </>
@@ -93,6 +96,7 @@
 //         )}
 //       </div>
 
+//       {user && <ReviewPromptBanner />}
 
 //       <h1>محصولات</h1>
 
@@ -186,7 +190,6 @@
 
 
 
-
 /**
  * ============================================================================
  * PAGE: / (home — product listing)
@@ -222,6 +225,7 @@ import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { ReviewPromptBanner } from "@/components/review-prompt-banner";
+import { StoriesBar } from "@/components/stories-bar";
 
 export default async function HomePage({
   searchParams,
@@ -268,6 +272,8 @@ export default async function HomePage({
                 {" | "}
                 <Link href="/admin/categories">مدیریت دسته‌ها</Link>
                 {" | "}
+                <Link href="/admin/stories">مدیریت استوری‌ها</Link>
+                {" | "}
                 <Link href="/admin/users">مدیریت کاربران</Link>
                 {" | "}
                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
@@ -286,6 +292,8 @@ export default async function HomePage({
       </div>
 
       {user && <ReviewPromptBanner />}
+
+      <StoriesBar />
 
       <h1>محصولات</h1>
 

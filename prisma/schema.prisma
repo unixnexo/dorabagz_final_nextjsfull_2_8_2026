@@ -62,6 +62,10 @@
 //   pushSubscriptions PushSubscription[]
 //   notifications     Notification[]
 
+//   productReviews           ProductReview[]
+//   siteSatisfactionRatings  SiteSatisfactionRating[]
+//   popupDismissals          PopupDismissal[]
+
 //   @@index([phoneNumber])
 //   @@index([role])
 // }
@@ -452,6 +456,7 @@
 //   couponUsage CouponUsage?
 
 //   payment Payment?
+//   review  ProductReview?
 
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
@@ -561,13 +566,79 @@
 //   @@index([userId, isRead])
 // }
 
+// // ============================================================================
+// // MODULE 7 — Reviews (product reviews + site-satisfaction popup)
+// // ============================================================================
 
+// // One review per whole order (per your spec), not per product/item.
+// // Rating always required; text is optional. Reviews with text go through
+// // admin approval before being publicly visible; a rejected review is
+// // deleted outright (per your spec — "delete it, don't tell anyone").
+// // A review with NO text never needed approval in the first place — see
+// // the approval logic note on ReviewStatus below.
+// enum ReviewStatus {
+//   PENDING // has text, awaiting admin approval
+//   APPROVED // visible on the product detail page(s) for this order's products
+// }
 
+// model ProductReview {
+//   id String @id @default(cuid())
 
+//   orderId String @unique // one review per whole order
+//   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+//   rating Int // 1-5
+//   text   String? // optional — presence of text is what triggers the approval flow
 
+//   status ReviewStatus @default(APPROVED) // see note: text-less reviews are auto-approved
 
+//   createdAt DateTime @default(now())
+
+//   @@index([userId])
+//   @@index([status])
+// }
+
+// // Rating-only (+ optional text, per your final answer) site-satisfaction
+// // popup. Admin-only visibility — never shown publicly anywhere.
+// model SiteSatisfactionRating {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   rating Int // 1-5
+//   text   String?
+
+//   createdAt DateTime @default(now())
+
+//   @@index([userId])
+// }
+
+// // Tracks which popups a user has permanently dismissed, per popup type
+// // (per your confirmed spec: dismissing one type doesn't silence the
+// // other). Once a row exists for (userId, popupType), never show that
+// // popup to that user again.
+// enum PopupType {
+//   ORDER_REVIEW_PROMPT
+//   SITE_SATISFACTION
+// }
+
+// model PopupDismissal {
+//   id String @id @default(cuid())
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   popupType PopupType
+
+//   createdAt DateTime @default(now())
+
+//   @@unique([userId, popupType])
+//   @@index([userId])
+// }
 
 
 
@@ -639,6 +710,7 @@ model User {
   productReviews           ProductReview[]
   siteSatisfactionRatings  SiteSatisfactionRating[]
   popupDismissals          PopupDismissal[]
+  storyViews               StoryView[]
 
   @@index([phoneNumber])
   @@index([role])
@@ -712,6 +784,7 @@ model Product {
   variants      ProductVariant[]
   favorites     Favorite[]
   couponProducts CouponProduct[]
+  storyProducts StoryProduct[]
 
   isDeleted Boolean @default(false)
 
@@ -1213,5 +1286,75 @@ model PopupDismissal {
   @@unique([userId, popupType])
   @@index([userId])
 }
+
+// ============================================================================
+// MODULE 8 — Stories (Instagram-style, shown above products)
+// ============================================================================
+
+enum StoryMediaType {
+  IMAGE
+  VIDEO
+}
+
+model Story {
+  id String @id @default(cuid())
+
+  mediaType StoryMediaType
+  mediaUrl  String // image: compressed to WebP. video: size/duration-limited,
+                    // NOT compressed yet — deferred to end-of-project, see README.
+
+  description String?
+
+  // Default 24h from creation, but admin can set any custom duration —
+  // set this to `createdAt + N hours` at creation/edit time.
+  expiresAt DateTime
+
+  products StoryProduct[] // optional — a story may link zero, one, or many products
+  views    StoryView[]
+
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+  @@index([isDeleted])
+}
+
+model StoryProduct {
+  id String @id @default(cuid())
+
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId, productId])
+  @@index([storyId])
+  @@index([productId])
+}
+
+// One row per (story, user) — this is what makes "seen count" correct
+// (counts each user once, no matter how many times they replay the
+// story) and what drives the "push already-seen stories back" ordering,
+// computed at query time rather than stored.
+model StoryView {
+  id String @id @default(cuid())
+
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  viewedAt DateTime @default(now())
+
+  @@unique([storyId, userId])
+  @@index([storyId])
+  @@index([userId])
+}
+
+
 
 
