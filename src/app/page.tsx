@@ -33,6 +33,7 @@
 // import { getCategoryTreeAction } from "@/server/category/actions";
 // import { getCurrentUser } from "@/server/user/get-current-user";
 // import { ReviewPromptBanner } from "@/components/review-prompt-banner";
+// import { StoriesBar } from "@/components/stories-bar";
 
 // export default async function HomePage({
 //   searchParams,
@@ -79,6 +80,8 @@
 //                 {" | "}
 //                 <Link href="/admin/categories">مدیریت دسته‌ها</Link>
 //                 {" | "}
+//                 <Link href="/admin/stories">مدیریت استوری‌ها</Link>
+//                 {" | "}
 //                 <Link href="/admin/users">مدیریت کاربران</Link>
 //                 {" | "}
 //                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
@@ -97,6 +100,8 @@
 //       </div>
 
 //       {user && <ReviewPromptBanner />}
+
+//       <StoriesBar />
 
 //       <h1>محصولات</h1>
 
@@ -274,6 +279,8 @@ export default async function HomePage({
                 {" | "}
                 <Link href="/admin/stories">مدیریت استوری‌ها</Link>
                 {" | "}
+                <Link href="/admin/discounts">مدیریت تخفیف‌ها</Link>
+                {" | "}
                 <Link href="/admin/users">مدیریت کاربران</Link>
                 {" | "}
                 <Link href="/admin/coupons">مدیریت تخفیف‌ها</Link>
@@ -345,11 +352,26 @@ export default async function HomePage({
                   />
                 )}
                 <p>{p.title}</p>
-                <p>
-                  {p.minPrice === p.maxPrice
-                    ? `${p.minPrice.toLocaleString("fa-IR")} تومان`
-                    : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومان`}
-                </p>
+                {p.hasDiscount ? (
+                  <p>
+                    <span style={{ textDecoration: "line-through", color: "#999", marginLeft: 6 }}>
+                      {p.minPrice === p.maxPrice
+                        ? p.minPrice.toLocaleString("fa-IR")
+                        : `${p.minPrice.toLocaleString("fa-IR")}-${p.maxPrice.toLocaleString("fa-IR")}`}
+                    </span>
+                    <span style={{ color: "#c0392b", fontWeight: "bold" }}>
+                      {p.minDiscountedPrice === p.maxDiscountedPrice
+                        ? `${p.minDiscountedPrice.toLocaleString("fa-IR")} تومان`
+                        : `${p.minDiscountedPrice.toLocaleString("fa-IR")} - ${p.maxDiscountedPrice.toLocaleString("fa-IR")} تومان`}
+                    </span>
+                  </p>
+                ) : (
+                  <p>
+                    {p.minPrice === p.maxPrice
+                      ? `${p.minPrice.toLocaleString("fa-IR")} تومان`
+                      : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومان`}
+                  </p>
+                )}
                 <p>{p.totalStock > 0 ? `موجودی: ${p.totalStock}` : "ناموجود"}</p>
               </Link>
             ))}
@@ -375,5 +397,6 @@ export default async function HomePage({
     </main>
   );
 }
+
 
 

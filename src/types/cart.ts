@@ -3,7 +3,12 @@
  */
 
 /** Row shape for a single cart line — includes enough product/variant info
- *  to render the cart page without extra fetches. */
+ *  to render the cart page without extra fetches.
+ *
+ *  Pricing (Module 9): `price` is always the EFFECTIVE price actually
+ *  charged (after any active discount) — this is what totalPrice sums
+ *  and what checkout/orders use. `originalPrice` is only for display
+ *  (strikethrough) when `hasDiscount` is true; when false they're equal. */
 export type CartItemDTO = {
   id: string; // CartItem row id (empty string "" for guest/local-only items, see GuestCartItem)
   variantId: string;
@@ -12,7 +17,9 @@ export type CartItemDTO = {
   productSlug: string;
   mainImageUrl: string | null;
   optionValues: Record<string, string>; // e.g. { Size: "SM", Color: "Red" }
-  price: number; // Toman, this variant's price
+  price: number; // Toman, EFFECTIVE price (after discount) — this is what's charged
+  originalPrice: number; // Toman, for strikethrough display when hasDiscount is true
+  hasDiscount: boolean;
   stock: number; // this variant's available stock, for capping quantity in UI
   quantity: number;
 };

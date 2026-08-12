@@ -6,6 +6,8 @@ import { checkoutSchema } from "@/lib/validations/checkout";
 import { getCategoryIdsIncludingChildren } from "@/server/category/category-tree";
 import { priceCoupon, type CartLineForPricing } from "@/server/coupon/coupon-pricing";
 import { computeOrderTotals } from "./order-pricing";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
+import { computeVariantDiscount } from "@/lib/discount-pricing";
 import { resolveCourierType } from "@/lib/courier";
 import { requestZarinpalPayment } from "@/server/payment/zarinpal";
 import { notifyCouponLimitReached } from "@/server/notification/events";
@@ -58,6 +60,22 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
     };
   }
 
+  // Product discounts (Module 9) apply BEFORE coupons — every price used
+  // below (coupon eligibility, order subtotal, snapshotted unitPrice) is
+  // the EFFECTIVE price after any active discount group, never the raw
+  // variant.price. This is what makes a sale actually get charged.
+  const discountGroups = await getActiveDiscountGroupsForPricing();
+  const effectivePriceByVariantId = new Map(
+    cartItems.map((item) => [
+      item.variantId,
+      computeVariantDiscount(discountGroups, {
+        price: item.variant.price,
+        productId: item.variant.productId,
+        categoryId: item.variant.product.categoryId,
+      }).discountedPrice,
+    ])
+  );
+
   // --- Coupon (optional) ---
   let couponId: string | null = null;
   let discountAmount = 0;
@@ -84,7 +102,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
     const cartLines: CartLineForPricing[] = cartItems.map((item) => ({
       productId: item.variant.productId,
       categoryId: item.variant.product.categoryId,
-      unitPrice: item.variant.price,
+      unitPrice: effectivePriceByVariantId.get(item.variantId) ?? item.variant.price,
       quantity: item.quantity,
     }));
 
@@ -127,7 +145,10 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
     discountAmount: finalDiscount,
     totalAmount,
   } = computeOrderTotals(
-    cartItems.map((i) => ({ unitPrice: i.variant.price, quantity: i.quantity })),
+    cartItems.map((i) => ({
+      unitPrice: effectivePriceByVariantId.get(i.variantId) ?? i.variant.price,
+      quantity: i.quantity,
+    })),
     discountAmount
   );
 
@@ -161,7 +182,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
               variantId: item.variantId,
               productTitle: item.variant.product.title,
               optionSummary: optionSummary || null,
-              unitPrice: item.variant.price,
+              unitPrice: effectivePriceByVariantId.get(item.variantId) ?? item.variant.price,
               quantity: item.quantity,
             };
           }),

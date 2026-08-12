@@ -8,6 +8,7 @@ import type {
   ProductOption,
 } from "@prisma/client";
 import type { CartItemDTO, CartSummaryDTO } from "@/types/cart";
+import { computeVariantDiscount, type DiscountGroupForPricing } from "@/lib/discount-pricing";
 
 type FullCartItem = CartItem & {
   variant: ProductVariant & {
@@ -18,7 +19,11 @@ type FullCartItem = CartItem & {
   };
 };
 
-export function toCartItemDTO(item: FullCartItem): CartItemDTO {
+/** `discountGroups` defaults to [] for call sites that don't care (rare)
+ *  — every real cart-rendering call site MUST pass the active groups
+ *  (see getActiveDiscountGroupsForPricing) or the cart will silently
+ *  charge full price on discounted items. */
+export function toCartItemDTO(item: FullCartItem, discountGroups: DiscountGroupForPricing[] = []): CartItemDTO {
   const mainImage =
     item.variant.product.images.find((i) => i.isMain) ?? item.variant.product.images[0] ?? null;
 
@@ -26,6 +31,12 @@ export function toCartItemDTO(item: FullCartItem): CartItemDTO {
   for (const link of item.variant.optionValues) {
     optionValues[link.optionValue.option.name] = link.optionValue.value;
   }
+
+  const pricing = computeVariantDiscount(discountGroups, {
+    price: item.variant.price,
+    productId: item.variant.productId,
+    categoryId: item.variant.product.categoryId,
+  });
 
   return {
     id: item.id,
@@ -35,7 +46,9 @@ export function toCartItemDTO(item: FullCartItem): CartItemDTO {
     productSlug: item.variant.product.slug,
     mainImageUrl: mainImage?.url ?? null,
     optionValues,
-    price: item.variant.price,
+    price: pricing.discountedPrice, // effective price — what's actually charged
+    originalPrice: pricing.originalPrice,
+    hasDiscount: pricing.hasDiscount,
     stock: item.variant.stock,
     quantity: item.quantity,
   };

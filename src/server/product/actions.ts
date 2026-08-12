@@ -10,6 +10,7 @@ import {
   fullProductInclude,
 } from "./product-mapper";
 import { createProductWithRelations, updateProductWithRelations } from "./product-write";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
 import type { ActionResult } from "@/server/auth/actions";
 import type { ProductListItemDTO, ProductDetailDTO } from "@/types/product";
 import type { PaginatedResult } from "@/types/user";
@@ -61,10 +62,12 @@ export async function listProductsAction(
     prisma.product.count({ where }),
   ]);
 
+  const discountGroups = await getActiveDiscountGroupsForPricing();
+
   return {
     success: true,
     data: {
-      items: items.map(toProductListItemDTO),
+      items: items.map((item) => toProductListItemDTO(item, discountGroups)),
       page,
       pageSize,
       totalItems,
@@ -116,10 +119,12 @@ export async function adminListProductsAction(
     prisma.product.count({ where }),
   ]);
 
+  const discountGroups = await getActiveDiscountGroupsForPricing();
+
   return {
     success: true,
     data: {
-      items: items.map(toProductListItemDTO),
+      items: items.map((item) => toProductListItemDTO(item, discountGroups)),
       page,
       pageSize,
       totalItems,
@@ -141,11 +146,14 @@ export async function getProductBySlugAction(
   if (!product || product.isDeleted) {
     return { success: false, error: "محصول یافت نشد." };
   }
-  return { success: true, data: toProductDetailDTO(product) };
+  const discountGroups = await getActiveDiscountGroupsForPricing();
+  return { success: true, data: toProductDetailDTO(product, discountGroups) };
 }
 
 // ---------------------------------------------------------------------------
-// Admin: single product detail by id (for the admin edit form).
+// Admin: single product detail by id (for the admin edit form). Deliberately
+// does NOT apply discounts — this feeds the product EDIT form, which needs
+// the raw original price the admin actually set, not a computed sale price.
 // ---------------------------------------------------------------------------
 export async function getProductByIdAction(
   id: string

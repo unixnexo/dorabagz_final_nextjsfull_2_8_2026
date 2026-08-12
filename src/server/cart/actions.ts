@@ -8,16 +8,20 @@ import {
   mergeGuestCartSchema,
 } from "@/lib/validations/cart";
 import { toCartItemDTO, toCartSummaryDTO, fullCartItemInclude } from "./cart-mapper";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
 import type { ActionResult } from "@/server/auth/actions";
 import type { CartSummaryDTO } from "@/types/cart";
 
 async function getCartSummaryForUser(userId: string): Promise<CartSummaryDTO> {
-  const items = await prisma.cartItem.findMany({
-    where: { userId },
-    include: fullCartItemInclude,
-    orderBy: { createdAt: "desc" },
-  });
-  return toCartSummaryDTO(items.map(toCartItemDTO));
+  const [items, discountGroups] = await Promise.all([
+    prisma.cartItem.findMany({
+      where: { userId },
+      include: fullCartItemInclude,
+      orderBy: { createdAt: "desc" },
+    }),
+    getActiveDiscountGroupsForPricing(),
+  ]);
+  return toCartSummaryDTO(items.map((item) => toCartItemDTO(item, discountGroups)));
 }
 
 // ---------------------------------------------------------------------------

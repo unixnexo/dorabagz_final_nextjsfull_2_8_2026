@@ -65,6 +65,7 @@
 //   productReviews           ProductReview[]
 //   siteSatisfactionRatings  SiteSatisfactionRating[]
 //   popupDismissals          PopupDismissal[]
+//   storyViews               StoryView[]
 
 //   @@index([phoneNumber])
 //   @@index([role])
@@ -110,6 +111,7 @@
 
 //   products Product[]
 //   couponCategories CouponCategory[]
+//   discountGroupCategories DiscountGroupCategory[]
 
 //   isDeleted Boolean @default(false)
 
@@ -138,6 +140,8 @@
 //   variants      ProductVariant[]
 //   favorites     Favorite[]
 //   couponProducts CouponProduct[]
+//   storyProducts StoryProduct[]
+//   discountGroupProducts DiscountGroupProduct[]
 
 //   isDeleted Boolean @default(false)
 
@@ -640,6 +644,156 @@
 //   @@index([userId])
 // }
 
+// // ============================================================================
+// // MODULE 8 — Stories (Instagram-style, shown above products)
+// // ============================================================================
+
+// enum StoryMediaType {
+//   IMAGE
+//   VIDEO
+// }
+
+// model Story {
+//   id String @id @default(cuid())
+
+//   mediaType StoryMediaType
+//   mediaUrl  String // image: compressed to WebP. video: size/duration-limited,
+//                     // NOT compressed yet — deferred to end-of-project, see README.
+
+//   description String?
+
+//   // Default 24h from creation, but admin can set any custom duration —
+//   // set this to `createdAt + N hours` at creation/edit time.
+//   expiresAt DateTime
+
+//   products StoryProduct[] // optional — a story may link zero, one, or many products
+//   views    StoryView[]
+
+//   isDeleted Boolean @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([expiresAt])
+//   @@index([isDeleted])
+// }
+
+// model StoryProduct {
+//   id String @id @default(cuid())
+
+//   storyId String
+//   story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   @@unique([storyId, productId])
+//   @@index([storyId])
+//   @@index([productId])
+// }
+
+// // One row per (story, user) — this is what makes "seen count" correct
+// // (counts each user once, no matter how many times they replay the
+// // story) and what drives the "push already-seen stories back" ordering,
+// // computed at query time rather than stored.
+// model StoryView {
+//   id String @id @default(cuid())
+
+//   storyId String
+//   story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   viewedAt DateTime @default(now())
+
+//   @@unique([storyId, userId])
+//   @@index([storyId])
+//   @@index([userId])
+// }
+
+// // ============================================================================
+// // MODULE 9 — Product Discounts (bulk discount groups)
+// // ============================================================================
+
+// enum DiscountType {
+//   PERCENT
+//   FIXED
+// }
+
+// // A discount group targets any mix of specific products and/or specific
+// // categories (union of both, per your spec — not mutually exclusive like
+// // coupon scopes). Every variant belonging to a linked product, or to a
+// // product under a linked category (children included), gets this
+// // discount applied at READ TIME — nothing is written onto the variant
+// // itself. This is what makes "edit the whole group, never one item"
+// // natural: there's no per-item state to edit, only group membership.
+// model DiscountGroup {
+//   id String @id @default(cuid())
+
+//   title String // admin-facing label only, e.g. "تخفیف نوروزی" — never shown to customers
+
+//   type  DiscountType
+//   value Int // percent (1-100) if PERCENT, Toman amount if FIXED
+
+//   // Both null = always-on until admin deletes the group. Either or both
+//   // set = a real sale window; outside that window, the discount simply
+//   // doesn't apply (checked at read time, nothing to auto-expire/cron).
+//   startAt DateTime?
+//   endAt   DateTime?
+
+//   products   DiscountGroupProduct[]
+//   categories DiscountGroupCategory[]
+
+//   isDeleted Boolean @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([isDeleted])
+// }
+
+// model DiscountGroupProduct {
+//   id String @id @default(cuid())
+
+//   groupId String
+//   group   DiscountGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+//   productId String
+//   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+//   @@unique([groupId, productId])
+//   @@index([groupId])
+//   @@index([productId])
+// }
+
+// model DiscountGroupCategory {
+//   id String @id @default(cuid())
+
+//   groupId String
+//   group   DiscountGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+//   categoryId String
+//   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+//   @@unique([groupId, categoryId])
+//   @@index([groupId])
+//   @@index([categoryId])
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -756,6 +910,7 @@ model Category {
 
   products Product[]
   couponCategories CouponCategory[]
+  discountGroupCategories DiscountGroupCategory[]
 
   isDeleted Boolean @default(false)
 
@@ -785,6 +940,7 @@ model Product {
   favorites     Favorite[]
   couponProducts CouponProduct[]
   storyProducts StoryProduct[]
+  discountGroupProducts DiscountGroupProduct[]
 
   isDeleted Boolean @default(false)
 
@@ -1355,6 +1511,73 @@ model StoryView {
   @@index([userId])
 }
 
+// ============================================================================
+// MODULE 9 — Product Discounts (bulk discount groups)
+// ============================================================================
 
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+// A discount group targets any mix of specific products and/or specific
+// categories (union of both, per your spec — not mutually exclusive like
+// coupon scopes). Every variant belonging to a linked product, or to a
+// product under a linked category (children included), gets this
+// discount applied at READ TIME — nothing is written onto the variant
+// itself. This is what makes "edit the whole group, never one item"
+// natural: there's no per-item state to edit, only group membership.
+model DiscountGroup {
+  id String @id @default(cuid())
+
+  title String // admin-facing label only, e.g. "تخفیف نوروزی" — never shown to customers
+
+  type  DiscountType
+  value Int // percent (1-100) if PERCENT, Toman amount if FIXED
+
+  // Both null = always-on until admin deletes the group. Either or both
+  // set = a real sale window; outside that window, the discount simply
+  // doesn't apply (checked at read time, nothing to auto-expire/cron).
+  startAt DateTime?
+  endAt   DateTime?
+
+  products   DiscountGroupProduct[]
+  categories DiscountGroupCategory[]
+
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isDeleted])
+}
+
+model DiscountGroupProduct {
+  id String @id @default(cuid())
+
+  groupId String
+  group   DiscountGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, productId])
+  @@index([groupId])
+  @@index([productId])
+}
+
+model DiscountGroupCategory {
+  id String @id @default(cuid())
+
+  groupId String
+  group   DiscountGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, categoryId])
+  @@index([groupId])
+  @@index([categoryId])
+}
 
 

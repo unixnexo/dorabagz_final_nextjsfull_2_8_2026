@@ -32,10 +32,17 @@ export type ProductOptionDTO = {
 /** A single purchasable SKU, with its option-value combination flattened
  *  into a simple map for easy rendering, e.g. { "Size": "SM", "Color": "Red" }.
  *  If the product has no real options, `optionValues` is an empty object
- *  and there will be exactly one variant for the product. */
+ *  and there will be exactly one variant for the product.
+ *
+ *  Pricing (Module 9): `price` is always the ORIGINAL price. If an active
+ *  discount group applies, `discountedPrice` is lower and `hasDiscount`
+ *  is true — show `price` with strikethrough next to `discountedPrice`.
+ *  When there's no discount, `discountedPrice` simply equals `price`. */
 export type ProductVariantDTO = {
   id: string;
-  price: number; // Toman
+  price: number; // Toman, ORIGINAL price
+  discountedPrice: number; // equals `price` when hasDiscount is false
+  hasDiscount: boolean;
   stock: number;
   optionValues: Record<string, string>; // optionName -> optionValue
 };
@@ -53,8 +60,11 @@ export type ProductListItemDTO = {
   createdAt: string;
   // Derived summary fields, computed from variants — useful for list/grid
   // cards without needing to fetch every variant:
-  minPrice: number; // lowest variant price
-  maxPrice: number; // highest variant price
+  minPrice: number; // lowest ORIGINAL variant price
+  maxPrice: number; // highest ORIGINAL variant price
+  minDiscountedPrice: number; // lowest price AFTER any active discount
+  maxDiscountedPrice: number; // highest price AFTER any active discount
+  hasDiscount: boolean; // true if ANY variant has an active discount
   totalStock: number; // sum of all variant stock
 };
 

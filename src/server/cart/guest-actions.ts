@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { toCartItemDTO, fullCartItemInclude } from "./cart-mapper";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
 import type { ActionResult } from "@/server/auth/actions";
 import type { CartItemDTO } from "@/types/cart";
 
@@ -27,6 +28,7 @@ export async function hydrateGuestCartAction(
     include: fullCartItemInclude.variant.include,
   });
 
+  const discountGroups = await getActiveDiscountGroupsForPricing();
   const quantityByVariantId = new Map(guestItems.map((i) => [i.variantId, i.quantity]));
 
   const items = variants.map((variant) => {
@@ -40,7 +42,7 @@ export async function hydrateGuestCartAction(
       updatedAt: new Date(),
       variant,
     };
-    return toCartItemDTO(fakeCartItem);
+    return toCartItemDTO(fakeCartItem, discountGroups);
   });
 
   return { success: true, data: items };

@@ -14,6 +14,7 @@ import type {
   ProductOptionDTO,
   ProductVariantDTO,
 } from "@/types/product";
+import { computeVariantDiscount, type DiscountGroupForPricing } from "@/lib/discount-pricing";
 
 type FullProduct = Product & {
   category: Category | null;
@@ -25,10 +26,31 @@ type FullProduct = Product & {
   })[];
 };
 
-export function toProductListItemDTO(product: FullProduct): ProductListItemDTO {
+/**
+ * `discountGroups` (Module 9) is optional — pass [] or omit it entirely
+ * in call sites that don't care about pricing (e.g. an internal query
+ * that only needs titles). Every call site that shows prices to a buyer
+ * MUST pass the real active groups (see getActiveDiscountGroupsForPricing
+ * in src/server/discount/pricing-service.ts) or discounts silently won't
+ * show up.
+ */
+export function toProductListItemDTO(
+  product: FullProduct,
+  discountGroups: DiscountGroupForPricing[] = []
+): ProductListItemDTO {
   const mainImage = product.images.find((i) => i.isMain) ?? product.images[0] ?? null;
-  const prices = product.variants.map((v) => v.price);
   const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
+
+  const pricedVariants = product.variants.map((v) =>
+    computeVariantDiscount(discountGroups, {
+      price: v.price,
+      productId: product.id,
+      categoryId: product.categoryId,
+    })
+  );
+
+  const originalPrices = pricedVariants.map((p) => p.originalPrice);
+  const discountedPrices = pricedVariants.map((p) => p.discountedPrice);
 
   return {
     id: product.id,
@@ -40,13 +62,19 @@ export function toProductListItemDTO(product: FullProduct): ProductListItemDTO {
     categoryTitle: product.category?.title ?? null,
     isDeleted: product.isDeleted,
     createdAt: product.createdAt.toISOString(),
-    minPrice: prices.length ? Math.min(...prices) : 0,
-    maxPrice: prices.length ? Math.max(...prices) : 0,
+    minPrice: originalPrices.length ? Math.min(...originalPrices) : 0,
+    maxPrice: originalPrices.length ? Math.max(...originalPrices) : 0,
+    minDiscountedPrice: discountedPrices.length ? Math.min(...discountedPrices) : 0,
+    maxDiscountedPrice: discountedPrices.length ? Math.max(...discountedPrices) : 0,
+    hasDiscount: pricedVariants.some((p) => p.hasDiscount),
     totalStock,
   };
 }
 
-export function toProductDetailDTO(product: FullProduct): ProductDetailDTO {
+export function toProductDetailDTO(
+  product: FullProduct,
+  discountGroups: DiscountGroupForPricing[] = []
+): ProductDetailDTO {
   const options: ProductOptionDTO[] = product.options
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((opt) => ({
@@ -62,9 +90,18 @@ export function toProductDetailDTO(product: FullProduct): ProductDetailDTO {
     for (const link of variant.optionValues) {
       optionValues[link.optionValue.option.name] = link.optionValue.value;
     }
+
+    const pricing = computeVariantDiscount(discountGroups, {
+      price: variant.price,
+      productId: product.id,
+      categoryId: product.categoryId,
+    });
+
     return {
       id: variant.id,
-      price: variant.price,
+      price: pricing.originalPrice,
+      discountedPrice: pricing.discountedPrice,
+      hasDiscount: pricing.hasDiscount,
       stock: variant.stock,
       optionValues,
     };

@@ -86,8 +86,19 @@ export function ProductActions({
       {selectedVariant ? (
         <div>
           <p>
-            قیمت: {selectedVariant.price.toLocaleString("fa-IR")} تومان | موجودی:{" "}
-            {selectedVariant.stock}
+            {selectedVariant.hasDiscount ? (
+              <>
+                <span style={{ textDecoration: "line-through", color: "#999", marginLeft: 8 }}>
+                  {selectedVariant.price.toLocaleString("fa-IR")} تومان
+                </span>
+                <span style={{ color: "#c0392b", fontWeight: "bold" }}>
+                  {selectedVariant.discountedPrice.toLocaleString("fa-IR")} تومان
+                </span>
+              </>
+            ) : (
+              <>قیمت: {selectedVariant.price.toLocaleString("fa-IR")} تومان</>
+            )}
+            {" | "}موجودی: {selectedVariant.stock}
           </p>
 
           <input
