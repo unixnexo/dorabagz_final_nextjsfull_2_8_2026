@@ -163,76 +163,76 @@ export default function Page() {
         </div>
 
         {/* Description */}
-<Accordion type="single" collapsible className="w-full">
-  <AccordionItem value="description" className="border-b">
-    <AccordionTrigger className="text-base font-semibold hover:no-underline">
-      توضیحات محصول
-    </AccordionTrigger>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="description" className="border-b">
+            <AccordionTrigger className="text-base hover:no-underline">
+              توضیحات محصول
+            </AccordionTrigger>
 
-    <AccordionContent>
-      <p className="text-sm leading-7 text-muted-foreground">
-        این کفش اسپرت با طراحی مدرن و راحتی بالا برای استفاده روزمره
-        و فعالیت‌های سبک ورزشی مناسب است. رویه تنفس‌پذیر، زیره مقاوم
-        و وزن سبک آن باعث می‌شود در طول روز احساس راحتی داشته باشید.
-        انتخابی ایده‌آل برای استایل کژوال و استفاده طولانی‌مدت.
-      </p>
-    </AccordionContent>
-  </AccordionItem>
+            <AccordionContent>
+              <p className="text-sm leading-7 text-muted-foreground">
+                این کفش اسپرت با طراحی مدرن و راحتی بالا برای استفاده روزمره
+                و فعالیت‌های سبک ورزشی مناسب است. رویه تنفس‌پذیر، زیره مقاوم
+                و وزن سبک آن باعث می‌شود در طول روز احساس راحتی داشته باشید.
+                انتخابی ایده‌آل برای استایل کژوال و استفاده طولانی‌مدت.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
 
-  {/* Specifications */}
-  <AccordionItem value="specifications" className="border-b-0">
-    <AccordionTrigger className="text-base font-semibold hover:no-underline">
-      مشخصات محصول
-    </AccordionTrigger>
+          {/* Specifications */}
+          <AccordionItem value="specifications" className="border-b-0">
+            <AccordionTrigger className="text-base hover:no-underline">
+              مشخصات محصول
+            </AccordionTrigger>
 
-    <AccordionContent>
-      <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/70 backdrop-blur-xl shadow-sm">
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm text-muted-foreground">جنس</span>
-          <span className="text-sm font-medium text-foreground">
-            چرم طبیعی نرم
-          </span>
-        </div>
+            <AccordionContent>
+              <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/70 backdrop-blur-xl shadow-sm">
+                <div className="flex items-center justify-between px-5 py-4">
+                  <span className="text-sm text-muted-foreground">جنس</span>
+                  <span className="text-sm font-medium text-foreground">
+                    چرم طبیعی نرم
+                  </span>
+                </div>
 
-        <div className="h-px bg-border/60" />
+                <div className="h-px bg-border/60" />
 
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm text-muted-foreground">رنگ</span>
-          <span className="text-sm font-medium text-foreground">
-            مشکی مات
-          </span>
-        </div>
+                <div className="flex items-center justify-between px-5 py-4">
+                  <span className="text-sm text-muted-foreground">رنگ</span>
+                  <span className="text-sm font-medium text-foreground">
+                    مشکی مات
+                  </span>
+                </div>
 
-        <div className="h-px bg-border/60" />
+                <div className="h-px bg-border/60" />
 
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm text-muted-foreground">نوع زیره</span>
-          <span className="text-sm font-medium text-foreground">
-            رابر ضد لغزش
-          </span>
-        </div>
+                <div className="flex items-center justify-between px-5 py-4">
+                  <span className="text-sm text-muted-foreground">نوع زیره</span>
+                  <span className="text-sm font-medium text-foreground">
+                    رابر ضد لغزش
+                  </span>
+                </div>
 
-        <div className="h-px bg-border/60" />
+                <div className="h-px bg-border/60" />
 
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm text-muted-foreground">مناسب برای</span>
-          <span className="text-sm font-medium text-foreground">
-            استفاده روزمره
-          </span>
-        </div>
+                <div className="flex items-center justify-between px-5 py-4">
+                  <span className="text-sm text-muted-foreground">مناسب برای</span>
+                  <span className="text-sm font-medium text-foreground">
+                    استفاده روزمره
+                  </span>
+                </div>
 
-        <div className="h-px bg-border/60" />
+                <div className="h-px bg-border/60" />
 
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm text-muted-foreground">وزن</span>
-          <span className="text-sm font-medium text-foreground">
-            ۳۲۰ گرم
-          </span>
-        </div>
-      </div>
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
+                <div className="flex items-center justify-between px-5 py-4">
+                  <span className="text-sm text-muted-foreground">وزن</span>
+                  <span className="text-sm font-medium text-foreground">
+                    ۳۲۰ گرم
+                  </span>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         {/* Submit */}
         <Button className="w-full">
