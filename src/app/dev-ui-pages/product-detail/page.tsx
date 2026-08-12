@@ -1,9 +1,12 @@
-// product detail page
+// // product detail page
 
+"use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft, Heart, X, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,32 +17,86 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const images = [
+  "/site/1.jpg",
+  "/site/2.jpg",
+  "/site/3.jpg",
+  "/site/4.jpg",
+];
+
 export default function Page() {
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+
+  const openGallery = () => {
+    setActiveImage(0);
+    setGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+  };
+
+  const nextImage = () => {
+    setActiveImage((current) =>
+      current === images.length - 1 ? 0 : current + 1
+    );
+  };
+
+  const previousImage = () => {
+    setActiveImage((current) =>
+      current === 0 ? images.length - 1 : current - 1
+    );
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Image */}
-      <div className="relative h-[420px] w-full overflow-hidden">
+      <div
+        className="relative h-[420px] w-full overflow-hidden cursor-pointer"
+        onClick={openGallery}
+      >
         <Image
-          src="/site/1.jpg"
+          src={images[0]}
           alt="محصول"
           fill
           priority
-          className="object-cover"
+          className="object-cover transition-transform duration-500 active:scale-[0.98]"
         />
 
         {/* Fade out bottom */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-background/70 to-background" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-background/70 to-background" />
 
         {/* Back button */}
-        <div className="absolute left-4 top-4 z-10">
+        <div
+          className="absolute left-4 top-4 z-10"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Button
             size="icon"
             variant="ghost"
-            className="h-10 w-10 rounded-full bg-background/80 backdrop-blur-md shadow-sm"
+            className="h-10 w-10 rounded-full bg-background/80 backdrop-blur-xl shadow-sm"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </div>
+
+        {/* Swipe hint */}
+        <div className="pointer-events-none absolute bottom-0 -right-3 z-10">
+          <div className="size-24 rounded-full">
+            <DotLottieReact
+              src="/lottie/Hand_Swipe.lottie"
+              loop
+              autoplay
+              className="h-full w-full"
+            />
+          </div>
+        </div>
+
+        {/* Image count */}
+        {/* <div className="pointer-events-none absolute bottom-7 left-5 rounded-full bg-background/75 px-3 py-1.5 text-xs font-medium backdrop-blur-xl">
+          ۱ / {images.length}
+        </div> */}
       </div>
 
       {/* Content */}
@@ -56,7 +113,7 @@ export default function Page() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 flex-row">
+        <div className="flex flex-row gap-3">
           <Button
             variant="outline"
             size="icon"
@@ -69,6 +126,7 @@ export default function Page() {
             <SelectTrigger>
               <SelectValue placeholder="انتخاب رنگ" />
             </SelectTrigger>
+
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>رنگ</SelectLabel>
@@ -84,6 +142,7 @@ export default function Page() {
             <SelectTrigger>
               <SelectValue placeholder="انتخاب سایز" />
             </SelectTrigger>
+
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>سایز</SelectLabel>
@@ -97,8 +156,7 @@ export default function Page() {
         </div>
 
         {/* Description */}
-        <div className="space-y-3">
-
+        <div>
           <p className="text-sm leading-7 text-muted-foreground">
             این کفش اسپرت با طراحی مدرن و راحتی بالا برای استفاده روزمره
             و فعالیت‌های سبک ورزشی مناسب است. رویه تنفس‌پذیر، زیره مقاوم
@@ -112,7 +170,73 @@ export default function Page() {
           افزودن به سبد خرید
         </Button>
       </div>
+
+      {/* Gallery */}
+      {galleryOpen && (
+        <div className="fixed inset-0 z-50 bg-black" dir="rtl">
+          {/* Close */}
+          <button
+            onClick={closeGallery}
+            className="absolute left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          {/* Counter */}
+          <div className="absolute right-1/2 top-5 z-50 translate-x-1/2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-xl">
+            {activeImage + 1} / {images.length}
+          </div>
+
+          {/* Main image */}
+          <div className="relative flex h-full w-full items-center justify-center">
+            <Image
+              src={images[activeImage]}
+              alt={`محصول ${activeImage + 1}`}
+              fill
+              className="object-contain"
+              priority
+            />
+
+            {/* Previous */}
+            <button
+              onClick={previousImage}
+              className="absolute right-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+
+            {/* Next */}
+            <button
+              onClick={nextImage}
+              className="absolute left-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Thumbnails */}
+          <div className="absolute bottom-6 right-1/2 flex translate-x-1/2 gap-2 rounded-2xl bg-black/40 p-2 backdrop-blur-xl">
+            {images.map((image, index) => (
+              <button
+                key={image}
+                onClick={() => setActiveImage(index)}
+                className={`relative h-12 w-12 overflow-hidden rounded-lg transition-all ${activeImage === index
+                    ? "ring-2 ring-white"
+                    : "opacity-60"
+                  }`}
+              >
+                <Image
+                  src={image}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
-
