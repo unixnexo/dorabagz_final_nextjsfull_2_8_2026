@@ -6,9 +6,10 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BottomNav } from "@/components/bottom-nav";
 import { HomeHeader } from "./home-header";
+import { SearchCommand } from "@/components/search-command";
 
 const categories = [
     {
@@ -67,6 +68,7 @@ const products = [
 export default function HomePage() {
 
     const categoriesRef = useRef<HTMLDivElement>(null);
+    const [searchOpen, setSearchOpen] = useState(false);
 
     useEffect(() => {
         const el = categoriesRef.current;
@@ -136,7 +138,7 @@ export default function HomePage() {
                 <HomeHeader />
 
                 {/* Main content */}
-                <div className="relative z-20 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
+                <div className="relative z-50 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
 
                     {/* Categories */}
                     <div className="relative -mx-4">
@@ -226,7 +228,15 @@ export default function HomePage() {
 
             </div>
 
-            <BottomNav />
+            <SearchCommand
+                open={searchOpen}
+                onOpenChange={setSearchOpen}
+            />
+
+            <BottomNav
+                searchOpen={searchOpen}
+                onSearchClick={() => setSearchOpen(true)}
+            />
         </main>
     );
 }
