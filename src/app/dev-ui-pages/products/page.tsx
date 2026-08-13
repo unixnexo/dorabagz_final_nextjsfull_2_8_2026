@@ -1,17 +1,14 @@
 "use client";
 
 import {
-    Bell,
     Heart,
-    UserRound,
-    SlidersHorizontal,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import { BottomNav } from "@/components/bottom-nav";
+import { HomeHeader } from "./home-header";
 
 const categories = [
     {
@@ -136,41 +133,7 @@ export default function HomePage() {
             <div className="min-h-screen w-full overflow-hidden">
 
                 {/* Header */}
-                <header className="fixed inset-x-0 top-0 z-10 flex h-[88px] items-center justify-between bg-white px-2 pb-5 pt-4 max-w-[500px] mx-auto">
-
-                    <div className="flex items-center gap-3">
-                        <Button
-                            asChild
-                            variant="ghost"
-                            size="icon"
-                            className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
-                        >
-                            <Link href="/profile">
-                                <UserRound className="!size-6 text-black/70" />
-                            </Link>
-                        </Button>
-
-                        <Button
-                            asChild
-                            variant="ghost"
-                            size="icon"
-                            className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
-                        >
-                            <Link href="/notifications">
-                                <Bell className="!size-6 text-black/70" />
-                            </Link>
-                        </Button>
-                    </div>
-
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
-                    >
-                        <SlidersHorizontal className="!size-6 text-black/70" />
-                    </Button>
-
-                </header>
+                <HomeHeader />
 
                 {/* Main content */}
                 <div className="relative z-20 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
