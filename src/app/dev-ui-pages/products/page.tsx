@@ -3,7 +3,6 @@
 import {
     Bell,
     Heart,
-    ChevronLeft,
     UserRound,
     SlidersHorizontal,
 } from "lucide-react";
@@ -44,26 +43,26 @@ const products = [
     {
         id: 1,
         title: "تیشرت لوگو دار",
-        price: "۱۹۴",
-        image: "https://placehold.co/600x700/f3f3f3/222?text=T-Shirt",
+        price: "2500000",
+        image: "/site/1.jpg",
     },
     {
         id: 2,
         title: "شلوارک جین",
-        price: "۱۱۲",
-        image: "https://placehold.co/600x700/f3f3f3/222?text=Shorts",
+        price: "1890000",
+        image: "/site/2.jpg",
     },
     {
         id: 3,
         title: "هودی ساده",
-        price: "۲۸۵",
-        image: "https://placehold.co/600x700/f3f3f3/222?text=Hoodie",
+        price: "6500000",
+        image: "/site/3.jpg",
     },
     {
         id: 4,
         title: "کیف دستی",
-        price: "۳۲۰",
-        image: "https://placehold.co/600x700/f3f3f3/222?text=Bag",
+        price: "3200000",
+        image: "/site/4.jpg",
     },
 ];
 
@@ -231,7 +230,7 @@ export default function HomePage() {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="absolute left-3 top-3 h-9 w-9 rounded-full bg-white/90 shadow-sm backdrop-blur hover:bg-white"
+                                            className="absolute right-3 top-3 h-9 w-9 rounded-full bg-white/90 shadow-sm backdrop-blur hover:bg-white"
                                         >
                                             <Heart className="h-[19px] w-[19px] stroke-[1.8]" />
                                         </Button>
@@ -245,11 +244,11 @@ export default function HomePage() {
 
                                         <div className="mt-1 flex items-center gap-1">
                                             <span className="text-[15px] font-bold">
-                                                {product.price}
+                                                {Number(product.price).toLocaleString("en-US")}
                                             </span>
 
                                             <span className="text-[12px] text-muted-foreground">
-                                                دلار
+                                                تومن
                                             </span>
                                         </div>
                                     </div>
