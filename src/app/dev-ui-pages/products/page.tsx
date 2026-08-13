@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { BottomNav } from "@/components/bottom-nav";
 
 const categories = [
     {
@@ -135,7 +136,7 @@ export default function HomePage() {
             <div className="min-h-screen w-full overflow-hidden">
 
                 {/* Header */}
-                <header className="fixed inset-x-0 top-0 z-10 flex h-[88px] items-center justify-between bg-white px-5 pb-5 pt-4 max-w-[500px] mx-auto">
+                <header className="fixed inset-x-0 top-0 z-10 flex h-[88px] items-center justify-between bg-white px-2 pb-5 pt-4 max-w-[500px] mx-auto">
 
                     <div className="flex items-center gap-3">
                         <Button
@@ -177,10 +178,10 @@ export default function HomePage() {
                     {/* Categories */}
                     <div className="relative -mx-4">
                         {/* Left fade */}
-                        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[#f1f2f3] to-transparent" />
+                        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[#f1f2f3] to-transparent rounded-t-lg" />
 
                         {/* Right fade */}
-                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[#f1f2f3] to-transparent" />
+                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[#f1f2f3] to-transparent rounded-t-lg" />
 
                         <div
                             ref={categoriesRef}
@@ -261,6 +262,8 @@ export default function HomePage() {
                 </div>
 
             </div>
+
+            <BottomNav />
         </main>
     );
 }
