@@ -64,6 +64,9 @@ export function AdminProductsTable() {
                     {p.minPrice === p.maxPrice
                       ? p.minPrice.toLocaleString("fa-IR")
                       : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")}`}
+                    {p.hasDiscount && (
+                      <span style={{ color: "#c0392b", fontSize: 11, marginRight: 6 }}>در حال تخفیف</span>
+                    )}
                   </td>
                   <td>{p.totalStock}</td>
                   <td>{p.isDeleted ? "حذف شده" : "فعال"}</td>

@@ -5,6 +5,8 @@ import { getEffectiveIdentity } from "@/server/auth/session";
 import { applyCouponSchema } from "@/lib/validations/coupon";
 import { getCategoryIdsIncludingChildren } from "@/server/category/category-tree";
 import { priceCoupon, type CartLineForPricing } from "./coupon-pricing";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
+import { computeVariantDiscount } from "@/lib/discount-pricing";
 import type { ActionResult } from "@/server/auth/actions";
 import type { CouponPreviewDTO } from "@/types/coupon";
 
@@ -13,7 +15,11 @@ import type { CouponPreviewDTO } from "@/types/coupon";
  * the discount it would produce, WITHOUT creating an order yet. Used by
  * the checkout page's "apply coupon" button before the user confirms
  * payment. The same pricing function runs again (server-side, non-
- * skippable) inside createOrderAction — this preview is just for UX.
+ * skippable) inside createOrderAction — this preview is just for UX, but
+ * MUST match createOrderAction's math exactly (same effective/discounted
+ * prices) or the preview shown to the user would lie about what they'll
+ * actually be charged. (This mismatch was a real bug, found and fixed
+ * during the Module 9 audit — see README "Module 9" section.)
  */
 export async function previewCouponAction(input: unknown): Promise<ActionResult<CouponPreviewDTO>> {
   const identity = await getEffectiveIdentity();
@@ -49,10 +55,16 @@ export async function previewCouponAction(input: unknown): Promise<ActionResult<
     ids.forEach((id) => expandedCategoryIds.add(id));
   }
 
+  // Product discounts apply BEFORE coupons — same rule as createOrderAction.
+  const discountGroups = await getActiveDiscountGroupsForPricing();
   const cartLines: CartLineForPricing[] = cartItems.map((item) => ({
     productId: item.variant.productId,
     categoryId: item.variant.product.categoryId,
-    unitPrice: item.variant.price,
+    unitPrice: computeVariantDiscount(discountGroups, {
+      price: item.variant.price,
+      productId: item.variant.productId,
+      categoryId: item.variant.product.categoryId,
+    }).discountedPrice,
     quantity: item.quantity,
   }));
 

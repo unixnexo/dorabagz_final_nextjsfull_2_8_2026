@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getEffectiveIdentity } from "@/server/auth/session";
 import { toggleFavoriteSchema } from "@/lib/validations/favorite";
 import { toFavoriteItemDTO } from "./favorite-mapper";
+import { getActiveDiscountGroupsForPricing } from "@/server/discount/pricing-service";
 import type { ActionResult } from "@/server/auth/actions";
 import type { FavoriteItemDTO } from "@/types/favorite";
 
@@ -18,13 +19,16 @@ export async function listFavoritesAction(): Promise<ActionResult<FavoriteItemDT
   const identity = await getEffectiveIdentity();
   if (!identity) return { success: false, error: "ابتدا وارد شوید." };
 
-  const favorites = await prisma.favorite.findMany({
-    where: { userId: identity.userId },
-    include: favoriteInclude,
-    orderBy: { createdAt: "desc" },
-  });
+  const [favorites, discountGroups] = await Promise.all([
+    prisma.favorite.findMany({
+      where: { userId: identity.userId },
+      include: favoriteInclude,
+      orderBy: { createdAt: "desc" },
+    }),
+    getActiveDiscountGroupsForPricing(),
+  ]);
 
-  return { success: true, data: favorites.map(toFavoriteItemDTO) };
+  return { success: true, data: favorites.map((f) => toFavoriteItemDTO(f, discountGroups)) };
 }
 
 // ---------------------------------------------------------------------------
