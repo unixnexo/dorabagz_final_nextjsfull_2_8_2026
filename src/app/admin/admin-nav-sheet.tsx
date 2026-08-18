@@ -23,7 +23,7 @@ export function AdminNavSheet() {
                 <button
                     type="button"
                     aria-label="باز کردن منو"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-black/[0.04] active:bg-black/[0.08] transition-colors"
+                    className="flex size-11 items-center justify-center rounded-2xl bg-black/[0.04] active:bg-black/[0.08] transition-colors"
                 >
                     <Menu className="h-5 w-5 text-[#1C1C1E]" strokeWidth={2.25} />
                 </button>
