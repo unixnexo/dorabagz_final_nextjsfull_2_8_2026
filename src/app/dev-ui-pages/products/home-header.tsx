@@ -34,7 +34,7 @@ export function HomeHeader() {
                     asChild
                     variant="ghost"
                     size="icon"
-                    className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
+                    className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
                 >
                     <Link href="/profile">
                         <UserRound className="!size-6 text-black/70" />
@@ -45,7 +45,7 @@ export function HomeHeader() {
                     asChild
                     variant="ghost"
                     size="icon"
-                    className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
+                    className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
                 >
                     <Link href="/notifications">
                         <Bell className="!size-6 text-black/70" />
@@ -59,7 +59,7 @@ export function HomeHeader() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="size-14 rounded-2xl bg-muted hover:bg-[#eeeeee]"
+                        className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
                     >
                         <SlidersHorizontal className="!size-6 text-black/70" />
                     </Button>
