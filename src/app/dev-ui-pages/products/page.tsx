@@ -11,6 +11,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { HomeHeader } from "./home-header";
 import { SearchCommand } from "@/components/search-command";
 import { ProductCard } from "@/components/product-card";
+import { Stories } from "./stories";
 
 const categories = [
     {
@@ -139,7 +140,12 @@ export default function HomePage() {
                 <HomeHeader />
 
                 {/* Main content */}
-                <div className="relative z-50 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
+                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
+
+                    {/* Stories */}
+                    <section className="mb-6">
+                        <Stories />
+                    </section>
 
                     {/* Categories */}
                     <div className="relative -mx-4">

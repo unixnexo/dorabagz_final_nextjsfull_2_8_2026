@@ -26,7 +26,7 @@ export function HomeHeader() {
 
     return (
         <header
-            className="fixed inset-x-0 top-0 z-50 mx-auto flex h-[88px] max-w-[500px] items-center justify-between bg-white px-2 pb-5 pt-4"
+            className="fixed inset-x-0 top-0 z-20 mx-auto flex h-[88px] max-w-[500px] items-center justify-between bg-white px-2 pb-5 pt-4"
         >
             {/* Left side */}
             <div className="flex items-center gap-3">
