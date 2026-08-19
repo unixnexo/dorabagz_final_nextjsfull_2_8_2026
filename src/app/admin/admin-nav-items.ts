@@ -20,8 +20,8 @@ export type AdminNavItem = {
 // Single source of truth for the admin nav sheet.
 // Add a page here and it shows up in the sheet automatically.
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
-    { href: "/admin/reports", label: "گزارش‌هاD", icon: BarChart3 },
-    { href: "/admin/orders", label: "سفارش‌هاD", icon: ShoppingBag },
+    { href: "/admin/reports", label: "گزارش‌ها🟥", icon: BarChart3 },
+    { href: "/admin/orders", label: "سفارش‌ها🟥", icon: ShoppingBag },
     { href: "/admin/products", label: "محصولات", icon: Package },
     { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: LayoutGrid },
     { href: "/admin/users", label: "کاربران", icon: Users },

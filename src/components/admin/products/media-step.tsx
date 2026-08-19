@@ -89,7 +89,7 @@ export function MediaStep({
                 />
             </FormField>
 
-            <FormField label="ویدیو" hint="اختیاری، حداکثر ۳۰ ثانیه">
+            {/* <FormField label="ویدیو" hint="اختیاری، حداکثر ۳۰ ثانیه">
                 <input
                     ref={videoInputRef}
                     type="file"
@@ -133,7 +133,7 @@ export function MediaStep({
                         )}
                     </button>
                 )}
-            </FormField>
+            </FormField> */}
         </div>
     );
 }

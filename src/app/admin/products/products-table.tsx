@@ -106,7 +106,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   adminListProductsAction,
@@ -121,15 +121,24 @@ import { ProductsList } from "@/components/admin/products/products-list";
 export function AdminProductsTable() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["admin-products", page, search],
+    queryKey: ["admin-products", page, debouncedSearch],
     queryFn: async () => {
       const result = await adminListProductsAction({
         page,
         pageSize: 20,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
       });
       if (!result.success) throw new Error(result.error);
       return result.data;

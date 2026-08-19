@@ -1,6 +1,13 @@
 "use client";
 
 import { FormField } from "./form-field";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 
 type FlatCategory = { id: string; label: string };
@@ -44,7 +51,7 @@ export function BasicInfoStep({
             </FormField>
 
             <FormField label="دسته‌بندی">
-                <div className="overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                {/* <div className="overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
                     <select
                         value={categoryId}
                         onChange={(e) => onCategoryChange(e.target.value)}
@@ -57,7 +64,34 @@ export function BasicInfoStep({
                             </option>
                         ))}
                     </select>
+                </div> */}
+
+                <div className="overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+                    <Select
+                        value={categoryId || "none"}
+                        onValueChange={(value) =>
+                            onCategoryChange(value === "none" ? "" : value)
+                        }
+                    >
+                        <SelectTrigger
+                            dir="rtl"
+                            className="h-auto w-full border-0 bg-transparent px-3.5 py-3 text-[14px] text-[#1C1C1E] shadow-none focus:ring-0"
+                        >
+                            <SelectValue placeholder="بدون دسته" />
+                        </SelectTrigger>
+
+                        <SelectContent dir="rtl">
+                            <SelectItem value="none">بدون دسته</SelectItem>
+
+                            {flatCategories.map((c) => (
+                                <SelectItem key={c.id} value={c.id}>
+                                    {c.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
+
             </FormField>
         </div>
     );

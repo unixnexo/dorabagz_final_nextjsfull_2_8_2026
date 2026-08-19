@@ -36,7 +36,7 @@ export function AdminNavSheet() {
             >
                 <SheetHeader className="px-6 pb-2 pt-8 text-right">
                     <SheetTitle className="absolute right-4 top-4 text-right text-[22px] font-bold text-[#1C1C1E]">
-                        پنل مدیریت
+                        پنل مدیریت درا بگز
                     </SheetTitle>
                 </SheetHeader>
 

@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
   const filename = `${randomUUID()}.webp`;
   const compressed = await sharp(buffer)
     .resize({ width: 1080, withoutEnlargement: true }) // stories are portrait/full-screen, 1080 is a sane cap
+    .toColourspace("srgb")
     .webp({ quality: 82 })
     .toBuffer();
 

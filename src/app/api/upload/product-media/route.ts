@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
   // at quality 82 (standard "visually lossless" WebP setting).
   const filename = `${randomUUID()}.webp`;
   const compressed = await sharp(buffer)
+    .toColourspace("srgb")
     .resize({ width: 1600, withoutEnlargement: true }) // cap max dimension, keeps aspect ratio
     .webp({ quality: 82 })
     .toBuffer();
