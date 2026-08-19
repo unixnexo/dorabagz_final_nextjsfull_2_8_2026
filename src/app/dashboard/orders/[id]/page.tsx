@@ -11,7 +11,7 @@
  *   {
  *     id, status, receiverFullName, receiverPhone, province, city,
  *     fullAddress, postalCode, courierType,
- *     items: OrderItemDTO[],  // { id, variantId, productTitle, optionSummary, unitPrice, quantity }
+ *     items: OrderItemDTO[],  // { id, variantId, productTitle, optionSummary, unitPrice, quantity, productSlug, productImage }
  *     subtotal, discountAmount, totalAmount, couponCode,
  *     paymentStatus, paymentRefId, createdAt, updatedAt
  *   }
@@ -35,6 +35,7 @@
  * ============================================================================
  */
 import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { getMyOrderAction } from "@/server/order/actions";
 import { OrderActions } from "./order-actions";
@@ -98,7 +99,21 @@ export default async function OrderDetailPage({
         <tbody>
           {order.items.map((item) => (
             <tr key={item.id}>
-              <td>{item.productTitle}</td>
+              <td>
+                {item.productImage && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.productImage}
+                    alt=""
+                    style={{ width: 40, height: 40, objectFit: "cover", verticalAlign: "middle", marginLeft: 8 }}
+                  />
+                )}
+                {item.productSlug ? (
+                  <Link href={`/products/${item.productSlug}`}>{item.productTitle}</Link>
+                ) : (
+                  item.productTitle
+                )}
+              </td>
               <td>{item.optionSummary ?? "-"}</td>
               <td>{item.quantity}</td>
               <td>{(item.unitPrice * item.quantity).toLocaleString("fa-IR")} تومان</td>

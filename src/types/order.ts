@@ -9,6 +9,14 @@ export type OrderItemDTO = {
   optionSummary: string | null; // e.g. "Size: SM / Color: Red", snapshot
   unitPrice: number; // Toman, snapshot
   quantity: number;
+  /** Pulled live from the related product (NOT part of the order
+   *  snapshot) — so these reflect the product's CURRENT slug/image, not
+   *  what they were at order time. Null when the variant (and therefore
+   *  the product link) has since been deleted — variantId is nullable
+   *  for the same reason (schema uses onDelete: SetNull on OrderItem.variant
+   *  specifically so order history survives product deletion). */
+  productSlug: string | null;
+  productImage: string | null;
 };
 
 /** Row shape for order lists (user's /dashboard/orders, admin order list). */

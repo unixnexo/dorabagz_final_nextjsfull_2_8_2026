@@ -9,9 +9,9 @@ export function OrderAddressCard({ order }: { order: OrderDetailDTO }) {
                 <p className="text-[14px] font-bold text-[#1C1C1E]">
                     {order.receiverFullName}
                 </p>
-                <span dir="ltr" className="flex items-center gap-1 text-[12.5px] text-[#8E8E93]">
+                <span dir="ltr" className="flex items-baseline gap-1 text-[12.5px] text-[#8E8E93]">
+                    <Phone className="size-2.5" strokeWidth={2.25} />
                     {order.receiverPhone}
-                    <Phone className="h-3.5 w-3.5" strokeWidth={2.25} />
                 </span>
             </div>
 

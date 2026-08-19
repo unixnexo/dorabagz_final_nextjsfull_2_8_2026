@@ -1,14 +1,33 @@
-import type { Order, OrderItem, Payment, Coupon, ProductReview } from "@prisma/client";
+import type {
+  Order,
+  OrderItem,
+  Payment,
+  Coupon,
+  ProductReview,
+  ProductVariant,
+  Product,
+  ProductImage,
+} from "@prisma/client";
 import type { OrderListItemDTO, OrderDetailDTO, OrderItemDTO } from "@/types/order";
 
+// OrderItem.variant is nullable (schema uses onDelete: SetNull specifically
+// so order history survives product deletion) — so the product chain
+// hanging off it is nullable too.
+type FullOrderItem = OrderItem & {
+  variant: (ProductVariant & { product: Product & { images: ProductImage[] } }) | null;
+};
+
 type FullOrder = Order & {
-  items: OrderItem[];
+  items: FullOrderItem[];
   payment: Payment | null;
   coupon: Coupon | null;
   review: ProductReview | null;
 };
 
-function toOrderItemDTO(item: OrderItem): OrderItemDTO {
+function toOrderItemDTO(item: FullOrderItem): OrderItemDTO {
+  const product = item.variant?.product ?? null;
+  const mainImage = product?.images.find((img) => img.isMain) ?? product?.images[0] ?? null;
+
   return {
     id: item.id,
     variantId: item.variantId,
@@ -16,6 +35,8 @@ function toOrderItemDTO(item: OrderItem): OrderItemDTO {
     optionSummary: item.optionSummary,
     unitPrice: item.unitPrice,
     quantity: item.quantity,
+    productSlug: product?.slug ?? null,
+    productImage: mainImage?.url ?? null,
   };
 }
 
@@ -55,9 +76,13 @@ export function toOrderDetailDTO(order: FullOrder): OrderDetailDTO {
   };
 }
 
-/** Standard include clause used everywhere we need a full order. */
+/** Standard include clause used everywhere we need a full order. `items`
+ *  now pulls each item's variant -> product -> images chain (nullable
+ *  throughout, since a variant/product can be deleted after the order
+ *  was placed) so the mapper can attach live productSlug/productImage
+ *  without a second query. */
 export const fullOrderInclude = {
-  items: true,
+  items: { include: { variant: { include: { product: { include: { images: true } } } } } },
   payment: true,
   coupon: true,
   review: true,
