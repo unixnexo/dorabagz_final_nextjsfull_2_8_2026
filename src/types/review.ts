@@ -50,4 +50,14 @@ export type SubmitSiteSatisfactionInput = {
   text?: string;
 };
 
+/** Admin's read-only view of a site-satisfaction submission. Never shown
+ *  publicly — admin-only visibility, per spec. */
+export type SiteSatisfactionRatingDTO = {
+  id: string;
+  rating: number; // 1-5
+  text: string | null;
+  phoneNumber: string; // full number, admin-only view
+  createdAt: string;
+};
+
 export type PopupType = "ORDER_REVIEW_PROMPT" | "SITE_SATISFACTION";
