@@ -140,11 +140,15 @@
 
 
 
+
+
+
+
 "use client";
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { ImageOff, X } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -152,6 +156,7 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import { adminListProductsAction } from "@/server/product/actions";
+import { PaginationControl } from "@/components/admin/orders/pagination-control";
 
 export function StoryProductPicker({
     selectedIds,
@@ -161,28 +166,41 @@ export function StoryProductPicker({
     onChange: (ids: string[]) => void;
 }) {
     const [pickerOpen, setPickerOpen] = useState(false);
+    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
 
-    const { data: products, isLoading, isError } = useQuery({
-        queryKey: ["admin-products-for-story"],
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["admin-products-for-story", page, search],
         queryFn: async () => {
-            const result = await adminListProductsAction({ page: 1, pageSize: 200 });
+            const result = await adminListProductsAction({
+                page,
+                pageSize: 20,
+                search: search || undefined,
+            });
             if (!result.success) throw new Error(result.error);
-            return result.data.items;
+            return result.data;
         },
-        enabled: pickerOpen, // only fetch once the picker is actually opened
+        enabled: pickerOpen,
     });
 
-    const selectedProducts = useMemo(
-        () => (products ?? []).filter((p) => selectedIds.includes(p.id)),
-        [products, selectedIds]
-    );
+    const products = data?.items;
 
-    const filtered = useMemo(() => {
-        if (!products) return [];
-        if (!search.trim()) return products;
-        return products.filter((p) => p.title.includes(search.trim()));
-    }, [products, search]);
+    // Selected chips need product data even for items not on the current
+    // page/search — keep a running cache of everything we've seen.
+    const [seen, setSeen] = useState<Map<string, { id: string; title: string }>>(new Map());
+    useMemo(() => {
+        if (!products) return;
+        setSeen((prev) => {
+            const next = new Map(prev);
+            products.forEach((p) => next.set(p.id, { id: p.id, title: p.title }));
+            return next;
+        });
+    }, [products]);
+
+    const selectedProducts = useMemo(
+        () => selectedIds.map((id) => seen.get(id)).filter((p): p is { id: string; title: string } => !!p),
+        [selectedIds, seen]
+    );
 
     function toggle(id: string) {
         onChange(selectedIds.includes(id) ? selectedIds.filter((i) => i !== id) : [...selectedIds, id]);
@@ -237,7 +255,10 @@ export function StoryProductPicker({
 
                     <input
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setPage(1);
+                        }}
                         placeholder="جستجوی محصول..."
                         className="mb-3 w-full rounded-2xl bg-black/[0.04] px-3.5 py-2.5 text-[13px] text-[#1C1C1E] outline-none placeholder:text-[#C7C7CC]"
                     />
@@ -246,7 +267,7 @@ export function StoryProductPicker({
                         {isLoading && (
                             <div className="space-y-1.5">
                                 {[0, 1, 2, 3].map((i) => (
-                                    <div key={i} className="h-[42px] animate-pulse rounded-2xl bg-black/[0.04]" />
+                                    <div key={i} className="h-[58px] animate-pulse rounded-2xl bg-black/[0.04]" />
                                 ))}
                             </div>
                         )}
@@ -257,30 +278,58 @@ export function StoryProductPicker({
                             </p>
                         )}
 
-                        {!isLoading && !isError && filtered.map((p) => {
+                        {!isLoading && !isError && products?.map((p) => {
                             const isSelected = selectedIds.includes(p.id);
+                            const priceLabel =
+                                p.minPrice === p.maxPrice
+                                    ? `${p.minPrice.toLocaleString("fa-IR")} تومان`
+                                    : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومان`;
+
                             return (
                                 <button
                                     key={p.id}
                                     type="button"
                                     onClick={() => toggle(p.id)}
                                     className={
-                                        "flex w-full items-center justify-between gap-2 rounded-2xl px-3.5 py-2.5 text-right text-[13px] " +
+                                        "flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2 text-right " +
                                         (isSelected ? "bg-black text-white" : "bg-black/[0.04] text-[#1C1C1E]")
                                     }
                                 >
-                                    <span className="truncate">{p.title}</span>
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black/[0.06]">
+                                        {p.mainImageUrl ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src={p.mainImageUrl} alt="" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <ImageOff className="h-4 w-4 text-[#C7C7CC]" strokeWidth={2} />
+                                        )}
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-[13px] font-medium">{p.title}</p>
+                                        <p className={"mt-0.5 text-[11px] tabular-nums " + (isSelected ? "text-white/70" : "text-[#8E8E93]")}>
+                                            {priceLabel}
+                                        </p>
+                                    </div>
+
                                     {isSelected && <span className="shrink-0 text-[11px]">انتخاب شد</span>}
                                 </button>
                             );
                         })}
 
-                        {!isLoading && !isError && products && filtered.length === 0 && (
+                        {!isLoading && !isError && products && products.length === 0 && (
                             <p className="py-6 text-center text-[12.5px] text-[#8E8E93]">
                                 محصولی پیدا نشد
                             </p>
                         )}
                     </div>
+
+                    {data && (
+                        <PaginationControl
+                            page={data.page}
+                            totalPages={data.totalPages}
+                            onPageChange={setPage}
+                        />
+                    )}
 
                     <button
                         type="button"
