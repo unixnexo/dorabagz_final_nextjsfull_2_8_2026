@@ -98,7 +98,7 @@
 
 
 import Link from "next/link";
-import { ImageOff, ChevronLeft, RotateCcw, Trash2 } from "lucide-react";
+import { ImageOff, ChevronLeft, RotateCcw, Trash2, Pencil } from "lucide-react";
 import type { ProductListItemDTO } from "@/types/product";
 
 export function ProductListCard({
@@ -168,6 +168,15 @@ export function ProductListCard({
 
                 <ChevronLeft className="h-4 w-4 shrink-0 text-[#C7C7CC]" strokeWidth={2.25} />
             </Link>
+
+            <Link
+                href={`/admin/products/${product.id}/edit`}
+                aria-label="ویرایش"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/[0.05] active:bg-black/[0.08]"
+            >
+                <Pencil className="h-3.5 w-3.5 text-[#1C1C1E]" strokeWidth={2.25} />
+            </Link>
+
 
             <button
                 type="button"
