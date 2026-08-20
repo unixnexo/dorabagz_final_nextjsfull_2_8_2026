@@ -121,7 +121,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -154,6 +154,7 @@ import { cn } from "@/lib/utils";
 export function AdminUsersTable() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const [role, setRole] = useState("");
     const [activeFilter, setActiveFilter] = useState<
         "all" | "active" | "inactive"
@@ -161,6 +162,15 @@ export function AdminUsersTable() {
 
     const [actionError, setActionError] = useState<string | null>(null);
     const [actionUserId, setActionUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [search]);
+
 
     const queryClient = useQueryClient();
 
@@ -170,12 +180,12 @@ export function AdminUsersTable() {
             : activeFilter === "active";
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["admin-users", page, search, role, activeFilter],
+        queryKey: ["admin-users", page, debouncedSearch, role, activeFilter],
         queryFn: async () => {
             const result = await listUsersAction({
                 page,
                 pageSize: 20,
-                search: search || undefined,
+                search: debouncedSearch || undefined,
                 role: role || undefined,
                 isActive,
             });

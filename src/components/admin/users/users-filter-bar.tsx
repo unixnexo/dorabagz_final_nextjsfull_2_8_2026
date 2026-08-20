@@ -16,7 +16,7 @@ export function UsersFilterBar({
     onActiveFilterChange: (value: ActiveFilter) => void;
 }) {
     return (
-        <div className="flex gap-2 overflow-x-auto pb-0.5">
+        <div className="flex gap-2 overflow-x-auto pb-0.5 scrollbar-none">
             <FilterPill
                 active={role === ""}
                 label="همه نقش‌ها"

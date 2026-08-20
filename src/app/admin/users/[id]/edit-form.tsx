@@ -139,12 +139,21 @@ export function AdminEditUserForm({
     setError(null);
     setIsSubmitting(true);
 
+    // const result = await adminUpdateUserAction({
+    //   userId: user.id,
+    //   phoneNumber,
+    //   fullName,
+    //   nationalCode,
+    //   email,
+    //   isActive,
+    // });
+
     const result = await adminUpdateUserAction({
       userId: user.id,
       phoneNumber,
       fullName,
-      nationalCode,
-      email,
+      nationalCode: nationalCode.trim() || undefined,
+      email: email.trim() || undefined,
       isActive,
     });
 
@@ -167,7 +176,6 @@ export function AdminEditUserForm({
           icon={Phone}
           value={phoneNumber}
           onChange={setPhoneNumber}
-          dir="ltr"
           inputMode="tel"
           placeholder="09123456789"
         />
@@ -187,7 +195,6 @@ export function AdminEditUserForm({
           icon={ShieldCheck}
           value={nationalCode}
           onChange={setNationalCode}
-          dir="ltr"
           inputMode="numeric"
           placeholder="0012345678"
         />
@@ -198,7 +205,6 @@ export function AdminEditUserForm({
           icon={Mail}
           value={email}
           onChange={setEmail}
-          dir="ltr"
           inputMode="email"
           placeholder="example@email.com"
         />
