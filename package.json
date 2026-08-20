@@ -42,11 +42,13 @@
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-hot-toast": "^2.6.0",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
     "tailwind-merge": "^3.6.0",
     "vaul": "^1.1.2",
     "web-push": "^3.6.7",
+    "yet-another-react-lightbox": "^3.32.2",
     "zod": "^3.24.1",
     "zustand": "^5.0.2"
   },
