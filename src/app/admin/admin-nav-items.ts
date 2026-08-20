@@ -23,7 +23,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     { href: "/admin/reports", label: "گزارش‌ها🟥", icon: BarChart3 },
     { href: "/admin/orders", label: "سفارش‌ها🟥", icon: ShoppingBag },
     { href: "/admin/products", label: "محصولات🟥", icon: Package },
-    { href: "/admin/categories", label: "دسته‌بندی‌ها", icon: LayoutGrid },
+    { href: "/admin/categories", label: "دسته‌بندی‌ها🟥", icon: LayoutGrid },
     { href: "/admin/users", label: "کاربران", icon: Users },
     { href: "/admin/reviews", label: "نظرات", icon: Star },
     { href: "/admin/stories", label: "استوری‌ها", icon: BookOpen },

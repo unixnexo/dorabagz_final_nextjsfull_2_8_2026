@@ -36,7 +36,7 @@ export function CategoryFormSheet({
                 className="max-h-[88dvh] overflow-y-auto rounded-t-3xl border-0 bg-[#F2F2F7] px-4 pb-8"
             >
                 <SheetHeader className="pb-2 pt-5 text-right">
-                    <SheetTitle className="text-right text-[19px] font-bold text-[#1C1C1E]">
+                    <SheetTitle className="absolute top-4 right-4 text-right text-[19px] font-bold text-[#1C1C1E]">
                         {editing ? "ویرایش دسته" : "دسته جدید"}
                     </SheetTitle>
                 </SheetHeader>

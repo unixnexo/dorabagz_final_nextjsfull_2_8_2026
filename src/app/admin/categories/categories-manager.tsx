@@ -193,7 +193,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   listCategoriesAction,
@@ -209,6 +209,7 @@ import { DeleteCategoryDialog } from "@/components/admin/categories/delete-categ
 
 export function CategoriesManager() {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryDTO | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<CategoryDTO | null>(null);
@@ -216,13 +217,21 @@ export function CategoriesManager() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setDebouncedSearch(search);
+  }, 400);
+
+  return () => clearTimeout(timer);
+}, [search]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-categories", search],
+    queryKey: ["admin-categories", debouncedSearch],
     queryFn: async () => {
       const result = await listCategoriesAction({
         page: 1,
         pageSize: 100,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
       });
       if (!result.success) throw new Error(result.error);
       return result.data;
