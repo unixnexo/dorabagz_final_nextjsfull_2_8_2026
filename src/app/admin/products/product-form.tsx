@@ -379,6 +379,398 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+// import { useEffect, useMemo, useState } from "react";
+// import { useRouter } from "next/navigation";
+// import { useQuery } from "@tanstack/react-query";
+// import { createProductAction, updateProductAction } from "@/server/product/actions";
+// import { getCategoryTreeAction } from "@/server/category/actions";
+// import { uploadProductMedia } from "@/lib/upload-client";
+// import { generateVariantCombinations, combinationKey } from "./variant-utils";
+// import type { ProductDetailDTO } from "@/types/product";
+// import { FormStepIndicator } from "@/components/admin/products/form-step-indicator";
+// import { FormStepFooter } from "@/components/admin/products/form-step-footer";
+// import { BasicInfoStep } from "@/components/admin/products/basic-info-step";
+// import { MediaStep } from "@/components/admin/products/media-step";
+// import { SpecsStep } from "@/components/admin/products/specs-step";
+// import { OptionsStep } from "@/components/admin/products/options-step";
+// import { PricingStep } from "@/components/admin/products/pricing-step";
+// import { FORM_STEPS, ImageItem, OptionItem, SpecItem, VariantItem } from "@/components/admin/products/product-form-types";
+
+// export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
+//   const router = useRouter();
+
+//   const [stepIndex, setStepIndex] = useState(0);
+//   const [furthestReachedIndex, setFurthestReachedIndex] = useState(0);
+
+//   const [title, setTitle] = useState(existing?.title ?? "");
+//   const [description, setDescription] = useState(existing?.description ?? "");
+//   const [categoryId, setCategoryId] = useState(existing?.categoryId ?? "");
+//   const [videoUrl, setVideoUrl] = useState(existing?.videoUrl ?? "");
+//   const [images, setImages] = useState<ImageItem[]>(
+//     existing?.images.map((i) => ({ url: i.url, isMain: i.isMain, sortOrder: i.sortOrder })) ?? []
+//   );
+//   const [specs, setSpecs] = useState<SpecItem[]>(
+//     existing?.specifications.map((s) => ({ key: s.key, value: s.value, sortOrder: s.sortOrder })) ?? []
+//   );
+//   const [options, setOptions] = useState<OptionItem[]>(
+//     existing?.options.map((o) => ({ name: o.name, values: o.values.map((v) => v.value) })) ?? []
+//   );
+//   const [variants, setVariants] = useState<VariantItem[]>(
+//     existing?.variants.map((v) => ({ price: v.price, stock: v.stock, optionValues: v.optionValues })) ?? [
+//       { price: 0, stock: 0, optionValues: {} },
+//     ]
+//   );
+
+//   const [isUploadingImage, setIsUploadingImage] = useState(false);
+//   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   const { data: categories } = useQuery({
+//     queryKey: ["category-tree"],
+//     queryFn: async () => {
+//       const result = await getCategoryTreeAction();
+//       return result.success ? result.data : [];
+//     },
+//   });
+
+//   // Whenever options change, regenerate the variant list to match every
+//   // combination, but preserve price/stock for combinations that already
+//   // existed (matched by their option-value key) so editing one option
+//   // doesn't wipe prices the admin already entered.
+//   useEffect(() => {
+//     const combos = generateVariantCombinations(options);
+//     setVariants((prevVariants) => {
+//       const prevByKey = new Map(prevVariants.map((v) => [combinationKey(v.optionValues), v]));
+//       return combos.map((combo) => {
+//         const existingVariant = prevByKey.get(combinationKey(combo));
+//         return {
+//           price: existingVariant?.price ?? 0,
+//           stock: existingVariant?.stock ?? 0,
+//           optionValues: combo,
+//         };
+//       });
+//     });
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [JSON.stringify(options)]);
+
+//   // Options that currently have at least one non-empty value — this is
+//   // what a variant must supply one value for, and what the picker sheet
+//   // renders sections for. Options left blank by the admin (empty name or
+//   // no values yet) are ignored everywhere variants are concerned.
+//   const definedOptions = useMemo(
+//     () => options.filter((o) => o.name.trim() && o.values.some((v) => v.trim())),
+//     [options]
+//   );
+
+//   const existingVariantKeys = useMemo(
+//     () => new Set(variants.map((v) => combinationKey(v.optionValues))),
+//     [variants]
+//   );
+
+//   function addVariant(optionValues: Record<string, string>) {
+//     setVariants((prev) => [...prev, { price: 0, stock: 0, optionValues }]);
+//   }
+
+//   function removeVariant(index: number) {
+//     setVariants((prev) => prev.filter((_, i) => i !== index));
+//   }
+
+//   // If an option is renamed/removed after variants already reference it,
+//   // those variants would silently point at a stale option name. Strip any
+//   // variant option-values whose key no longer matches a defined option,
+//   // and drop variants that end up with zero option values as a result
+//   // (unless there are no defined options at all, i.e. a single-variant
+//   // product with no options).
+//   useEffect(() => {
+//     const definedNames = new Set(definedOptions.map((o) => o.name));
+//     setVariants((prev) => {
+//       if (definedNames.size === 0) return prev;
+//       return prev
+//         .map((v) => ({
+//           ...v,
+//           optionValues: Object.fromEntries(
+//             Object.entries(v.optionValues).filter(([k]) => definedNames.has(k))
+//           ),
+//         }))
+//         .filter((v) => Object.keys(v.optionValues).length > 0);
+//     });
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [definedOptions.map((o) => o.name).join("|")]);
+
+
+
+//   async function handleImageFilesSelected(files: File[]) {
+//     if (images.length + files.length > 6) {
+//       setError("حداکثر ۱ عکس اصلی + ۵ عکس اضافی مجاز است");
+//       return;
+//     }
+//     setIsUploadingImage(true);
+//     for (const file of files) {
+//       const result = await uploadProductMedia(file);
+//       if ("error" in result) {
+//         setError(result.error);
+//         continue;
+//       }
+//       setImages((prev) => [
+//         ...prev,
+//         { url: result.url, isMain: prev.length === 0, sortOrder: prev.length },
+//       ]);
+//     }
+//     setIsUploadingImage(false);
+//   }
+
+//   async function handleVideoFileSelected(file: File) {
+//     setIsUploadingVideo(true);
+//     const result = await uploadProductMedia(file);
+//     setIsUploadingVideo(false);
+//     if ("error" in result) {
+//       setError(result.error);
+//       return;
+//     }
+//     setVideoUrl(result.url);
+//   }
+
+//   function setMainImage(index: number) {
+//     setImages((prev) => prev.map((img, i) => ({ ...img, isMain: i === index })));
+//   }
+
+//   function removeImage(index: number) {
+//     setImages((prev) => prev.filter((_, i) => i !== index));
+//   }
+
+//   function addSpec() {
+//     setSpecs((prev) => [...prev, { key: "", value: "", sortOrder: prev.length }]);
+//   }
+//   function updateSpec(index: number, field: "key" | "value", value: string) {
+//     setSpecs((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)));
+//   }
+//   function removeSpec(index: number) {
+//     setSpecs((prev) => prev.filter((_, i) => i !== index));
+//   }
+
+//   function addOption() {
+//     setOptions((prev) => [...prev, { name: "", values: [""] }]);
+//   }
+//   function updateOptionName(index: number, name: string) {
+//     setOptions((prev) => prev.map((o, i) => (i === index ? { ...o, name } : o)));
+//   }
+//   function updateOptionValue(optIndex: number, valIndex: number, value: string) {
+//     setOptions((prev) =>
+//       prev.map((o, i) =>
+//         i === optIndex ? { ...o, values: o.values.map((v, j) => (j === valIndex ? value : v)) } : o
+//       )
+//     );
+//   }
+//   function addOptionValue(optIndex: number) {
+//     setOptions((prev) => prev.map((o, i) => (i === optIndex ? { ...o, values: [...o.values, ""] } : o)));
+//   }
+//   function removeOptionValue(optIndex: number, valIndex: number) {
+//     setOptions((prev) =>
+//       prev.map((o, i) =>
+//         i === optIndex ? { ...o, values: o.values.filter((_, j) => j !== valIndex) } : o
+//       )
+//     );
+//   }
+//   function removeOption(index: number) {
+//     setOptions((prev) => prev.filter((_, i) => i !== index));
+//   }
+
+//   function updateVariantField(index: number, field: "price" | "stock", value: number) {
+//     setVariants((prev) => prev.map((v, i) => (i === index ? { ...v, [field]: value } : v)));
+//   }
+
+//   const flatCategories = useMemo(() => {
+//     if (!categories) return [];
+//     const flat: { id: string; label: string }[] = [];
+//     for (const cat of categories) {
+//       flat.push({ id: cat.id, label: cat.title });
+//       for (const child of cat.children) {
+//         flat.push({ id: child.id, label: `— ${child.title}` });
+//       }
+//     }
+//     return flat;
+//   }, [categories]);
+
+//   // Per-step validation: what blocks moving forward from the current step.
+//   const currentStepKey = FORM_STEPS[stepIndex].key;
+//   const nextDisabled = useMemo(() => {
+//     if (currentStepKey === "basic") return title.trim().length === 0;
+//     // if (currentStepKey === "pricing") return variants.some((v) => v.price <= 0);
+//     if (currentStepKey === "pricing")
+//       return variants.length === 0 || variants.some((v) => v.price <= 0);
+//     return false;
+//   }, [currentStepKey, title, variants]);
+
+//   const isFirstStep = stepIndex === 0;
+//   const isLastStep = stepIndex === FORM_STEPS.length - 1;
+
+//   function goToStep(index: number) {
+//     if (index > furthestReachedIndex) return;
+//     setError(null);
+//     setStepIndex(index);
+//   }
+
+//   function handleBack() {
+//     if (isFirstStep) return;
+//     setError(null);
+//     setStepIndex((i) => i - 1);
+//   }
+
+//   async function handleNext() {
+//     if (nextDisabled) return;
+
+//     if (!isLastStep) {
+//       const next = stepIndex + 1;
+//       setStepIndex(next);
+//       setFurthestReachedIndex((f) => Math.max(f, next));
+//       setError(null);
+//       return;
+//     }
+
+//     await handleSubmit();
+//   }
+
+//   async function handleSubmit() {
+//     setError(null);
+//     setIsSubmitting(true);
+
+//     const payload = {
+//       title,
+//       description: description || undefined,
+//       categoryId: categoryId || null,
+//       videoUrl: videoUrl || null,
+//       images,
+//       specifications: specs,
+//       options,
+//       variants,
+//     };
+
+//     const result = existing
+//       ? await updateProductAction({ id: existing.id, ...payload })
+//       : await createProductAction(payload);
+
+//     setIsSubmitting(false);
+//     if (!result.success) {
+//       setError(result.error);
+//       return;
+//     }
+//     router.push("/admin/products");
+//     router.refresh();
+//   }
+
+//   return (
+//     <div className="pb-4">
+//       <FormStepIndicator
+//         currentIndex={stepIndex}
+//         furthestReachedIndex={furthestReachedIndex}
+//         onStepClick={goToStep}
+//       />
+
+//       {currentStepKey === "basic" && (
+//         <BasicInfoStep
+//           title={title}
+//           description={description}
+//           categoryId={categoryId}
+//           flatCategories={flatCategories}
+//           onTitleChange={setTitle}
+//           onDescriptionChange={setDescription}
+//           onCategoryChange={setCategoryId}
+//         />
+//       )}
+
+//       {currentStepKey === "media" && (
+//         <MediaStep
+//           images={images}
+//           videoUrl={videoUrl}
+//           isUploadingImage={isUploadingImage}
+//           isUploadingVideo={isUploadingVideo}
+//           onImageFilesSelected={handleImageFilesSelected}
+//           onSetMainImage={setMainImage}
+//           onRemoveImage={removeImage}
+//           onVideoFileSelected={handleVideoFileSelected}
+//           onRemoveVideo={() => setVideoUrl("")}
+//         />
+//       )}
+
+//       {currentStepKey === "specs" && (
+//         <SpecsStep
+//           specs={specs}
+//           onAdd={addSpec}
+//           onUpdate={updateSpec}
+//           onRemove={removeSpec}
+//         />
+//       )}
+
+//       {currentStepKey === "options" && (
+//         <OptionsStep
+//           options={options}
+//           onAddOption={addOption}
+//           onUpdateOptionName={updateOptionName}
+//           onUpdateOptionValue={updateOptionValue}
+//           onAddOptionValue={addOptionValue}
+//           onRemoveOptionValue={removeOptionValue}
+//           onRemoveOption={removeOption}
+//         />
+//       )}
+
+//       {/* {currentStepKey === "pricing" && (
+//         <PricingStep variants={variants} onFieldChange={updateVariantField} />
+//       )} */}
+
+//       {currentStepKey === "pricing" && (
+//         <PricingStep
+//           variants={variants}
+//           definedOptions={definedOptions}
+//           existingVariantKeys={existingVariantKeys}
+//           onFieldChange={updateVariantField}
+//           onAddVariant={addVariant}
+//           onRemoveVariant={removeVariant}
+//         />
+//       )}
+
+//       {error && (
+//         <p className="mt-4 rounded-2xl bg-[#FF3B30]/10 px-3.5 py-2.5 text-[12.5px] font-medium text-[#FF3B30]">
+//           {error}
+//         </p>
+//       )}
+
+//       <FormStepFooter
+//         isFirstStep={isFirstStep}
+//         isLastStep={isLastStep}
+//         isSubmitting={isSubmitting}
+//         nextDisabled={nextDisabled}
+//         onBack={handleBack}
+//         onNext={handleNext}
+//       />
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -387,7 +779,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createProductAction, updateProductAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import { uploadProductMedia } from "@/lib/upload-client";
-import { generateVariantCombinations, combinationKey } from "./variant-utils";
+import { combinationKey } from "./variant-utils";
 import type { ProductDetailDTO } from "@/types/product";
 import { FormStepIndicator } from "@/components/admin/products/form-step-indicator";
 import { FormStepFooter } from "@/components/admin/products/form-step-footer";
@@ -417,10 +809,11 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
   const [options, setOptions] = useState<OptionItem[]>(
     existing?.options.map((o) => ({ name: o.name, values: o.values.map((v) => v.value) })) ?? []
   );
+  // Starts empty on purpose — variants are only ever added manually via
+  // the "add combination" sheet (or the no-options "add price" button in
+  // PricingStep). Nothing auto-generates them anymore.
   const [variants, setVariants] = useState<VariantItem[]>(
-    existing?.variants.map((v) => ({ price: v.price, stock: v.stock, optionValues: v.optionValues })) ?? [
-      { price: 0, stock: 0, optionValues: {} },
-    ]
+    existing?.variants.map((v) => ({ price: v.price, stock: v.stock, optionValues: v.optionValues })) ?? []
   );
 
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -436,25 +829,49 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
     },
   });
 
-  // Whenever options change, regenerate the variant list to match every
-  // combination, but preserve price/stock for combinations that already
-  // existed (matched by their option-value key) so editing one option
-  // doesn't wipe prices the admin already entered.
+  // Options that currently have at least one non-empty value — this is
+  // what a variant must supply one value for, and what the picker sheet
+  // renders sections for. Options left blank by the admin (empty name or
+  // no values yet) are ignored everywhere variants are concerned.
+  const definedOptions = useMemo(
+    () => options.filter((o) => o.name.trim() && o.values.some((v) => v.trim())),
+    [options]
+  );
+
+  const existingVariantKeys = useMemo(
+    () => new Set(variants.map((v) => combinationKey(v.optionValues))),
+    [variants]
+  );
+
+  function addVariant(optionValues: Record<string, string>) {
+    setVariants((prev) => [...prev, { price: 0, stock: 0, optionValues }]);
+  }
+
+  function removeVariant(index: number) {
+    setVariants((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  // If an option is renamed/removed after variants already reference it,
+  // those variants would silently point at a stale option name. Strip any
+  // variant option-values whose key no longer matches a defined option,
+  // and drop variants that end up with zero option values as a result
+  // (unless there are no defined options at all, i.e. a single-variant
+  // product with no options).
   useEffect(() => {
-    const combos = generateVariantCombinations(options);
-    setVariants((prevVariants) => {
-      const prevByKey = new Map(prevVariants.map((v) => [combinationKey(v.optionValues), v]));
-      return combos.map((combo) => {
-        const existingVariant = prevByKey.get(combinationKey(combo));
-        return {
-          price: existingVariant?.price ?? 0,
-          stock: existingVariant?.stock ?? 0,
-          optionValues: combo,
-        };
-      });
+    const definedNames = new Set(definedOptions.map((o) => o.name));
+    setVariants((prev) => {
+      if (definedNames.size === 0) return prev;
+      return prev
+        .map((v) => ({
+          ...v,
+          optionValues: Object.fromEntries(
+            Object.entries(v.optionValues).filter(([k]) => definedNames.has(k))
+          ),
+        }))
+        .filter((v) => Object.keys(v.optionValues).length > 0);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(options)]);
+  }, [definedOptions.map((o) => o.name).join("|")]);
 
   async function handleImageFilesSelected(files: File[]) {
     if (images.length + files.length > 6) {
@@ -552,7 +969,8 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
   const currentStepKey = FORM_STEPS[stepIndex].key;
   const nextDisabled = useMemo(() => {
     if (currentStepKey === "basic") return title.trim().length === 0;
-    if (currentStepKey === "pricing") return variants.some((v) => v.price <= 0);
+    if (currentStepKey === "pricing")
+      return variants.length === 0 || variants.some((v) => v.price <= 0);
     return false;
   }, [currentStepKey, title, variants]);
 
@@ -669,7 +1087,14 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
       )}
 
       {currentStepKey === "pricing" && (
-        <PricingStep variants={variants} onFieldChange={updateVariantField} />
+        <PricingStep
+          variants={variants}
+          definedOptions={definedOptions}
+          existingVariantKeys={existingVariantKeys}
+          onFieldChange={updateVariantField}
+          onAddVariant={addVariant}
+          onRemoveVariant={removeVariant}
+        />
       )}
 
       {error && (
@@ -689,4 +1114,3 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
     </div>
   );
 }
-

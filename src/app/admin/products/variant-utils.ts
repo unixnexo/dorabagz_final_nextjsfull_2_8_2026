@@ -76,9 +76,21 @@ export function generateVariantCombinations(
   return combinations;
 }
 
-/** A stable string key for a combination, used to match old variant data
- *  (price/stock the admin already entered) against newly regenerated
- *  combinations, so editing one option doesn't wipe every price/stock. */
+// /** A stable string key for a combination, used to match old variant data
+//  *  (price/stock the admin already entered) against newly regenerated
+//  *  combinations, so editing one option doesn't wipe every price/stock. */
+// export function combinationKey(combo: Record<string, string>): string {
+//   return Object.entries(combo)
+//     .sort(([a], [b]) => a.localeCompare(b))
+//     .map(([k, v]) => `${k}:${v}`)
+//     .join("|");
+// }
+
+
+/** A stable string key for a combination, used to detect duplicate
+ *  variants (e.g. two variants both being "Color: Black / Size: SM")
+ *  and to match old variant data (price/stock the admin already
+ *  entered) if a variant's option values get edited elsewhere. */
 export function combinationKey(combo: Record<string, string>): string {
   return Object.entries(combo)
     .sort(([a], [b]) => a.localeCompare(b))
