@@ -29,7 +29,7 @@
 //                 <div className="mb-5 flex items-center gap-3">
 //                     <Image
 //                         src="/site/logo.jpg"
-//                         alt="دورا بگز"
+//                         alt="درا بگز"
 //                         width={100}
 //                         height={100}
 //                         priority
@@ -38,7 +38,7 @@
 
 //                     <div className="min-w-0 text-right">
 //                         <h2 className="font-bold text-[#171717]">
-//                             به دورا بگز خوش اومدی
+//                             به درا بگز خوش اومدی
 //                         </h2>
 
 //                         <p className="mt-1 text-sm leading-5 text-black/45">
@@ -205,7 +205,7 @@ export default function LoginDrawer() {
                 <div className="mb-5 flex items-center gap-3">
                     <Image
                         src="/site/logo.jpg"
-                        alt="دورا بگز"
+                        alt="درا بگز"
                         width={100}
                         height={100}
                         priority
@@ -214,7 +214,7 @@ export default function LoginDrawer() {
 
                     <div className="min-w-0 text-right">
                         <h2 className="font-bold text-[#171717]">
-                            به دورا بگز خوش اومدی
+                            به درا بگز خوش اومدی
                         </h2>
 
                         <p className="mt-1 text-sm leading-5 text-black/45">

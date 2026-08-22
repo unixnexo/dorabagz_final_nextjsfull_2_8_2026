@@ -41,6 +41,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(iranSans.variable, "bg-background")}
     >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="DoraBagz" />
+      </head>
       <body className="font-sans">
         <div className="mx-auto max-w-[500px] w-full" data-vaul-drawer-wrapper>
           <QueryProvider>
