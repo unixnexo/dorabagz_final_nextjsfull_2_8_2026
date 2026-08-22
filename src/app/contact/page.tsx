@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import BackButton from "@/components/BackButton";
 
 type ContactItemProps = {
     icon: React.ReactNode;
@@ -144,6 +145,7 @@ export default function ContactPage() {
             dir="rtl"
             className="min-h-screen bg-muted/30 px-4 py-8 sm:px-6 sm:py-12"
         >
+            <BackButton />
             <div className="mx-auto w-full max-w-2xl">
                 {/* Header */}
                 <header className="mb-8 text-center">
@@ -183,23 +185,23 @@ export default function ContactPage() {
                         <ContactItem
                             icon={<Phone className="size-5" />}
                             label="شماره تماس"
-                            value="۰۹۱۲ ۱۲۳ ۴۵۶۷"
-                            copyValue="09121234567"
-                            href="tel:+989121234567"
+                            value="0917 454 1027"
+                            copyValue="09174541027"
+                            href="tel:+989174541027"
                         />
 
                         <ContactItem
                             icon={<Phone className="size-5" />}
                             label="اینستاگرام"
-                            value="@shopname"
-                            href="https://instagram.com/shopname"
+                            value="@dora.bagz"
+                            href="https://instagram.com/dora.bagz"
                         />
 
                         <ContactItem
                             icon={<Send className="size-5" />}
                             label="تلگرام"
-                            value="@shopname"
-                            href="https://t.me/shopname"
+                            value="@dorabagz"
+                            href="https://t.me/dorabagz"
                         />
                     </ContactSection>
 
@@ -212,32 +214,32 @@ export default function ContactPage() {
                         <ContactItem
                             icon={<Phone className="size-5" />}
                             label="شماره تماس"
-                            value="۰۹۱۲ ۹۸۷ ۶۵۴۳"
-                            copyValue="09129876543"
-                            href="tel:+989129876543"
+                            value="0938 834 2027"
+                            copyValue="09388342027"
+                            href="tel:+989388342027"
                         />
 
                         <ContactItem
                             icon={<Send className="size-5" />}
                             label="تلگرام"
-                            value="@supportname"
-                            href="https://t.me/supportname"
+                            value="@unixnexo"
+                            href="https://t.me/unixnexo"
                         />
 
                         <ContactItem
                             icon={<Phone className="size-5" />}
                             label="گیت‌هاب"
-                            value="github.com/username"
-                            href="https://github.com/username"
+                            value="github.com/unixnexo"
+                            href="https://github.com/unixnexo"
                         />
 
-                        <ContactItem
+                        {/* <ContactItem
                             icon={<Mail className="size-5" />}
                             label="ایمیل"
                             value="hello@example.com"
                             copyValue="hello@example.com"
                             href="mailto:hello@example.com"
-                        />
+                        /> */}
                     </ContactSection>
                 </div>
 
