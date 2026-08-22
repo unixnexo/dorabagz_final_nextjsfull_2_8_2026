@@ -144,6 +144,25 @@ export async function updateCategoryAction(
 // ---------------------------------------------------------------------------
 // Admin: soft delete
 // ---------------------------------------------------------------------------
+// export async function deleteCategoryAction(
+//   categoryId: string
+// ): Promise<ActionResult<{ deleted: true }>> {
+//   const admin = await requireAdmin();
+//   if (!admin) return { success: false, error: "دسترسی غیرمجاز." };
+
+//   const children = await prisma.category.findFirst({
+//     where: { parentId: categoryId, isDeleted: false },
+//   });
+//   if (children) {
+//     return { success: false, error: "ابتدا زیردسته‌های این دسته را حذف کنید." };
+//   }
+
+//   await prisma.category.update({ where: { id: categoryId }, data: { isDeleted: true } });
+//   return { success: true, data: { deleted: true } };
+// }
+
+
+
 export async function deleteCategoryAction(
   categoryId: string
 ): Promise<ActionResult<{ deleted: true }>> {
@@ -155,6 +174,13 @@ export async function deleteCategoryAction(
   });
   if (children) {
     return { success: false, error: "ابتدا زیردسته‌های این دسته را حذف کنید." };
+  }
+
+  const linkedProduct = await prisma.product.findFirst({
+    where: { categoryId, isDeleted: false },
+  });
+  if (linkedProduct) {
+    return { success: false, error: "این دسته دارای محصول است و قابل حذف نیست. ابتدا محصولات را از این دسته خارج کنید یا حذف کنید." };
   }
 
   await prisma.category.update({ where: { id: categoryId }, data: { isDeleted: true } });
