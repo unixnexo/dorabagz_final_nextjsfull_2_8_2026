@@ -15,6 +15,7 @@ import { uploadProductMedia } from "@/lib/upload-client";
 import type { CategoryDTO } from "@/types/category";
 import { CategoryImagePicker } from "./category-image-picker";
 import { ParentCategoryPicker } from "./parent-category-picker";
+import toast from "react-hot-toast";
 
 export function CategoryFormSheet({
     open,
@@ -69,24 +70,53 @@ function CategoryFormBody({
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // async function handleFileSelected(file: File) {
+    //     setIsUploading(true);
+    //     setError(null);
+    //     const result = await uploadProductMedia(file);
+    //     setIsUploading(false);
+    //     if ("error" in result) {
+    //         setError(result.error);
+    //         return;
+    //     }
+    //     setImageUrl(result.url);
+    // }
+
     async function handleFileSelected(file: File) {
         setIsUploading(true);
         setError(null);
-        const result = await uploadProductMedia(file);
-        setIsUploading(false);
-        if ("error" in result) {
-            setError(result.error);
-            return;
+
+        try {
+            const result = await uploadProductMedia(file);
+
+            if ("error" in result) {
+                setError(result.error);
+                toast.error(result.error || "آپلود عکس انجام نشد.");
+                return;
+            }
+
+            setImageUrl(result.url);
+        } catch {
+            setError("آپلود عکس با مشکل روبه‌رو شد.");
+            toast.error("آپلود عکس با مشکل روبه‌رو شد.");
+        } finally {
+            setIsUploading(false);
         }
-        setImageUrl(result.url);
     }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError(null);
 
+        // if (!title.trim()) {
+        //     setError("عنوان دسته را وارد کنید");
+        //     return;
+        // }
+
         if (!title.trim()) {
-            setError("عنوان دسته را وارد کنید");
+            const message = "عنوان دسته رو وارد کن.";
+            setError(message);
+            toast.error(message);
             return;
         }
 
@@ -101,11 +131,26 @@ function CategoryFormBody({
             : await createCategoryAction(payload);
         setIsSaving(false);
 
+        // if (!result.success) {
+        //     setError(result.error);
+        //     return;
+        // }
+        // onSaved();
+
         if (!result.success) {
             setError(result.error);
+            toast.error(result.error || "ذخیره دسته‌بندی انجام نشد.");
             return;
         }
+
+        toast.success(
+            editing
+                ? "دسته‌بندی با موفقیت ویرایش شد."
+                : "دسته‌بندی با موفقیت ساخته شد."
+        );
+
         onSaved();
+
     }
 
     return (

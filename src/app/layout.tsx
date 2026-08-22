@@ -7,6 +7,7 @@ import { ServiceWorkerRegistration } from "@/components/service-worker-registrat
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const iranSans = localFont({
   src: "../fonts/iransans.woff2",
@@ -43,6 +44,16 @@ export default function RootLayout({
       <body className="font-sans">
         <div className="mx-auto max-w-[500px] w-full" data-vaul-drawer-wrapper>
           <QueryProvider>
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  fontFamily: "inherit",
+                  direction: "rtl",
+                },
+              }}
+            />
             <ServiceWorkerRegistration />
             <ImpersonationBanner />
             {children}

@@ -117,6 +117,7 @@ import { PaginationControl } from "@/components/admin/orders/pagination-control"
 import { AdminSearchField } from "@/components/admin/orders/admin-search-field";
 import { AdminFabLink } from "@/components/admin/products/admin-fab-link";
 import { ProductsList } from "@/components/admin/products/products-list";
+import toast from "react-hot-toast";
 
 export function AdminProductsTable() {
   const [page, setPage] = useState(1);
@@ -132,7 +133,13 @@ export function AdminProductsTable() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const { data, isLoading, isError } = useQuery({
+  // const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useQuery({
     queryKey: ["admin-products", page, debouncedSearch],
     queryFn: async () => {
       const result = await adminListProductsAction({
@@ -145,10 +152,41 @@ export function AdminProductsTable() {
     },
   });
 
+  // async function handleToggleDeleted(id: string, currentlyDeleted: boolean) {
+  //   await setProductDeletedAction(id, !currentlyDeleted);
+  //   queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+  // }
+
   async function handleToggleDeleted(id: string, currentlyDeleted: boolean) {
-    await setProductDeletedAction(id, !currentlyDeleted);
-    queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+    try {
+      const result = await setProductDeletedAction(id, !currentlyDeleted);
+
+      if (!result.success) {
+        toast.error(result.error || "تغییر وضعیت محصول انجام نشد.");
+        return;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: ["admin-products"],
+      });
+
+      toast.success(
+        currentlyDeleted
+          ? "محصول با موفقیت فعال شد."
+          : "محصول با موفقیت حذف شد."
+      );
+    } catch {
+      toast.error("تغییر وضعیت محصول با مشکل روبه‌رو شد.");
+    }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(
+        queryError?.message || "گرفتن محصولات با مشکل روبه‌رو شد."
+      );
+    }
+  }, [isError, queryError]);
 
   return (
     <div className="pb-4">

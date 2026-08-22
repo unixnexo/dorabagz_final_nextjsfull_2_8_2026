@@ -789,6 +789,7 @@ import { SpecsStep } from "@/components/admin/products/specs-step";
 import { OptionsStep } from "@/components/admin/products/options-step";
 import { PricingStep } from "@/components/admin/products/pricing-step";
 import { FORM_STEPS, ImageItem, OptionItem, SpecItem, VariantItem } from "@/components/admin/products/product-form-types";
+import toast from "react-hot-toast";
 
 export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
   const router = useRouter();
@@ -821,13 +822,36 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: categories } = useQuery({
+  // const { data: categories } = useQuery({
+  const {
+    data: categories,
+    isError: categoriesError,
+    error: categoriesQueryError,
+  } = useQuery({
     queryKey: ["category-tree"],
+    // queryFn: async () => {
+    //   const result = await getCategoryTreeAction();
+    //   return result.success ? result.data : [];
+    // },
     queryFn: async () => {
       const result = await getCategoryTreeAction();
-      return result.success ? result.data : [];
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      return result.data;
     },
   });
+
+  useEffect(() => {
+    if (categoriesError) {
+      toast.error(
+        categoriesQueryError?.message ||
+        "گرفتن دسته‌بندی‌ها با مشکل روبه‌رو شد."
+      );
+    }
+  }, [categoriesError, categoriesQueryError]);
 
   // Options that currently have at least one non-empty value — this is
   // what a variant must supply one value for, and what the picker sheet
@@ -873,35 +897,94 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [definedOptions.map((o) => o.name).join("|")]);
 
+  // async function handleImageFilesSelected(files: File[]) {
+  //   if (images.length + files.length > 6) {
+  //     setError("حداکثر ۱ عکس اصلی + ۵ عکس اضافی مجاز است");
+  //     return;
+  //   }
+  //   setIsUploadingImage(true);
+  //   for (const file of files) {
+  //     const result = await uploadProductMedia(file);
+  //     if ("error" in result) {
+  //       setError(result.error);
+  //       continue;
+  //     }
+  //     setImages((prev) => [
+  //       ...prev,
+  //       { url: result.url, isMain: prev.length === 0, sortOrder: prev.length },
+  //     ]);
+  //   }
+  //   setIsUploadingImage(false);
+  // }
+
   async function handleImageFilesSelected(files: File[]) {
     if (images.length + files.length > 6) {
-      setError("حداکثر ۱ عکس اصلی + ۵ عکس اضافی مجاز است");
+      const message = "حداکثر ۱ عکس اصلی و ۵ عکس اضافی می‌تونی اضافه کنی.";
+      setError(message);
+      toast.error(message);
       return;
     }
+
     setIsUploadingImage(true);
-    for (const file of files) {
-      const result = await uploadProductMedia(file);
-      if ("error" in result) {
-        setError(result.error);
-        continue;
+
+    try {
+      for (const file of files) {
+        const result = await uploadProductMedia(file);
+
+        if ("error" in result) {
+          setError(result.error);
+          toast.error(result.error || "آپلود عکس انجام نشد.");
+          continue;
+        }
+
+        setImages((prev) => [
+          ...prev,
+          {
+            url: result.url,
+            isMain: prev.length === 0,
+            sortOrder: prev.length,
+          },
+        ]);
       }
-      setImages((prev) => [
-        ...prev,
-        { url: result.url, isMain: prev.length === 0, sortOrder: prev.length },
-      ]);
+    } catch {
+      setError("آپلود عکس با مشکل روبه‌رو شد.");
+      toast.error("آپلود عکس با مشکل روبه‌رو شد.");
+    } finally {
+      setIsUploadingImage(false);
     }
-    setIsUploadingImage(false);
   }
+
+  // async function handleVideoFileSelected(file: File) {
+  //   setIsUploadingVideo(true);
+  //   const result = await uploadProductMedia(file);
+  //   setIsUploadingVideo(false);
+  //   if ("error" in result) {
+  //     setError(result.error);
+  //     return;
+  //   }
+  //   setVideoUrl(result.url);
+  // }
 
   async function handleVideoFileSelected(file: File) {
     setIsUploadingVideo(true);
-    const result = await uploadProductMedia(file);
-    setIsUploadingVideo(false);
-    if ("error" in result) {
-      setError(result.error);
-      return;
+    setError(null);
+
+    try {
+      const result = await uploadProductMedia(file);
+
+      if ("error" in result) {
+        setError(result.error);
+        toast.error(result.error || "آپلود ویدیو انجام نشد.");
+        return;
+      }
+
+      setVideoUrl(result.url);
+    } catch {
+      setError("آپلود ویدیو با مشکل روبه‌رو شد.");
+      toast.error("آپلود ویدیو با مشکل روبه‌رو شد.");
+    } finally {
+      setIsUploadingVideo(false);
     }
-    setVideoUrl(result.url);
   }
 
   function setMainImage(index: number) {
@@ -1022,11 +1105,28 @@ export function ProductForm({ existing }: { existing?: ProductDetailDTO }) {
       ? await updateProductAction({ id: existing.id, ...payload })
       : await createProductAction(payload);
 
+    // setIsSubmitting(false);
+    // if (!result.success) {
+    //   setError(result.error);
+    //   return;
+    // }
+    // router.push("/admin/products");
+    // router.refresh();
+
     setIsSubmitting(false);
+
     if (!result.success) {
       setError(result.error);
+      toast.error(result.error || "ذخیره محصول انجام نشد.");
       return;
     }
+
+    toast.success(
+      existing
+        ? "محصول با موفقیت ویرایش شد."
+        : "محصول با موفقیت ساخته شد."
+    );
+
     router.push("/admin/products");
     router.refresh();
   }

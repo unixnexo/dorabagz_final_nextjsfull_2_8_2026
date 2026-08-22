@@ -422,7 +422,7 @@ export function CouponsManager() {
       const result = await listCouponsAction({
         page,
         pageSize: 20,
-        search: debouncedSearch  || undefined,
+        search: debouncedSearch || undefined,
       });
       if (!result.success) throw new Error(result.error);
       return result.data;

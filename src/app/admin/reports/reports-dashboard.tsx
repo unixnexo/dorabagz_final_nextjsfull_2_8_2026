@@ -220,7 +220,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getIncomeSummaryAction,
@@ -237,13 +237,20 @@ import { RangeReportCard } from "@/components/admin/reports/range-report-card";
 import { TopProductsList } from "@/components/admin/reports/top-products-list";
 import { TopCustomersList } from "@/components/admin/reports/top-customers-list";
 import { SectionHeading } from "@/components/admin/reports/section-heading";
+import toast from "react-hot-toast";
 
 export function ReportsDashboard() {
   const [preset, setPreset] = useState<ReportRangePreset>("THIS_MONTH");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const { data: summary, isLoading: summaryLoading } = useQuery({
+  // const { data: summary, isLoading: summaryLoading } = useQuery({
+  const {
+    data: summary,
+    isLoading: summaryLoading,
+    isError: summaryError,
+    error: summaryQueryError,
+  } = useQuery({
     queryKey: ["report-summary"],
     queryFn: async () => {
       const result = await getIncomeSummaryAction();
@@ -255,7 +262,9 @@ export function ReportsDashboard() {
   const {
     data: report,
     isLoading: reportLoading,
+    // isError: reportError,
     isError: reportError,
+    error: reportQueryError,
   } = useQuery({
     queryKey: ["report-range", preset, startDate, endDate],
     queryFn: async () => {
@@ -270,21 +279,84 @@ export function ReportsDashboard() {
     enabled: preset !== "CUSTOM" || (!!startDate && !!endDate),
   });
 
-  const { data: topProducts } = useQuery({
+  // const { data: topProducts } = useQuery({
+  const {
+    data: topProducts,
+    isError: topProductsError,
+    error: topProductsQueryError,
+  } = useQuery({
     queryKey: ["top-products"],
+    // queryFn: async () => {
+    //   const result = await getTopProductsAction();
+    //   return result.success ? result.data : [];
+    // },
     queryFn: async () => {
       const result = await getTopProductsAction();
-      return result.success ? result.data : [];
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      return result.data;
     },
   });
 
-  const { data: topCustomers } = useQuery({
+  // const { data: topCustomers } = useQuery({
+  const {
+    data: topCustomers,
+    isError: topCustomersError,
+    error: topCustomersQueryError,
+  } = useQuery({
     queryKey: ["top-customers"],
+    // queryFn: async () => {
+    //   const result = await getTopCustomersAction();
+    //   return result.success ? result.data : [];
+    // },
     queryFn: async () => {
       const result = await getTopCustomersAction();
-      return result.success ? result.data : [];
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      return result.data;
     },
   });
+
+  useEffect(() => {
+    if (summaryError) {
+      toast.error(
+        summaryQueryError?.message || "گرفتن اطلاعات با مشکل روبه‌رو شد."
+      );
+    }
+  }, [summaryError, summaryQueryError]);
+
+  useEffect(() => {
+    if (reportError) {
+      toast.error(
+        reportQueryError?.message || "گرفتن گزارش با مشکل روبه‌رو شد."
+      );
+    }
+  }, [reportError, reportQueryError]);
+
+  useEffect(() => {
+    if (topProductsError) {
+      toast.error(
+        topProductsQueryError?.message ||
+        "گرفتن محصولات پرفروش با مشکل روبه‌رو شد."
+      );
+    }
+  }, [topProductsError, topProductsQueryError]);
+
+  useEffect(() => {
+    if (topCustomersError) {
+      toast.error(
+        topCustomersQueryError?.message ||
+        "گرفتن مشتریان برتر با مشکل روبه‌رو شد."
+      );
+    }
+  }, [topCustomersError, topCustomersQueryError]);
+
 
   return (
     <div className="pb-4">

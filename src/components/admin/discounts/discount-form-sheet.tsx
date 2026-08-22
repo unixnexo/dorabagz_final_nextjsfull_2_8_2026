@@ -14,6 +14,7 @@ import { FormField, TextInput } from "./form-field";
 import { DiscountProductPicker } from "./discount-product-picker";
 import { DiscountCategoryPicker } from "./discount-category-picker";
 import { JalaliDatePicker } from "./jalali-date-picker";
+import toast from "react-hot-toast";
 
 export function DiscountFormSheet({
     open,
@@ -52,12 +53,27 @@ export function DiscountFormSheet({
     async function handleSubmit() {
         setError(null);
 
+        // if (!title.trim()) {
+        //     setError("لطفاً یک عنوان وارد کنید.");
+        //     return;
+        // }
+
         if (!title.trim()) {
-            setError("لطفاً یک عنوان وارد کنید.");
+            const message = "یه عنوان برای گروه تخفیف وارد کن.";
+            setError(message);
+            toast.error(message);
             return;
         }
+
+        // if (productIds.length === 0 && categoryIds.length === 0) {
+        //     setError("حداقل یک محصول یا دسته‌بندی انتخاب کنید.");
+        //     return;
+        // }
+
         if (productIds.length === 0 && categoryIds.length === 0) {
-            setError("حداقل یک محصول یا دسته‌بندی انتخاب کنید.");
+            const message = "حداقل یه محصول یا دسته‌بندی انتخاب کن.";
+            setError(message);
+            toast.error(message);
             return;
         }
 
@@ -77,10 +93,24 @@ export function DiscountFormSheet({
             : await createDiscountGroupAction(payload);
         setIsSubmitting(false);
 
+        // if (!result.success) {
+        //     setError(result.error);
+        //     return;
+        // }
+        // onDone();
+
         if (!result.success) {
             setError(result.error);
+            toast.error(result.error || "ذخیره گروه تخفیف انجام نشد.");
             return;
         }
+
+        toast.success(
+            editing
+                ? "گروه تخفیف با موفقیت ویرایش شد."
+                : "گروه تخفیف با موفقیت ساخته شد."
+        );
+
         onDone();
     }
 

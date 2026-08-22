@@ -16,6 +16,7 @@ import { CouponProductPicker } from "./coupon-product-picker";
 import { CouponCategoryPicker } from "./coupon-category-picker";
 import { CouponUserPicker } from "./coupon-user-picker";
 import { JalaliDatePicker } from "./jalali-date-picker";
+import toast from "react-hot-toast";
 
 function randomCode() {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -108,10 +109,20 @@ export function CouponFormSheet({
             : await createCouponAction(payload);
         setIsSubmitting(false);
 
+        // if (!result.success) {
+        //     setError(result.error);
+        //     return;
+        // }
+        // onDone();
         if (!result.success) {
             setError(result.error);
             return;
         }
+
+        toast.success(
+            editing ? "کد تخفیف ویرایش شد" : "کد تخفیف ایجاد شد"
+        );
+
         onDone();
     }
 

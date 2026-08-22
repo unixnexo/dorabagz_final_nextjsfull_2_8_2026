@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Upload } from "lucide-react";
 import type { StoryMediaType } from "@/types/story";
+import toast from "react-hot-toast";
 
 export function StoryMediaUpload({
     mediaType,
@@ -16,27 +17,63 @@ export function StoryMediaUpload({
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    //     const file = e.target.files?.[0];
+    //     if (!file) return;
+
+    //     // Video temporarily disabled — admin can only upload images for now.
+    //     // const isVideo = file.type.startsWith("video/");
+    //     setError(null);
+    //     setIsUploading(true);
+
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     const res = await fetch("/api/upload/story-media", { method: "POST", body: formData });
+    //     const data = await res.json();
+    //     setIsUploading(false);
+
+    //     if (!res.ok) {
+    //         setError(data.error ?? "خطا در آپلود فایل");
+    //         return;
+    //     }
+    //     onMediaSelected("IMAGE", data.url);
+    //     // onMediaSelected(isVideo ? "VIDEO" : "IMAGE", data.url);
+    // }
+
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Video temporarily disabled — admin can only upload images for now.
-        // const isVideo = file.type.startsWith("video/");
         setError(null);
         setIsUploading(true);
 
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await fetch("/api/upload/story-media", { method: "POST", body: formData });
-        const data = await res.json();
-        setIsUploading(false);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
 
-        if (!res.ok) {
-            setError(data.error ?? "خطا در آپلود فایل");
-            return;
+            const res = await fetch("/api/upload/story-media", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                const message = data.error || "آپلود عکس انجام نشد.";
+                setError(message);
+                toast.error(message);
+                return;
+            }
+
+            onMediaSelected("IMAGE", data.url);
+            toast.success("عکس با موفقیت آپلود شد.");
+        } catch {
+            const message = "آپلود عکس با مشکل روبه‌رو شد.";
+            setError(message);
+            toast.error(message);
+        } finally {
+            setIsUploading(false);
         }
-        onMediaSelected("IMAGE", data.url);
-        // onMediaSelected(isVideo ? "VIDEO" : "IMAGE", data.url);
     }
 
     return (

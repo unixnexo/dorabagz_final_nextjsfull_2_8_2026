@@ -11,6 +11,7 @@ import { createStoryAction, updateStoryAction } from "@/server/story/admin-actio
 import type { AdminStoryDTO, StoryMediaType } from "@/types/story";
 import { StoryMediaUpload } from "./story-media-upload";
 import { StoryProductPicker } from "./story-product-picker";
+import toast from "react-hot-toast";
 
 export function StoryFormSheet({
     open,
@@ -46,8 +47,15 @@ export function StoryFormSheet({
     async function handleSubmit() {
         setError(null);
 
+        // if (!mediaUrl) {
+        //     setError("لطفاً یک فایل آپلود کنید.");
+        //     return;
+        // }
+
         if (!mediaUrl) {
-            setError("لطفاً یک فایل آپلود کنید.");
+            const message = "اول یه فایل برای استوری آپلود کن.";
+            setError(message);
+            toast.error(message);
             return;
         }
 
@@ -64,10 +72,24 @@ export function StoryFormSheet({
             : await createStoryAction(payload);
         setIsSubmitting(false);
 
+        // if (!result.success) {
+        //     setError(result.error);
+        //     return;
+        // }
+        // onDone();
+
         if (!result.success) {
             setError(result.error);
+            toast.error(result.error || "ذخیره استوری انجام نشد.");
             return;
         }
+
+        toast.success(
+            editing
+                ? "استوری با موفقیت ویرایش شد."
+                : "استوری با موفقیت ساخته شد."
+        );
+
         onDone();
     }
 

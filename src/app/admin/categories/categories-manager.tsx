@@ -206,6 +206,7 @@ import { CategoryTreeList } from "@/components/admin/categories/category-tree-li
 import { CategoryListSkeleton } from "@/components/admin/categories/category-list-skeleton";
 import { CategoryFormSheet } from "@/components/admin/categories/category-form-sheet";
 import { DeleteCategoryDialog } from "@/components/admin/categories/delete-category-dialog";
+import toast from "react-hot-toast";
 
 export function CategoriesManager() {
   const [search, setSearch] = useState("");
@@ -218,14 +219,20 @@ export function CategoriesManager() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-  const timer = setTimeout(() => {
-    setDebouncedSearch(search);
-  }, 400);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
 
-  return () => clearTimeout(timer);
-}, [search]);
+    return () => clearTimeout(timer);
+  }, [search]);
 
-  const { data, isLoading } = useQuery({
+  // const { data, isLoading } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useQuery({
     queryKey: ["admin-categories", debouncedSearch],
     queryFn: async () => {
       const result = await listCategoriesAction({
@@ -237,6 +244,14 @@ export function CategoriesManager() {
       return result.data;
     },
   });
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(
+        queryError?.message || "گرفتن دسته‌بندی‌ها با مشکل روبه‌رو شد."
+      );
+    }
+  }, [isError, queryError]);
 
   // Only top-level categories can be picked as a parent (2-level max rule).
   const topLevelOptions = data?.items.filter((c) => !c.parentId) ?? [];
@@ -251,10 +266,19 @@ export function CategoriesManager() {
     setFormOpen(true);
   }
 
+  // function handleFormSaved() {
+  //   setFormOpen(false);
+  //   setEditing(null);
+  //   queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+  // }
+
   function handleFormSaved() {
     setFormOpen(false);
     setEditing(null);
-    queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+
+    queryClient.invalidateQueries({
+      queryKey: ["admin-categories"],
+    });
   }
 
   async function handleConfirmDelete() {
@@ -264,12 +288,24 @@ export function CategoriesManager() {
     const result = await deleteCategoryAction(deleteTarget.id);
     setIsDeleting(false);
 
+    // if (!result.success) {
+    //   setDeleteError(result.error);
+    //   return;
+    // }
     if (!result.success) {
       setDeleteError(result.error);
+      toast.error(result.error || "حذف دسته‌بندی انجام نشد.");
       return;
     }
+    // setDeleteTarget(null);
+    // queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
     setDeleteTarget(null);
-    queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+
+    queryClient.invalidateQueries({
+      queryKey: ["admin-categories"],
+    });
+
+    toast.success("دسته‌بندی با موفقیت حذف شد.");
   }
 
   return (

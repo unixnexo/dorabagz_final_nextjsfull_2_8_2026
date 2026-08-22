@@ -243,7 +243,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Plus } from "lucide-react";
@@ -264,7 +264,13 @@ export function StoriesManager() {
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: stories, isLoading, isError } = useQuery({
+  // const { data: stories, isLoading, isError } = useQuery({
+  const {
+    data: stories,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useQuery({
     queryKey: ["admin-stories"],
     queryFn: async () => {
       const result = await adminListStoriesAction();
@@ -272,6 +278,14 @@ export function StoriesManager() {
       return result.data;
     },
   });
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(
+        queryError?.message || "گرفتن استوری‌ها با مشکل روبه‌رو شد."
+      );
+    }
+  }, [isError, queryError]);
 
   function openCreate() {
     setEditingStory(null);
@@ -294,11 +308,17 @@ export function StoriesManager() {
     setIsDeleting(true);
     const result = await deleteStoryAction(deletingStory.id);
     setIsDeleting(false);
+    // if (!result.success) {
+    //   toast.error(result.error);
+    //   return;
+    // }
+    // toast.success("استوری حذف شد");
     if (!result.success) {
-      toast.error(result.error);
+      toast.error(result.error || "حذف استوری انجام نشد.");
       return;
     }
-    toast.success("استوری حذف شد");
+
+    toast.success("استوری با موفقیت حذف شد.");
     setDeletingStory(null);
     queryClient.invalidateQueries({ queryKey: ["admin-stories"] });
   }

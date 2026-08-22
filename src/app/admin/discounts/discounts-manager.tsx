@@ -298,7 +298,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
@@ -322,7 +322,13 @@ export function DiscountsManager() {
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: groups, isLoading, isError } = useQuery({
+  // const { data: groups, isLoading, isError } = useQuery({
+  const {
+    data: groups,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useQuery({
     queryKey: ["admin-discount-groups"],
     queryFn: async () => {
       const result = await listDiscountGroupsAction();
@@ -330,6 +336,14 @@ export function DiscountsManager() {
       return result.data;
     },
   });
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(
+        queryError?.message || "گرفتن گروه‌های تخفیف با مشکل روبه‌رو شد."
+      );
+    }
+  }, [isError, queryError]);
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: ["admin-discount-groups"] });
@@ -358,30 +372,51 @@ export function DiscountsManager() {
     setIsDeleting(true);
     const result = await deleteDiscountGroupAction(deletingGroup.id);
     setIsDeleting(false);
+    // if (!result.success) {
+    //   toast.error(result.error);
+    //   return;
+    // }
+    // toast.success("گروه تخفیف حذف شد");
+
     if (!result.success) {
-      toast.error(result.error);
+      toast.error(result.error || "حذف گروه تخفیف انجام نشد.");
       return;
     }
-    toast.success("گروه تخفیف حذف شد");
+
+    toast.success("گروه تخفیف با موفقیت حذف شد.");
     setDeletingGroup(null);
     invalidate();
   }
 
   async function handleRemoveProduct(groupId: string, productId: string) {
     const result = await removeProductFromGroupAction(groupId, productId);
+    // if (!result.success) {
+    //   toast.error(result.error);
+    //   return;
+    // }
+    // invalidate();
     if (!result.success) {
-      toast.error(result.error);
+      toast.error(result.error || "حذف محصول از گروه تخفیف انجام نشد.");
       return;
     }
+
+    toast.success("محصول از گروه تخفیف حذف شد.");
     invalidate();
   }
 
   async function handleRemoveCategory(groupId: string, categoryId: string) {
     const result = await removeCategoryFromGroupAction(groupId, categoryId);
+    // if (!result.success) {
+    //   toast.error(result.error);
+    //   return;
+    // }
+    // invalidate();
     if (!result.success) {
-      toast.error(result.error);
+      toast.error(result.error || "حذف دسته‌بندی از گروه تخفیف انجام نشد.");
       return;
     }
+
+    toast.success("دسته‌بندی از گروه تخفیف حذف شد.");
     invalidate();
   }
 
