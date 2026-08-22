@@ -28,7 +28,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     { href: "/admin/reviews", label: "نظرات", icon: Star },
     { href: "/admin/stories", label: "استوری‌ها🟥", icon: BookOpen },
     { href: "/admin/discount", label: "تخفیف‌ها", icon: Percent },
-    { href: "/admin/coupons", label: "کد‌های تخفیف", icon: Ticket },
+    { href: "/admin/coupons", label: "کد‌های تخفیف🟥", icon: Ticket },
 ];
 
 // Looks up the page title for the current route, falling back to a default.
