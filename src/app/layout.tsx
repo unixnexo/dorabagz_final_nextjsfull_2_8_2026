@@ -15,18 +15,68 @@ const iranSans = localFont({
   display: "swap",
 });
 
+
+const SITE_URL = "https://dorabagz.ir";
+const SITE_NAME = "DoraBagz";
+const SITE_DESCRIPTION = "فروشگاه اینترنتی درا بگز — خرید آنلاین با ارسال سریع";
+
 export const metadata: Metadata = {
-  title: "فروشگاه",
-  description: "فروشگاه اینترنتی",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} | فروشگاه اینترنتی`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/icon-192.png",
     apple: "/icons/icon-192.png",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "fa_IR",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | فروشگاه اینترنتی`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og-default.webp",
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} | فروشگاه اینترنتی`,
+    description: SITE_DESCRIPTION,
+    images: ["/og-default.jpg"],
+  },
+  formatDetection: {
+    telephone: false, // stops iOS auto-linking phone-number-looking strings (e.g. product codes)
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#111111",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -42,7 +92,7 @@ export default function RootLayout({
       className={cn(iranSans.variable, "bg-background")}
     >
       <head>
-        <meta name="apple-mobile-web-app-title" content="DoraBagz" />
+        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
       </head>
       <body className="font-sans">
         <div className="mx-auto max-w-[500px] w-full" data-vaul-drawer-wrapper>
