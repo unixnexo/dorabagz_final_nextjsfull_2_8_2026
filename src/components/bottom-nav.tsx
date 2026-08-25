@@ -17,7 +17,7 @@ type BottomNavProps = {
 
 const navItems = [
     {
-        href: "/dev-ui-pages/products",
+        href: "/",
         icon: Home,
         label: "خانه",
         type: "link",

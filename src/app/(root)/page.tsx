@@ -204,3 +204,37 @@ export default async function HomePage({
 
 
 
+
+
+
+
+
+
+// import { listProductsAction } from "@/server/product/actions";
+// import { getCategoryTreeAction } from "@/server/category/actions";
+// import HomeContent from "./homecontent";
+
+// export default async function HomePage({
+//   searchParams,
+// }: {
+//   searchParams: Promise<{ [key: string]: string | undefined }>;
+// }) {
+//   const params = await searchParams;
+//   const page = params.page ? Number(params.page) : 1;
+
+//   const [productsResult, categoriesResult] = await Promise.all([
+//     listProductsAction({
+//       page,
+//       search: params.search,
+//       categoryId: params.categoryId,
+//       minPrice: params.minPrice,
+//       maxPrice: params.maxPrice,
+//     }),
+//     getCategoryTreeAction(),
+//   ]);
+
+//   const products = productsResult.success ? productsResult.data.items : [];
+//   const categories = categoriesResult.success ? categoriesResult.data : [];
+
+//   return <HomeContent products={products} categories={categories} />;
+// }
