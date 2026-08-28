@@ -8,6 +8,7 @@ import { SearchCommand } from "@/components/search-command";
 import { BottomNav } from "@/components/bottom-nav";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function FAQPage() {
 
@@ -40,13 +41,15 @@ export default function FAQPage() {
                         سوالی دارید؟ جوابش را اینجا پیدا کنید.
                     </p>
 
-                    <motion.button
-                        whileTap={{ scale: 0.94 }}
-                        className="flex items-center gap-1 mt-3.5 h-9 rounded-full bg-black px-4 text-[11px] font-medium text-white shadow-sm transition-transform"
-                    >
-                        تماس با پشتیبانی
-                        <ArrowLeft size={12} />
-                    </motion.button>
+                    <Link href="/contact">
+                        <motion.button
+                            whileTap={{ scale: 0.94 }}
+                            className="mt-3.5 flex h-9 items-center gap-1 rounded-full bg-black px-4 text-[11px] font-medium text-white shadow-sm transition-transform"
+                        >
+                            تماس با پشتیبانی
+                            <ArrowLeft size={12} />
+                        </motion.button>
+                    </Link>
                 </motion.section>
 
                 {/* FAQ */}

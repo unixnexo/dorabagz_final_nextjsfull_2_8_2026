@@ -1,67 +1,39 @@
-"use client";
-
-import { motion } from "framer-motion";
-
+import type { Metadata } from "next";
 import BackButton from "@/components/BackButton";
 import { FAQAccordion } from "./faq-accordion";
-import { SearchCommand } from "@/components/search-command";
-import { BottomNav } from "@/components/bottom-nav";
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { FAQHeader } from "./faq-header";
+
+export const metadata: Metadata = {
+    title: "سوالات متداول",
+    description:
+        "پاسخ سوالات متداول درباره خرید از درا بگز، نحوه ثبت سفارش، ارسال، پرداخت، پیگیری سفارش و پشتیبانی.",
+    alternates: {
+        canonical: "/faq",
+    },
+    openGraph: {
+        title: "سوالات متداول | درا بگز",
+        description:
+            "پاسخ سوالات متداول درباره خرید، ارسال، پرداخت، سفارش و پشتیبانی درا بگز.",
+        url: "/faq",
+        type: "website",
+        locale: "fa_IR",
+    },
+    robots: {
+        index: true,
+        follow: true,
+    },
+};
 
 export default function FAQPage() {
-
-    const [searchOpen, setSearchOpen] = useState(false);
-    
     return (
-        <main
-            className="min-h-screen bg-[#f5f5f5] px-4 py-5 text-[#171717] pb-32"
-        >
+        <main className="min-h-screen bg-[#f5f5f5] px-4 py-5 pb-32 text-[#171717]">
             <div className="relative mx-auto w-full max-w-[500px]">
-                {/* Back */}
                 <BackButton />
 
-                {/* Header */}
-                <motion.section
-                    initial={{ opacity: 0, y: -12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                    }}
-                    className="flex flex-col items-center pt-1"
-                >
-                    <h1 className="text-[30px] font-semibold tracking-[-0.03em]">
-                        سوالات متداول
-                    </h1>
+                <FAQHeader />
 
-                    <p className="mt-2 text-center text-[13px] text-black/55">
-                        سوالی دارید؟ جوابش را اینجا پیدا کنید.
-                    </p>
-
-                    <motion.button
-                        whileTap={{ scale: 0.94 }}
-                        className="flex items-center gap-1 mt-3.5 h-9 rounded-full bg-black px-4 text-[11px] font-medium text-white shadow-sm transition-transform"
-                    >
-                        تماس با پشتیبانی
-                        <ArrowLeft size={12} />
-                    </motion.button>
-                </motion.section>
-
-                {/* FAQ */}
                 <FAQAccordion />
             </div>
-
-            {/* <SearchCommand
-                open={searchOpen}
-                onOpenChange={setSearchOpen}
-            />
-
-            <BottomNav
-                searchOpen={searchOpen}
-                onSearchClick={() => setSearchOpen(true)}
-            /> */}
         </main>
     );
 }

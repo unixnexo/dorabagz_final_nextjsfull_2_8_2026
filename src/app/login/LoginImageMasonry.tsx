@@ -128,6 +128,37 @@ export default function LoginImageMasonry() {
         return () => media.removeEventListener("change", update);
     }, []);
 
+    useEffect(() => {
+    const checkLoadedImages = () => {
+        const loaded = new Set<number>();
+
+        document
+            .querySelectorAll<HTMLImageElement>("[data-masonry-image]")
+            .forEach((img) => {
+                if (img.complete && img.naturalWidth > 0) {
+                    const image = Number(img.dataset.masonryImage);
+                    loaded.add(image);
+                }
+            });
+
+        if (loaded.size > 0) {
+            setLoadedImages((prev) => {
+                const next = new Set(prev);
+
+                loaded.forEach((image) => next.add(image));
+
+                return next;
+            });
+        }
+    };
+
+    checkLoadedImages();
+
+    const frame = requestAnimationFrame(checkLoadedImages);
+
+    return () => cancelAnimationFrame(frame);
+}, []);
+
     const columnCount = isSmall ? 3 : 4;
 
     const columns = Array.from({ length: columnCount }, (_, columnIndex) =>
@@ -184,6 +215,7 @@ export default function LoginImageMasonry() {
                                                 alt=""
                                                 loading="eager"
                                                 decoding="async"
+                                                data-masonry-image={image}
                                                 onLoad={() => handleImageLoad(image)}
                                                 className={`block aspect-[3/4] w-full object-cover transition-opacity duration-300 ${isLoaded
                                                         ? "opacity-100"

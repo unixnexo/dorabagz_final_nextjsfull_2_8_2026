@@ -5,7 +5,7 @@ import { OTP_LENGTH } from "@/server/auth/constants";
 const phoneSchema = z
   .string()
   .refine(isValidIranianPhoneNumber, {
-    message: "شماره موبایل معتبر نیست (فرمت صحیح: 09xxxxxxxxx)",
+    message: "شماره موبایل معتبر نیست (فرمت صحیح: 9xxxxxxxxx)",
   });
 
 export const requestOtpSchema = z.object({

@@ -233,8 +233,17 @@ export default function LoginDrawer() {
                                             placeholder="912 345 6789"
                                             value={phone}
                                             maxLength={10}
+                                            // onChange={(e) => {
+                                            //     const value = e.target.value.replace(/\D/g, "");
+                                            //     setPhone(value);
+                                            // }}
                                             onChange={(e) => {
-                                                const value = e.target.value.replace(/\D/g, "");
+                                                let value = e.target.value.replace(/\D/g, "");
+
+                                                if (value.startsWith("09")) {
+                                                    value = value.slice(1);
+                                                }
+
                                                 setPhone(value);
                                             }}
                                             className="h-full border-0 bg-transparent px-4 text-[17px] tracking-wide shadow-none placeholder:text-black/25 focus-visible:ring-0"
