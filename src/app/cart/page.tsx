@@ -37,6 +37,16 @@
  */
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { CartView } from "./cart-view";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "سبد خرید",
+    description: "سبد خرید شما در فروشگاه اینترنتی درا بگز.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default async function CartPage() {
   const user = await getCurrentUser();

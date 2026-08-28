@@ -19,7 +19,17 @@
  * status filter dropdown, pagination.
  * ============================================================================
  */
+import { Metadata } from "next";
 import { OrdersList } from "./orders-list";
+
+export const metadata: Metadata = {
+    title: "سفارش‌های من",
+    description: "مشاهده و پیگیری سفارش‌های شما در فروشگاه اینترنتی درا بگز.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default function MyOrdersPage() {
   return (

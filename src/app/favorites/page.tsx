@@ -25,6 +25,16 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { FavoritesList } from "./favorites-list";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "علاقه‌مندی‌ها",
+    description: "محصولات مورد علاقه شما در درا بگز.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default async function FavoritePage() {
   const user = await getCurrentUser();

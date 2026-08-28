@@ -36,6 +36,16 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { CheckoutForm } from "./checkout-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "تسویه حساب",
+    description: "تکمیل سفارش و پرداخت در فروشگاه اینترنتی درا بگز.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default async function CheckoutPage() {
   const user = await getCurrentUser();

@@ -46,6 +46,16 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { ProfilePageClient } from "./profile-page-client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "سفارش‌های من",
+    description: "مشاهده و پیگیری سفارش‌های شما در فروشگاه اینترنتی درا بگز.",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
