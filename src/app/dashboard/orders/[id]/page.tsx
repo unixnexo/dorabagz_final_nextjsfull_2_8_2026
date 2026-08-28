@@ -62,7 +62,7 @@ export default async function OrderDetailPage({
   searchParams: Promise<{ success?: string; stockIssue?: string }>;
 }) {
   const user = await getCurrentUser();
-  if (!user) redirect("/logic");
+  if (!user) redirect("/login");
 
   const { id } = await params;
   const { success, stockIssue } = await searchParams;

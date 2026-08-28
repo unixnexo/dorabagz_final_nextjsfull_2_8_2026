@@ -120,7 +120,7 @@ export default async function AdminOrderDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") redirect("/logic");
+  if (!session || session.role !== "ADMIN") redirect("/login");
 
   const { id } = await params;
   const result = await adminGetOrderAction(id);

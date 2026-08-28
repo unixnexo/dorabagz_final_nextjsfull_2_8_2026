@@ -39,7 +39,7 @@ import { CheckoutForm } from "./checkout-form";
 
 export default async function CheckoutPage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/logic");
+  if (!user) redirect("/login");
 
   return (
     <main dir="rtl" style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>

@@ -6,7 +6,7 @@ export default async function CheckoutPage() {
     const user = await getCurrentUser();
 
     if (!user) {
-        redirect("/logic");
+        redirect("/login");
     }
 
     return <CheckoutForm />;

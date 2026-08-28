@@ -28,7 +28,7 @@ import { FavoritesList } from "./favorites-list";
 
 export default async function FavoritePage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/logic");
+  if (!user) redirect("/login");
 
   return (
     <main dir="rtl" style={{ maxWidth: 800, margin: "40px auto", fontFamily: "sans-serif" }}>
