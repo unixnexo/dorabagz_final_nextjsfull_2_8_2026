@@ -36,7 +36,7 @@ export function HomeHeader() {
                     size="icon"
                     className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
                 >
-                    <Link href="/profile">
+                    <Link href="/dashboard/profile">
                         <UserRound className="!size-6 text-black/70" />
                     </Link>
                 </Button>
