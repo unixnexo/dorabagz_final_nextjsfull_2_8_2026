@@ -146,11 +146,24 @@
 
 
 
-import { Toaster } from "react-hot-toast";
+import type { Metadata } from "next";
+
 import BackButton from "@/components/BackButton";
 import LoginDrawer from "./LoginDrawer";
 import LoginImageMasonry from "./LoginImageMasonry";
 
+export const metadata: Metadata = {
+  title: "ورود و ثبت‌نام",
+  description:
+    "ورود یا ثبت‌نام در درا بگز برای خرید آنلاین، پیگیری سفارش‌ها و دسترسی به حساب کاربری.",
+  alternates: {
+    canonical: "/login",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function LoginPage() {
   return (
@@ -158,8 +171,6 @@ export default function LoginPage() {
       dir="rtl"
       className="flex min-h-dvh flex-col overflow-hidden bg-[#f1f2f3]"
     >
-      <Toaster position="top-center" />
-
       <LoginImageMasonry />
 
       <LoginDrawer />

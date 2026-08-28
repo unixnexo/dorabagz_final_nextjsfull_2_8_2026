@@ -213,6 +213,52 @@
 import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import HomeContent from "./homecontent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: {
+        absolute: "درا بگز | فروشگاه اینترنتی",
+    },
+    description:
+        "درا بگز؛ فروشگاه اینترنتی کیف با مجموعه‌ای از کیف‌ها و محصولات متنوع. مشاهده محصولات، دسته‌بندی‌ها و خرید آنلاین.",
+    alternates: {
+        canonical: "/",
+    },
+    openGraph: {
+        type: "website",
+        locale: "fa_IR",
+        url: "https://dorabagz.ir/",
+        siteName: "درا بگز",
+        title: "درا بگز | فروشگاه اینترنتی کیف و لباس",
+        description:
+            "خرید آنلاین کیف و لباس از درا بگز؛ مشاهده محصولات و دسته‌بندی‌های مختلف.",
+        images: [
+            {
+                url: "/og-default.webp",
+                width: 1200,
+                height: 630,
+                alt: "درا بگز | فروشگاه اینترنتی کیف و لباس",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "درا بگز | فروشگاه اینترنتی کیف و لباس",
+        description:
+            "خرید آنلاین کیف و لباس از درا بگز؛ مشاهده محصولات و دسته‌بندی‌های مختلف.",
+        images: ["/og-default.webp"],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+};
 
 export default async function HomePage({
   searchParams,
