@@ -124,6 +124,7 @@ import type { UserDTO } from "@/types/user";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
 
 type Step = "VIEW" | "ENTER_NEW_PHONE" | "ENTER_OTP";
 
@@ -160,10 +161,12 @@ export function ProfileForm({
 
     if (!result.success) {
       setError(result.error);
+      toast.error(result.error);
       return;
     }
 
     setStep("ENTER_OTP");
+    toast.success("کد تایید ارسال شد");
   }
 
   async function handleConfirmChange(
@@ -183,16 +186,17 @@ export function ProfileForm({
 
     if (!result.success) {
       setError(result.error);
+      toast.error(result.error);
       return;
     }
 
-    setCurrentPhone(
-      result.data.user.phoneNumber
-    );
+    setCurrentPhone(result.data.user.phoneNumber);
 
     setStep("VIEW");
     setNewPhone("");
     setCode("");
+
+    toast.success("شماره موبایل با موفقیت تغییر کرد");
   }
 
   return (

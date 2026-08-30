@@ -50,8 +50,8 @@ export function LogoutButton({
           </Button>
         ) : (
           <Button
-            variant="ghost"
-            className="gap-2 rounded-xl border border-white/60 bg-white/50 px-4 text-black/70 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-95"
+            variant="destructive"
+            className="gap-2 text-white w-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-95"
           >
             <LogOut className="size-4" />
             خروج از حساب
@@ -72,7 +72,7 @@ export function LogoutButton({
 
           <form action={logoutAction}>
             <AlertDialogAction asChild>
-              <button type="submit" className="w-full">خروج از حساب</button>
+              <Button type="submit" className="w-full">خروج از حساب</Button>
             </AlertDialogAction>
           </form>
         </AlertDialogFooter>
