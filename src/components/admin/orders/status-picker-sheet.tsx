@@ -34,8 +34,8 @@ export function StatusPickerSheet({
                 side="bottom"
                 className="rounded-t-3xl border-0 bg-[#F2F2F7] px-4 pb-8"
             >
-                <SheetHeader className="pb-2 pt-5 text-right">
-                    <SheetTitle className="text-right text-[17px] font-bold text-[#1C1C1E]">
+                <SheetHeader className="pb-5 pt-3 text-right">
+                    <SheetTitle className="absolute top-3 text-right text-[17px] font-bold text-[#1C1C1E]">
                         تغییر وضعیت سفارش
                     </SheetTitle>
                 </SheetHeader>

@@ -121,7 +121,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminListOrdersAction } from "@/server/order/actions";
 import type { OrderStatus } from "@/types/order";
@@ -135,14 +135,17 @@ export function AdminOrdersTable() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<OrderStatus | "">("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["admin-orders", page, search, status],
+    // queryKey: ["admin-orders", page, search, status],
+    queryKey: ["admin-orders", page, debouncedSearch, status],
     queryFn: async () => {
       const result = await adminListOrdersAction({
         page,
         pageSize: 20,
-        search: search || undefined,
+        // search: search || undefined,
+        search: debouncedSearch || undefined,
         status: status || undefined,
       });
       if (!result.success) throw new Error(result.error);
@@ -150,15 +153,26 @@ export function AdminOrdersTable() {
     },
   });
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [search]);
+
+
   return (
     <div className="pb-4">
       <div className="space-y-2.5 pt-4">
         <AdminSearchField
           value={search}
-          onChange={(v) => {
-            setSearch(v);
-            setPage(1);
-          }}
+          // onChange={(v) => {
+          //   setSearch(v);
+          //   setPage(1);
+          // }}
+          onChange={setSearch}
           placeholder="جستجو با شماره سفارش، نام یا شماره گیرنده..."
         />
 
