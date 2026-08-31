@@ -69,16 +69,41 @@ export async function POST(request: NextRequest) {
   //   .webp({ quality: 82 })
   //   .toBuffer();
 
-  const compressed = await sharp(buffer)
-    .rotate()
-    .resize({
-      width: 1600,
-      withoutEnlargement: true,
+  // const compressed = await sharp(buffer)
+  //   .rotate()
+  //   .resize({
+  //     width: 1600,
+  //     withoutEnlargement: true,
+  //   })
+  //   .webp({
+  //     quality: 82,
+  //   })
+  //   .toBuffer();
+
+  let compressed: Buffer;
+
+  try {
+    compressed = await sharp(buffer, {
+      failOn: "none",
     })
-    .webp({
-      quality: 82,
-    })
-    .toBuffer();
+      .rotate()
+      .resize({
+        width: 1600,
+        withoutEnlargement: true,
+      })
+      .webp({
+        quality: 82,
+      })
+      .toBuffer();
+  } catch (error) {
+    console.error("Image processing failed:", error);
+
+    return NextResponse.json(
+      { error: "پردازش تصویر ناموفق بود. لطفاً تصویر دیگری انتخاب کنید." },
+      { status: 400 }
+    );
+  }
+
 
   await writeFile(path.join(UPLOAD_DIR, filename), compressed);
   return NextResponse.json({ url: `/uploads/products/${filename}` });
