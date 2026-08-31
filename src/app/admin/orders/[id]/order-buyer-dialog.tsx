@@ -110,9 +110,6 @@ export function OrderBuyerDialog({ userId }: OrderBuyerDialogProps) {
                                         </div>
                                     </div>
 
-                                    <p className="mt-2 px-1 text-[11px] text-[#AEAEB2]">
-                                        فعلاً ۰ — بعد از فعال‌سازی کامل ماژول سفارشات به‌روزرسانی می‌شود
-                                    </p>
                                 </section>
 
                                 {/* Security / audit */}
