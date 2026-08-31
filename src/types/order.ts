@@ -33,6 +33,7 @@ export type OrderListItemDTO = {
 /** Full shape for a single order's detail page (user or admin view). */
 export type OrderDetailDTO = {
   id: string;
+  userId: string;
   status: OrderStatus;
 
   receiverFullName: string;

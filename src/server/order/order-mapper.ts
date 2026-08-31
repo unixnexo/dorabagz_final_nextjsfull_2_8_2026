@@ -55,6 +55,7 @@ export function toOrderListItemDTO(order: FullOrder): OrderListItemDTO {
 export function toOrderDetailDTO(order: FullOrder): OrderDetailDTO {
   return {
     id: order.id,
+    userId: order.userId,
     status: order.status,
     receiverFullName: order.receiverFullName,
     receiverPhone: order.receiverPhone,

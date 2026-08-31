@@ -113,6 +113,7 @@ import { OrderPaymentCard } from "@/components/admin/orders/order-payment-card";
 import { OrderItemsCard } from "@/components/admin/orders/order-items-card";
 import { AdminSectionHeading } from "@/components/admin/orders/admin-section-heading";
 import { OrderAddressCard } from "@/components/admin/orders/order-address-card";
+import { OrderBuyerDialog } from "./order-buyer-dialog";
 
 export default async function AdminOrderDetailPage({
   params,
@@ -131,6 +132,8 @@ export default async function AdminOrderDetailPage({
   return (
     <div className="space-y-5 pb-6">
       <OrderDetailHeader order={order} />
+
+      <OrderBuyerDialog userId={order.userId} />
 
       <AdminOrderStatusControl orderId={order.id} currentStatus={order.status} />
 
