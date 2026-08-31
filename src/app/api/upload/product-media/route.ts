@@ -63,10 +63,21 @@ export async function POST(request: NextRequest) {
   // Image: compress + convert to WebP, no quality loss worth mentioning
   // at quality 82 (standard "visually lossless" WebP setting).
   const filename = `${randomUUID()}.webp`;
+  // const compressed = await sharp(buffer)
+  //   .toColourspace("srgb")
+  //   .resize({ width: 1600, withoutEnlargement: true }) // cap max dimension, keeps aspect ratio
+  //   .webp({ quality: 82 })
+  //   .toBuffer();
+
   const compressed = await sharp(buffer)
-    .toColourspace("srgb")
-    .resize({ width: 1600, withoutEnlargement: true }) // cap max dimension, keeps aspect ratio
-    .webp({ quality: 82 })
+    .rotate()
+    .resize({
+      width: 1600,
+      withoutEnlargement: true,
+    })
+    .webp({
+      quality: 82,
+    })
     .toBuffer();
 
   await writeFile(path.join(UPLOAD_DIR, filename), compressed);

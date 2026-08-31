@@ -56,10 +56,21 @@ export async function POST(request: NextRequest) {
   }
 
   const filename = `${randomUUID()}.webp`;
+  // const compressed = await sharp(buffer)
+  //   .resize({ width: 1080, withoutEnlargement: true }) // stories are portrait/full-screen, 1080 is a sane cap
+  //   .toColourspace("srgb")
+  //   .webp({ quality: 82 })
+  //   .toBuffer();
+
   const compressed = await sharp(buffer)
-    .resize({ width: 1080, withoutEnlargement: true }) // stories are portrait/full-screen, 1080 is a sane cap
-    .toColourspace("srgb")
-    .webp({ quality: 82 })
+    .rotate()
+    .resize({
+      width: 1600,
+      withoutEnlargement: true,
+    })
+    .webp({
+      quality: 82,
+    })
     .toBuffer();
 
   await writeFile(path.join(UPLOAD_DIR, filename), compressed);
