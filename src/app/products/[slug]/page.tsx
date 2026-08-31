@@ -172,7 +172,7 @@ export default async function ProductDetailPage({
   const hasDiscount = product.variants.some((v) => v.hasDiscount);
 
   return (
-    <div className="min-h-screen" dir="rtl">
+    <div className="min-h-dvh overflow-x-hidden">
       <ProductGallery
         images={product.images}
         videoUrl={product.videoUrl}
