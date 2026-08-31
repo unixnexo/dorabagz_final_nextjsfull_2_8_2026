@@ -131,7 +131,7 @@ export function ProductReviews({ productId }: { productId: string }) {
       {data.items.map((review) => (
         <div key={review.id} className="rounded-3xl border border-border/60 bg-card/60 p-4">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="text-xs text-muted-foreground">{review.maskedPhoneNumber}</span>
+            <span className="text-xs text-muted-foreground" dir="ltr">{review.maskedPhoneNumber}</span>
 
             <div className="flex items-center gap-0.5 rounded-full bg-amber-500/10 px-2 py-1" dir="ltr">
               {Array.from({ length: 5 }).map((_, index) => (
