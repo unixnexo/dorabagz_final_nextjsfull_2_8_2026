@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { Card } from "@/components/ui/card";
 import type { CartItemDTO } from "@/types/cart";
@@ -68,9 +69,27 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                     {options && <p className="mt-1 truncate text-[11px] text-black/40">{options}</p>}
 
                     <div className="mt-auto flex items-end justify-between gap-2">
-                        <div className="min-w-0">
+                        {/* <div className="min-w-0">
                             <span className="block truncate text-[14px] font-bold">
                                 {item.price.toLocaleString("fa-IR")}
+                            </span>
+                            <span className="text-[10px] text-black/40">تومان</span>
+                        </div> */}
+
+                        <div className="min-w-0">
+                            <span className="relative block overflow-hidden truncate text-[14px] font-bold">
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                    <motion.span
+                                        key={item.price}
+                                        initial={{ y: 10, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: -10, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                                        className="inline-block"
+                                    >
+                                        {item.price.toLocaleString("fa-IR")}
+                                    </motion.span>
+                                </AnimatePresence>
                             </span>
                             <span className="text-[10px] text-black/40">تومان</span>
                         </div>
@@ -86,7 +105,22 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                                 <Plus className="size-4" />
                             </button>
 
-                            <span className="w-7 text-center text-[13px] font-semibold">{item.quantity}</span>
+                            {/* <span className="w-7 text-center text-[13px] font-semibold">{item.quantity}</span> */}
+
+                            <span className="relative w-7 overflow-hidden text-center text-[13px] font-semibold">
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                    <motion.span
+                                        key={item.quantity}
+                                        initial={{ y: 12, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: -12, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                        className="inline-block"
+                                    >
+                                        {item.quantity}
+                                    </motion.span>
+                                </AnimatePresence>
+                            </span>
 
                             <button
                                 type="button"
