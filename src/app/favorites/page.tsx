@@ -41,9 +41,9 @@ export default async function FavoritePage() {
   if (!user) redirect("/login");
 
   return (
-    <main dir="rtl" style={{ maxWidth: 800, margin: "40px auto", fontFamily: "sans-serif" }}>
+    <div>
       <h1>علاقه‌مندی‌ها</h1>
       <FavoritesList />
-    </main>
+    </div>
   );
 }
