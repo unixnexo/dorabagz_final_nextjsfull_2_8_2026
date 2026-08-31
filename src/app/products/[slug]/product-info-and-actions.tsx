@@ -2,13 +2,13 @@
 
 // import { useMemo, useState } from "react";
 // import toast from "react-hot-toast";
-// import { Button } from "@/components/ui/button";
 // import { useCart } from "@/hooks/use-cart";
 // import { toggleFavoriteAction } from "@/server/favorite/actions";
 // import { VariantPicker } from "./variant-picker";
 // import { ProductPrice } from "./product-price";
 // import { QuantityStepper } from "./quantity-stepper";
 // import { FavoriteButton } from "./favorite-button";
+// import { AddToCartButton } from "./add-to-cart-button";
 // import type { ProductDetailDTO } from "@/types/product";
 // import type { UserDTO } from "@/types/user";
 
@@ -24,7 +24,6 @@
 //     const [selected, setSelected] = useState<Record<string, string>>({});
 //     const [quantity, setQuantity] = useState(1);
 //     const [isFavorited, setIsFavorited] = useState(initiallyFavorited);
-//     const [isAddingToCart, setIsAddingToCart] = useState(false);
 //     const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
 //     const { addToCart } = useCart(currentUser);
@@ -57,24 +56,24 @@
 //         setQuantity(1);
 //     }
 
-//     async function handleAddToCart() {
+//     // Returns true/false so AddToCartButton knows whether to play its
+//     // success animation. Toast intentionally disabled per request — the
+//     // button's own animation is the feedback now. Left commented out
+//     // (not removed) in case we want it back as a secondary confirmation.
+//     async function handleAddToCart(): Promise<boolean> {
 //         if (!selectedVariant) {
 //             toast.error("لطفاً همه گزینه‌ها را انتخاب کنید.");
-//             return;
+//             return false;
 //         }
 
-//         setIsAddingToCart(true);
+//         const result = await addToCart(selectedVariant.id, quantity);
 
-//         try {
-//             const result = await addToCart(selectedVariant.id, quantity);
-
-//             if (result.success) {
-//                 toast.success("به سبد خرید اضافه شد.");
-//             } else {
-//                 toast.error(result.error);
-//             }
-//         } finally {
-//             setIsAddingToCart(false);
+//         if (result.success) {
+//             // toast.success("به سبد خرید اضافه شد.");
+//             return true;
+//         } else {
+//             toast.error(result.error);
+//             return false;
 //         }
 //     }
 
@@ -193,22 +192,21 @@
 //                 </div>
 //             )}
 
-//             <Button
-//                 className="w-full"
-//                 onClick={handleAddToCart}
-//                 disabled={
-//                     !selectedVariant ||
-//                     selectedVariant.stock === 0 ||
-//                     isAddingToCart
-//                 }
-//             >
-//                 {selectedVariant?.stock === 0
-//                     ? "ناموجود"
-//                     : "افزودن به سبد خرید"}
-//             </Button>
+//             <AddToCartButton
+//                 onAddToCart={handleAddToCart}
+//                 disabled={!selectedVariant}
+//                 outOfStock={selectedVariant?.stock === 0}
+//             />
 //         </div>
 //     );
 // }
+
+
+
+
+
+
+
 
 
 
@@ -229,6 +227,8 @@ import { ProductPrice } from "./product-price";
 import { QuantityStepper } from "./quantity-stepper";
 import { FavoriteButton } from "./favorite-button";
 import { AddToCartButton } from "./add-to-cart-button";
+import { ShareButton } from "./share-button";
+import { ProductCode } from "./product-code";
 import type { ProductDetailDTO } from "@/types/product";
 import type { UserDTO } from "@/types/user";
 
@@ -331,9 +331,18 @@ export function ProductInfoAndActions({
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <h1 className="text-3xl font-bold leading-tight text-foreground">
-                    {product.title}
-                </h1>
+                <div className="flex items-start justify-between gap-3">
+                    <h1 className="text-3xl font-bold leading-tight text-foreground">
+                        {product.title}
+                    </h1>
+
+                    <ShareButton
+                        title={product.title}
+                        url={typeof window !== "undefined" ? window.location.href : ""}
+                    />
+                </div>
+
+                <ProductCode code={product.productCode} />
 
                 <ProductPrice
                     variants={product.variants}
