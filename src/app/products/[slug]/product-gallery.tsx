@@ -345,13 +345,13 @@ export function ProductGallery({
                     </div>
                 )}
 
-                {slideCount > 1 && (
+                {/* {slideCount > 1 && ( */}
                     <div className="pointer-events-none absolute bottom-0 -right-3 z-10">
                         <div className="size-24 rounded-full">
                             <DotLottieReact src="/lottie/Hand_Swipe.lottie" loop autoplay className="h-full w-full" />
                         </div>
                     </div>
-                )}
+                {/* )} */}
             </div>
 
             {galleryOpen && (
