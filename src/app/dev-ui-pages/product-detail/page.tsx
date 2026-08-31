@@ -6,7 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Heart, X, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -180,7 +180,7 @@ export default function Page() {
           </AccordionItem>
 
           {/* Specifications */}
-          <AccordionItem value="specifications" className="border-b-0">
+          <AccordionItem value="specifications" className="border-b">
             <AccordionTrigger className="text-base hover:no-underline">
               مشخصات محصول
             </AccordionTrigger>
@@ -232,6 +232,163 @@ export default function Page() {
               </div>
             </AccordionContent>
           </AccordionItem>
+
+          {/* Reviews */}
+          <AccordionItem value="reviews" className="border-b-0">
+            <AccordionTrigger className="group text-base hover:no-underline">
+              <div className="flex w-full items-center justify-between pl-3">
+                <span>نظرات کاربران</span>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    <span className="text-sm font-semibold text-foreground">
+                      ۴.۸
+                    </span>
+                  </div>
+
+                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                    ۲۶ نظر
+                  </span>
+                </div>
+              </div>
+            </AccordionTrigger>
+
+            <AccordionContent className="pt-2">
+              <div className="space-y-5">
+                {/* Rating summary */}
+                <div className="rounded-3xl border border-border/60 bg-card/70 p-5 shadow-sm backdrop-blur-xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-end gap-2">
+                        <span className="text-4xl font-black text-foreground">
+                          ۴.۸
+                        </span>
+
+                        <span className="pb-1 text-sm text-muted-foreground">
+                          از ۵
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        بر اساس ۲۶ نظر کاربران
+                      </p>
+                    </div>
+
+                    <div className="flex gap-0.5" dir="ltr">
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <Star
+                          key={index}
+                          className="h-5 w-5 fill-amber-400 text-amber-400"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reviews list */}
+                <div className="space-y-3">
+                  {/* Review 1 */}
+                  <div className="rounded-3xl border border-border/60 bg-card/60 p-4">
+                    <div className="mb-3 flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          علی رضایی
+                        </p>
+
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          ۲ روز پیش
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex items-center gap-0.5 rounded-full bg-amber-500/10 px-2 py-1"
+                        dir="ltr"
+                      >
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Star
+                            key={index}
+                            className="h-3.5 w-3.5 fill-amber-400 text-amber-400"
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <p className="text-sm leading-7 text-muted-foreground">
+                      کیفیتش خیلی خوب بود و دقیقاً مثل عکس‌هاست. سایزش هم کاملاً
+                      مناسب بود و بسته‌بندی خیلی تمیزی داشت.
+                    </p>
+                  </div>
+
+                  {/* Review 2 */}
+                  <div className="rounded-3xl border border-border/60 bg-card/60 p-4">
+                    <div className="mb-3 flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          سارا محمدی
+                        </p>
+
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          یک هفته پیش
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex items-center gap-0.5 rounded-full bg-amber-500/10 px-2 py-1"
+                        dir="ltr"
+                      >
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3.5 w-3.5 ${star <= 4
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-muted-foreground/25"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <p className="text-sm leading-7 text-muted-foreground">
+                      خیلی راحت و سبک بود. فقط رنگش یه مقدار با چیزی که روی صفحه
+                      دیده می‌شد متفاوت بود ولی در کل راضی بودم.
+                    </p>
+                  </div>
+
+                  {/* Review 3 - rating only */}
+                  <div className="rounded-3xl border border-border/60 bg-card/60 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          مهدی کریمی
+                        </p>
+
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          ۲ هفته پیش
+                        </p>
+                      </div>
+
+                      <div
+                        className="flex items-center gap-0.5 rounded-full bg-amber-500/10 px-2 py-1"
+                        dir="ltr"
+                      >
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3.5 w-3.5 ${star <= 5
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-muted-foreground/25"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
         </Accordion>
 
         {/* Submit */}
