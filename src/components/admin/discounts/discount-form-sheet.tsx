@@ -15,6 +15,7 @@ import { DiscountProductPicker } from "./discount-product-picker";
 import { DiscountCategoryPicker } from "./discount-category-picker";
 import { JalaliDatePicker } from "./jalali-date-picker";
 import toast from "react-hot-toast";
+import { FormattedNumberInput } from "@/components/formatted-number-input";
 
 export function DiscountFormSheet({
     open,
@@ -147,14 +148,30 @@ export function DiscountFormSheet({
                     </FormField>
 
                     <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}>
-                        <TextInput
+                        {/* <TextInput
                             type="number"
                             inputMode="numeric"
                             min={1}
                             max={type === "PERCENT" ? 100 : undefined}
                             value={value}
                             onChange={(e) => setValue(Number(e.target.value) || 0)}
-                        />
+                        /> */}
+                        {type === "PERCENT" ? (
+                            <TextInput
+                                type="number"
+                                inputMode="numeric"
+                                min={1}
+                                max={100}
+                                value={value}
+                                onChange={(e) => setValue(Number(e.target.value) || 0)}
+                            />
+                        ) : (
+                            <FormattedNumberInput
+                                min={1}
+                                value={value}
+                                onChange={(value) => setValue(value === "" ? 0 : value)}
+                            />
+                        )}
                     </FormField>
 
                     <JalaliDatePicker

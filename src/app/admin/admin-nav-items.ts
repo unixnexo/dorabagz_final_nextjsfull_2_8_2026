@@ -27,7 +27,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     { href: "/admin/users", label: "کاربران", icon: Users },
     { href: "/admin/reviews", label: "نظرات", icon: Star },
     { href: "/admin/stories", label: "استوری‌ها", icon: BookOpen },
-    { href: "/admin/discounts", label: "تخفیف‌ها♾️", icon: Percent },
+    { href: "/admin/discounts", label: "تخفیف‌ها", icon: Percent },
     { href: "/admin/coupons", label: "کد‌های تخفیف", icon: Ticket },
 ];
 
