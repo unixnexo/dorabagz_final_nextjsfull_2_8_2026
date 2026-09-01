@@ -24,7 +24,7 @@ export function OrderDetailShell({ order, success, stockIssue }: OrderDetailShel
             <div className="mx-auto w-full max-w-[500px] px-4 pb-6 pt-[92px]">
                 {/* Header */}
                 <header className="fixed inset-x-0 top-0 z-40 mx-auto flex h-[88px] max-w-[500px] items-center justify-between bg-[#f1f2f3] px-4 pt-4">
-                    <BackButton />
+                    <BackButton href="/dashboard/orders" />
 
                     <div className="text-right">
                         <h1 className="text-[19px] font-bold tracking-tight">
@@ -59,7 +59,12 @@ export function OrderDetailShell({ order, success, stockIssue }: OrderDetailShel
                 </FadeIn>
 
                 <FadeIn delay={0.12} className="mb-4">
-                    <OrderActions orderId={order.id} status={order.status} paymentStatus={order.paymentStatus} />
+                    <OrderActions
+                        orderId={order.id}
+                        status={order.status}
+                        paymentStatus={order.paymentStatus}
+                        totalAmount={order.totalAmount}
+                    />
                 </FadeIn>
 
                 {order.status === "COMPLETED" && !order.hasReview && (
