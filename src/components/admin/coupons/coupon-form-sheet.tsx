@@ -17,6 +17,7 @@ import { CouponCategoryPicker } from "./coupon-category-picker";
 import { CouponUserPicker } from "./coupon-user-picker";
 import { JalaliDatePicker } from "./jalali-date-picker";
 import toast from "react-hot-toast";
+import { FormattedNumberInput } from "@/components/formatted-number-input";
 
 function randomCode() {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -167,23 +168,44 @@ export function CouponFormSheet({
                     </FormField>
 
                     <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}>
-                        <TextInput
+                        {/* <TextInput
                             type="number"
                             inputMode="numeric"
                             min={1}
                             max={type === "PERCENT" ? 100 : undefined}
                             value={value}
                             onChange={(e) => setValue(Number(e.target.value) || 0)}
-                        />
+                        /> */}
+                        {type === "PERCENT" ? (
+                            <TextInput
+                                type="number"
+                                inputMode="numeric"
+                                min={1}
+                                max={100}
+                                value={value}
+                                onChange={(e) => setValue(Number(e.target.value) || 0)}
+                            />
+                        ) : (
+                            <FormattedNumberInput
+                                min={1}
+                                value={value}
+                                onChange={(value) => setValue(value === "" ? 0 : value)}
+                            />
+                        )}
                     </FormField>
 
                     {type === "PERCENT" && (
                         <FormField label="حداکثر مبلغ تخفیف (تومان، اختیاری)">
-                            <TextInput
+                            {/* <TextInput
                                 type="number"
                                 inputMode="numeric"
                                 value={maxDiscountAmount}
                                 onChange={(e) => setMaxDiscountAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                                placeholder="بدون سقف"
+                            /> */}
+                            <FormattedNumberInput
+                                value={maxDiscountAmount}
+                                onChange={setMaxDiscountAmount}
                                 placeholder="بدون سقف"
                             />
                         </FormField>
@@ -210,32 +232,49 @@ export function CouponFormSheet({
                     )}
 
                     <FormField label="حداقل مبلغ سفارش (تومان، اختیاری)">
-                        <TextInput
+                        {/* <TextInput
                             type="number"
                             inputMode="numeric"
                             value={minOrderAmount}
                             onChange={(e) => setMinOrderAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                            placeholder="بدون حداقل"
+                        /> */}
+                        <FormattedNumberInput
+                            value={minOrderAmount}
+                            onChange={setMinOrderAmount}
                             placeholder="بدون حداقل"
                         />
                     </FormField>
 
                     <div className="grid grid-cols-2 gap-2.5">
                         <FormField label="حداکثر استفاده هر کاربر">
-                            <TextInput
+                            {/* <TextInput
                                 type="number"
                                 inputMode="numeric"
                                 min={1}
                                 value={maxUsesPerUser}
                                 onChange={(e) => setMaxUsesPerUser(Number(e.target.value) || 1)}
+                            /> */}
+                            <FormattedNumberInput
+                                min={1}
+                                value={maxUsesPerUser}
+                                onChange={(value) =>
+                                    setMaxUsesPerUser(value === "" ? 1 : value)
+                                }
                             />
                         </FormField>
 
                         <FormField label="سقف کل استفاده (اختیاری)">
-                            <TextInput
+                            {/* <TextInput
                                 type="number"
                                 inputMode="numeric"
                                 value={maxTotalUsage}
                                 onChange={(e) => setMaxTotalUsage(e.target.value === "" ? "" : Number(e.target.value))}
+                                placeholder="نامحدود"
+                            /> */}
+                            <FormattedNumberInput
+                                value={maxTotalUsage}
+                                onChange={setMaxTotalUsage}
                                 placeholder="نامحدود"
                             />
                         </FormField>

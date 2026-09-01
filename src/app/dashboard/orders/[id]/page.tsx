@@ -184,7 +184,7 @@ export default async function OrderDetailPage({
     <>
       {/* Per spec, this is the ONE trigger point for the site-satisfaction
                 popup: right after a successful payment redirect. */}
-      {success === "1" && <SiteSatisfactionPopup />}
+      {success === "1" && <SiteSatisfactionPopup /> }
 
       <OrderDetailShell order={order} success={success === "1"} stockIssue={stockIssue === "1"} />
     </>
