@@ -175,7 +175,7 @@ export default function LoginPage() {
 
       <LoginDrawer />
 
-      <BackButton />
+      <BackButton href="/" />
     </main>
   );
 }
