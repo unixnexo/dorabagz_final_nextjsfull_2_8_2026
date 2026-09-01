@@ -1,9 +1,8 @@
 "use client";
 
-import { Bell, UserRound, SlidersHorizontal, CircleHelp } from "lucide-react";
+import { Bell, UserRound, SlidersHorizontal, CircleHelp, Headset } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
     Drawer,
@@ -19,7 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useNumberInput } from "@/lib/use-number-input";
 
-export function HomeHeader() {
+export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
     const [sort, setSort] = useState("newest");
     const minPrice = useNumberInput();
     const maxPrice = useNumberInput();
@@ -40,6 +39,19 @@ export function HomeHeader() {
                         <UserRound className="!size-6 text-black/70" />
                     </Link>
                 </Button>
+
+                {isAdmin && (
+                    <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                    >
+                        <Link href="/admin/reports">
+                            <Headset className="!size-6 text-black/70" />
+                        </Link>
+                    </Button>
+                )}
 
                 <Button
                     asChild

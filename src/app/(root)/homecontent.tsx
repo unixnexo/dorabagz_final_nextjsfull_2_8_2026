@@ -14,9 +14,10 @@ import { ProductCard } from "./product-card";
 type HomeContentProps = {
     products: ProductListItemDTO[];
     categories: CategoryTreeDTO[];
+    isAdmin: boolean;
 };
 
-export default function HomeContent({ products, categories }: HomeContentProps) {
+export default function HomeContent({ products, categories, isAdmin }: HomeContentProps) {
     const categoriesRef = useRef<HTMLDivElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
 
@@ -81,7 +82,7 @@ export default function HomeContent({ products, categories }: HomeContentProps) 
         <main className="min-h-screen pt-[88px] text-[#171717]">
             <div className="min-h-screen w-full overflow-hidden">
                 {/* Header */}
-                <HomeHeader />
+                <HomeHeader isAdmin={isAdmin} />
 
                 {/* Main content */}
                 <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">

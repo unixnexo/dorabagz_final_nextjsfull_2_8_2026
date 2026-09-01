@@ -212,6 +212,7 @@
 
 import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
+import { getCurrentUser } from "@/server/user/get-current-user";
 import HomeContent from "./homecontent";
 import { Metadata } from "next";
 
@@ -261,26 +262,33 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
+    searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  const params = await searchParams;
-  const page = params.page ? Number(params.page) : 1;
+    const params = await searchParams;
+    const page = params.page ? Number(params.page) : 1;
 
-  const [productsResult, categoriesResult] = await Promise.all([
-    listProductsAction({
-      page,
-      search: params.search,
-      categoryId: params.categoryId,
-      minPrice: params.minPrice,
-      maxPrice: params.maxPrice,
-    }),
-    getCategoryTreeAction(),
-  ]);
+    const [productsResult, categoriesResult, user] = await Promise.all([
+        listProductsAction({
+            page,
+            search: params.search,
+            categoryId: params.categoryId,
+            minPrice: params.minPrice,
+            maxPrice: params.maxPrice,
+        }),
+        getCategoryTreeAction(),
+        getCurrentUser(),
+    ]);
 
-  const products = productsResult.success ? productsResult.data.items : [];
-  const categories = categoriesResult.success ? categoriesResult.data : [];
+    const products = productsResult.success ? productsResult.data.items : [];
+    const categories = categoriesResult.success ? categoriesResult.data : [];
 
-  return <HomeContent products={products} categories={categories} />;
+    return (
+        <HomeContent
+            products={products}
+            categories={categories}
+            isAdmin={user?.role === "ADMIN"}
+        />
+    );
 }
