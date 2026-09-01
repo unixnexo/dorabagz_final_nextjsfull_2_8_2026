@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { requestOtpAction, verifyOtpAction } from "@/server/auth/actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
+import { mergeGuestCartAction } from "@/server/cart/actions";
 
 type Step = "phone" | "otp";
 
@@ -34,6 +35,7 @@ export default function LoginDrawer() {
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [resendSeconds, setResendSeconds] = useState(120);
 
     const [direction, setDirection] = useState(1);
 
@@ -48,15 +50,35 @@ export default function LoginDrawer() {
         });
         setIsSubmitting(false);
 
+        // if (!result.success) {
+        //     toast.error(result.error);
+        //     return;
+        // }
+
+        // setDirection(1);
+        // setStep("otp");
+        // toast.success("کد تایید ارسال شد");
+
         if (!result.success) {
             toast.error(result.error);
             return;
         }
 
+        setResendSeconds(120);
         setDirection(1);
         setStep("otp");
         toast.success("کد تایید ارسال شد");
     };
+
+    useEffect(() => {
+        if (resendSeconds <= 0) return;
+
+        const timer = setInterval(() => {
+            setResendSeconds((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [resendSeconds]);
 
     const goBackToPhone = () => {
         setDirection(-1);
@@ -64,15 +86,34 @@ export default function LoginDrawer() {
         setStep("phone");
     };
 
+    // const submitOtp = async () => {
+    //     if (otp.length !== 6) return;
+
+    //     setIsSubmitting(true);
+    //     const guestItems = useGuestCartStore.getState().items;
+    //     const result = await verifyOtpAction(
+    //         { phoneNumber: toPhoneNumber(phone), code: otp },
+    //         { items: guestItems }
+    //     );
+    //     setIsSubmitting(false);
+
+    //     if (!result.success) {
+    //         toast.error(result.error);
+    //         return;
+    //     }
+
+    //     useGuestCartStore.getState().clear();
+    //     // toast.success("خوش اومدی!");
+    //     setOpen(false);
+    //     router.push("/");
+    //     router.refresh();
+    // };
+
     const submitOtp = async () => {
         if (otp.length !== 6) return;
 
         setIsSubmitting(true);
-        const guestItems = useGuestCartStore.getState().items;
-        const result = await verifyOtpAction(
-            { phoneNumber: toPhoneNumber(phone), code: otp },
-            { items: guestItems }
-        );
+        const result = await verifyOtpAction({ phoneNumber: toPhoneNumber(phone), code: otp });
         setIsSubmitting(false);
 
         if (!result.success) {
@@ -80,14 +121,35 @@ export default function LoginDrawer() {
             return;
         }
 
+        // Merge guest cart AFTER login succeeds — separate action, not a
+        // second argument to verifyOtpAction.
+        const guestItems = useGuestCartStore.getState().items;
+        if (guestItems.length > 0) {
+            await mergeGuestCartAction({ items: guestItems });
+        }
+
         useGuestCartStore.getState().clear();
-        // toast.success("خوش اومدی!");
         setOpen(false);
         router.push("/");
         router.refresh();
     };
 
+    // const resendCode = async () => {
+    //     const result = await requestOtpAction({
+    //         phoneNumber: toPhoneNumber(phone),
+    //     });
+
+    //     if (!result.success) {
+    //         toast.error(result.error);
+    //         return;
+    //     }
+
+    //     toast.success("کد مجدد ارسال شد");
+    // };
+
     const resendCode = async () => {
+        if (resendSeconds > 0) return;
+
         const result = await requestOtpAction({
             phoneNumber: toPhoneNumber(phone),
         });
@@ -97,6 +159,7 @@ export default function LoginDrawer() {
             return;
         }
 
+        setResendSeconds(120);
         toast.success("کد مجدد ارسال شد");
     };
 
@@ -314,12 +377,23 @@ export default function LoginDrawer() {
                                 </Button>
 
                                 <div className="mt-4 flex items-center justify-between">
-                                    <Button
+                                    {/* <Button
                                         variant="ghost"
                                         onClick={resendCode}
                                         className="px-2"
                                     >
                                         ارسال مجدد کد
+                                    </Button> */}
+
+                                    <Button
+                                        variant="ghost"
+                                        onClick={resendCode}
+                                        disabled={resendSeconds > 0 || isSubmitting}
+                                        className="px-2"
+                                    >
+                                        {resendSeconds > 0
+                                            ? `ارسال مجدد کد (${Math.floor(resendSeconds / 60)}:${String(resendSeconds % 60).padStart(2, "0")})`
+                                            : "ارسال مجدد کد"}
                                     </Button>
 
                                     <Button

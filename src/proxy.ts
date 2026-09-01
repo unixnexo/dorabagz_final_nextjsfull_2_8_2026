@@ -109,7 +109,7 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith("/admin")) {
     const realSession = await verifyToken(sessionToken);
     if (!realSession || realSession.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/not-found", request.url));
     }
   }
 
