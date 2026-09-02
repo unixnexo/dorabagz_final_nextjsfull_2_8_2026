@@ -9,6 +9,7 @@ import {
     Percent,
     Ticket,
     LayoutGrid,
+    Telescope,
 } from "lucide-react";
 
 export type AdminNavItem = {
@@ -20,6 +21,7 @@ export type AdminNavItem = {
 // Single source of truth for the admin nav sheet.
 // Add a page here and it shows up in the sheet automatically.
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
+    { href: "/admin", label: "نمای کلی", icon: Telescope },
     { href: "/admin/reports", label: "گزارش‌ها", icon: BarChart3 },
     { href: "/admin/orders", label: "سفارش‌ها", icon: ShoppingBag },
     { href: "/admin/products", label: "محصولات", icon: Package },

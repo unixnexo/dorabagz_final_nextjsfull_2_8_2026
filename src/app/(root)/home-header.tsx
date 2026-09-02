@@ -47,7 +47,7 @@ export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
                         size="icon"
                         className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
                     >
-                        <Link href="/admin/reports">
+                        <Link href="/admin">
                             <Headset className="!size-6 text-black/70" />
                         </Link>
                     </Button>
