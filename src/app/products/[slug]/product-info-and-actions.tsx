@@ -231,6 +231,8 @@ import { ShareButton } from "./share-button";
 import { ProductCode } from "./product-code";
 import type { ProductDetailDTO } from "@/types/product";
 import type { UserDTO } from "@/types/user";
+import { Check, ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function ProductInfoAndActions({
     product,
@@ -276,6 +278,75 @@ export function ProductInfoAndActions({
         setQuantity(1);
     }
 
+    function showCartSuccessToast() {
+        toast.custom(
+            (t) => (
+                <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.94 }}
+                    animate={{
+                        opacity: t.visible ? 1 : 0,
+                        y: t.visible ? 0 : 8,
+                        scale: t.visible ? 1 : 0.96,
+                    }}
+                    transition={{
+                        duration: 0.35,
+                        ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="relative w-full min-w-[300px] overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#1C1C1E] p-4 text-white shadow-[0_14px_45px_rgba(0,0,0,0.25)]"
+                >
+                    {/* Shine */}
+                    <motion.div
+                        initial={{ x: "-120%" }}
+                        animate={{ x: "140%" }}
+                        transition={{
+                            duration: 1.2,
+                            ease: "easeInOut",
+                            delay: 0.15,
+                        }}
+                        className="pointer-events-none absolute inset-y-0 w-20 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
+                    />
+
+                    <div className="relative">
+                        <div className="flex items-center gap-3">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.1]">
+                                <Check
+                                    className="size-5 text-white"
+                                    strokeWidth={2.5}
+                                />
+                            </div>
+
+                            <div className="min-w-0 flex-1 text-right">
+                                <p className="text-[14px] font-semibold">
+                                    به سبد خرید اضافه شد
+                                </p>
+
+                                <p className="mt-0.5 text-[12px] text-white/55">
+                                    محصول با موفقیت به سبد خرید شما اضافه شد.
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                toast.dismiss(t.id);
+                                window.location.href = "/cart";
+                            }}
+                            className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-white text-[13px] font-bold text-[#1C1C1E] transition-transform duration-150 active:scale-[0.97]"
+                        >
+                            <ShoppingBag className="size-4" strokeWidth={2.2} />
+                            رفتن به سبد خرید
+                        </button>
+                    </div>
+                </motion.div>
+            ),
+            {
+                duration: 5000,
+            }
+        );
+    }
+
+
     // Returns true/false so AddToCartButton knows whether to play its
     // success animation. Toast intentionally disabled per request — the
     // button's own animation is the feedback now. Left commented out
@@ -290,6 +361,7 @@ export function ProductInfoAndActions({
 
         if (result.success) {
             // toast.success("به سبد خرید اضافه شد.");
+            showCartSuccessToast();
             return true;
         } else {
             toast.error(result.error);
@@ -299,7 +371,42 @@ export function ProductInfoAndActions({
 
     async function handleToggleFavorite() {
         if (!currentUser) {
-            toast.error("برای افزودن به علاقه‌مندی‌ها ابتدا وارد شوید.");
+            // toast.error("برای افزودن به علاقه‌مندی‌ها ابتدا وارد شوید.");
+            toast.custom(
+                (t) => (
+                    <div
+                        className={`w-full min-w-[280px] rounded-[20px] border border-black/[0.06] bg-white p-4 shadow-[0_10px_35px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 ease-out ${t.visible
+                            ? "translate-y-0 scale-100 opacity-100"
+                            : "translate-y-2 scale-95 opacity-0"
+                            }`}
+                    >
+                        <div className="text-center">
+                            <p className="text-[14px] font-medium leading-6 text-[#1C1C1E]">
+                                برای افزودن به علاقه‌مندی‌ها
+                            </p>
+
+                            <p className="text-[13px] leading-6 text-[#8E8E93]">
+                                ابتدا وارد حساب کاربری خود شوید.
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                toast.dismiss(t.id);
+                                window.location.href = "/login";
+                            }}
+                            className="mt-3 h-11 w-full rounded-full bg-[#1C1C1E] text-[14px] font-semibold text-white transition-transform duration-150 active:scale-[0.97]"
+                        >
+                            ورود
+                        </button>
+                    </div>
+                ),
+                {
+                    duration: 5000,
+                }
+            );
+
             return;
         }
 
