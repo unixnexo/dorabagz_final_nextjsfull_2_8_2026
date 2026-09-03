@@ -257,13 +257,13 @@ export default function HomeContent({ products, categories, isAdmin }: HomeConte
     const items = products.items;
 
     return (
-        <main className="min-h-screen pt-[88px] text-[#171717]">
-            <div className="min-h-screen w-full overflow-hidden">
+        <main className="min-h-dvh pt-[88px] text-[#171717]">
+            <div className="min-h-dvg w-full overflow-hidden">
                 {/* Header */}
                 <HomeHeader isAdmin={isAdmin} />
 
                 {/* Main content */}
-                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5">
+                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5 min-h-dvh">
                     {/* Stories */}
                     <section className="mb-6">
                         <Stories />
