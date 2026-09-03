@@ -43,7 +43,11 @@ export function AdminNavSheet() {
                 <nav className="mt-8 px-4">
                     <ul className="overflow-hidden rounded-3xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
                         {ADMIN_NAV_ITEMS.map((item, index) => {
-                            const isActive = pathname.startsWith(item.href);
+                            // const isActive = pathname.startsWith(item.href);
+                            const isActive =
+                                item.href === "/admin"
+                                    ? pathname === "/admin"
+                                    : pathname.startsWith(item.href);
                             const Icon = item.icon;
                             return (
                                 <li key={item.href}>

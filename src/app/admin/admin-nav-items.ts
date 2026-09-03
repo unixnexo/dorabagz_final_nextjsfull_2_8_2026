@@ -34,7 +34,18 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
 ];
 
 // Looks up the page title for the current route, falling back to a default.
+// export function getAdminPageTitle(pathname: string): string {
+//     const match = ADMIN_NAV_ITEMS.find((item) => pathname.startsWith(item.href));
+//     return match?.label ?? "پنل مدیریت";
+// }
+
+
 export function getAdminPageTitle(pathname: string): string {
-    const match = ADMIN_NAV_ITEMS.find((item) => pathname.startsWith(item.href));
+    const match = ADMIN_NAV_ITEMS.find((item) =>
+        item.href === "/admin"
+            ? pathname === "/admin"
+            : pathname.startsWith(item.href)
+    );
+
     return match?.label ?? "پنل مدیریت";
 }

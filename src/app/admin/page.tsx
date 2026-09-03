@@ -247,7 +247,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <main dir="rtl" className="pb-8">
-      <div className="mx-auto w-full max-w-[1100px] px-4 pt-5 sm:px-6 sm:pt-7">
+      <div className="mx-auto w-full max-w-[1100px] pt-2">
         {/* ================================================================ */}
         {/* HEADER */}
         {/* ================================================================ */}
