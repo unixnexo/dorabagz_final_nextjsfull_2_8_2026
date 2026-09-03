@@ -752,10 +752,25 @@ export function CheckoutForm() {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-[13px] font-bold">
+                  {/* <p className="mt-3 text-[13px] font-bold">
                     {(item.price * item.quantity).toLocaleString("fa-IR")}{" "}
                     <span className="text-[10px] font-normal text-black/40">تومن</span>
-                  </p>
+                  </p> */}
+
+                  <div className="mt-3 flex items-end gap-2">
+                    {/* Final price */}
+                    <p className="text-[13px] font-bold">
+                      {(item.price * item.quantity).toLocaleString("fa-IR")}{" "}
+                      <span className="text-[10px] font-normal text-black/40">تومن</span>
+                    </p>
+
+                    {/* Original price */}
+                    {item.hasDiscount && item.originalPrice > item.price && (
+                      <p className="text-[11px] text-black/35 line-through">
+                        {(item.originalPrice * item.quantity).toLocaleString("fa-IR")} تومن
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

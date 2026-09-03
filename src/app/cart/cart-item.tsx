@@ -21,6 +21,11 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
 
     const isOutOfStock = item.quantity > item.stock;
 
+    const discountPercent =
+        item.hasDiscount && item.originalPrice > 0
+            ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)
+            : 0;
+
     return (
         <Card
             className={`overflow-hidden rounded-[28px] border-0 bg-white p-3 shadow-none transition-opacity ${isOutOfStock ? "opacity-50" : ""
@@ -68,14 +73,7 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
 
                     {options && <p className="mt-1 truncate text-[11px] text-black/40">{options}</p>}
 
-                    <div className="mt-auto flex items-end justify-between gap-2">
-                        {/* <div className="min-w-0">
-                            <span className="block truncate text-[14px] font-bold">
-                                {item.price.toLocaleString("fa-IR")}
-                            </span>
-                            <span className="text-[10px] text-black/40">تومن</span>
-                        </div> */}
-
+                    {/* <div className="mt-auto flex items-end justify-between gap-2">
                         <div className="min-w-0">
                             <span className="relative block overflow-hidden truncate text-[14px] font-bold">
                                 <AnimatePresence mode="popLayout" initial={false}>
@@ -94,7 +92,6 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                             <span className="text-[10px] text-black/40">تومن</span>
                         </div>
 
-                        {/* Quantity */}
                         <div className="flex h-9 items-center rounded-full bg-[#f1f2f3] p-0.5">
                             <button
                                 type="button"
@@ -105,7 +102,77 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                                 <Plus className="size-4" />
                             </button>
 
-                            {/* <span className="w-7 text-center text-[13px] font-semibold">{item.quantity}</span> */}
+
+                            <span className="relative w-7 overflow-hidden text-center text-[13px] font-semibold">
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                    <motion.span
+                                        key={item.quantity}
+                                        initial={{ y: 12, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: -12, opacity: 0 }}
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                        className="inline-block"
+                                    >
+                                        {item.quantity}
+                                    </motion.span>
+                                </AnimatePresence>
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={onDecrease}
+                                disabled={isOutOfStock || item.quantity <= 1}
+                                className="flex size-8 items-center justify-center rounded-full bg-white shadow-sm transition-transform disabled:opacity-30 active:scale-90"
+                            >
+                                <Minus className="size-4" />
+                            </button>
+                        </div>
+                    </div> */}
+
+
+                    <div className="mt-auto flex items-end justify-between gap-2">
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                                {item.hasDiscount && discountPercent > 0 && (
+                                    <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-500">
+                                        {discountPercent}٪
+                                    </span>
+                                )}
+
+                                <span className="relative block overflow-hidden truncate text-[14px] font-bold">
+                                    <AnimatePresence mode="popLayout" initial={false}>
+                                        <motion.span
+                                            key={item.price}
+                                            initial={{ y: 10, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ y: -10, opacity: 0 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                                            className="inline-block"
+                                        >
+                                            {item.price.toLocaleString("fa-IR")}
+                                        </motion.span>
+                                    </AnimatePresence>
+                                </span>
+                            </div>
+
+                            {item.hasDiscount && item.originalPrice > item.price && (
+                                <div className="mt-0.5 text-[11px] text-black/35 line-through">
+                                    {item.originalPrice.toLocaleString("fa-IR")}
+                                </div>
+                            )}
+
+                            <span className="text-[10px] text-black/40">تومن</span>
+                        </div>
+
+                        <div className="flex h-9 items-center rounded-full bg-[#f1f2f3] p-0.5">
+                            <button
+                                type="button"
+                                onClick={onIncrease}
+                                disabled={isOutOfStock || item.quantity >= item.stock}
+                                className="flex size-8 items-center justify-center rounded-full bg-white shadow-sm transition-transform disabled:opacity-30 active:scale-90"
+                            >
+                                <Plus className="size-4" />
+                            </button>
 
                             <span className="relative w-7 overflow-hidden text-center text-[13px] font-semibold">
                                 <AnimatePresence mode="popLayout" initial={false}>
@@ -132,6 +199,7 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </Card>
