@@ -317,8 +317,8 @@ export function ProductCard({ product }: ProductCardProps) {
                         {/* Discount badge — top-left ribbon-style corner tag,
                             only rendered when there's an actual discount */}
                         {product.hasDiscount && discountPercent > 0 && (
-                            <div className="absolute left-3 top-3 z-10 flex h-7 min-w-7 items-center justify-center rounded-full bg-[#c0392b] px-2 shadow-sm">
-                                <span className="text-[11px] font-bold text-white">
+                            <div className="absolute left-3 top-3 z-10 flex h-7 min-w-7 items-center justify-center rounded-full bg-[#c0392b] px-3 shadow-sm">
+                                <span className="text-xs font-bold text-white">
                                     {discountPercent}%
                                 </span>
                             </div>
