@@ -100,6 +100,7 @@ import HomeContent from "./homecontent";
 import { Metadata } from "next";
 import type { PaginatedResult } from "@/types/user";
 import type { ProductListItemDTO } from "@/types/product";
+import NotificationPermissionDialog from "@/components/notification-permission-dialog";
 
 export const metadata: Metadata = {
     title: {
@@ -185,11 +186,15 @@ export default async function HomePage({
     const categories = categoriesResult.success ? categoriesResult.data : [];
 
     return (
-        <HomeContent
-            products={products}
-            categories={categories}
-            isAdmin={user?.role === "ADMIN"}
-        />
-    );
-}
+        <>
+            <HomeContent
+                products={products}
+                categories={categories}
+                isAdmin={user?.role === "ADMIN"}
+            />
+
+            <NotificationPermissionDialog />
+        </>
+    )
+};
 
