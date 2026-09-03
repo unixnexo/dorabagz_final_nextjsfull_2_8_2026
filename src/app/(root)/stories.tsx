@@ -490,16 +490,18 @@ export function Stories() {
 
                         {/* Tap zones for prev/next — left third goes back,
                             right two-thirds advances, matches common IG/story UX */}
-                        <button
-                            type="button"
-                            aria-label="استوری قبلی"
-                            onClick={goToPrev}
-                            className="absolute inset-y-0 left-0 z-20 w-1/3"
-                        />
+                        {/* Tap zones — RTL story behavior */}
                         <button
                             type="button"
                             aria-label="استوری بعدی"
                             onClick={goToNext}
+                            className="absolute inset-y-0 left-0 z-20 w-1/3"
+                        />
+
+                        <button
+                            type="button"
+                            aria-label="استوری قبلی"
+                            onClick={goToPrev}
                             className="absolute inset-y-0 right-0 z-20 w-2/3"
                         />
 
@@ -597,9 +599,18 @@ export function Stories() {
 
                                                 <div className="space-y-2">
                                                     {activeStory.linkedProducts.map((product) => (
+                                                        // <Link
+                                                        //     key={product.id}
+                                                        //     href={`/products/${product.slug}`}
+                                                        //     className="flex items-center gap-3 rounded-[18px] bg-white p-2.5 transition-transform active:scale-[0.98]"
+                                                        // >
                                                         <Link
                                                             key={product.id}
                                                             href={`/products/${product.slug}`}
+                                                            onClick={() => {
+                                                                setDetailsOpen(false);
+                                                                setActiveIndex(null);
+                                                            }}
                                                             className="flex items-center gap-3 rounded-[18px] bg-white p-2.5 transition-transform active:scale-[0.98]"
                                                         >
                                                             <div className="size-14 shrink-0 overflow-hidden rounded-2xl bg-muted">
