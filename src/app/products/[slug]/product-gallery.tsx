@@ -326,11 +326,33 @@ export function ProductGallery({
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent via-background/70 to-background" />
 
                 {hasDiscount && (
-                    <div className="absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-gradient-to-l from-rose-500 to-orange-400 px-3 py-1.5 text-xs font-bold text-white shadow-lg shadow-rose-500/30">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        تخفیف ویژه
-                    </div>
-                )}
+    <motion.div
+        initial={{ opacity: 0, y: -10, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+            type: "spring",
+            stiffness: 420,
+            damping: 26,
+            delay: 0.1,
+        }}
+        className="absolute right-4 top-4 z-10"
+    >
+        <motion.div
+            whileTap={{ scale: 0.96 }}
+            className="flex items-center gap-2 rounded-full bg-white px-3.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+        >
+            <span className="text-[12px] font-bold text-black">
+                تخفیف
+            </span>
+
+            <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+
+            <span className="text-[11px] font-medium text-black/45">
+                پیشنهاد ویژه
+            </span>
+        </motion.div>
+    </motion.div>
+)}
 
                 {!layoutId && (
                     <div className="absolute left-4 top-4 z-10" onClick={(e) => e.stopPropagation()}>
