@@ -122,14 +122,35 @@ export function VariantCard({
                     <span className="text-[10.5px] font-medium text-[#8E8E93]">
                         قیمت (تومن)
                     </span>
-                    <input
+                    {/* <input
                         type="number"
                         inputMode="numeric"
                         value={variant.price || ""}
                         onChange={(e) => onFieldChange("price", Number(e.target.value) || 0)}
                         placeholder="۰"
                         className="bg-transparent text-[13.5px] font-semibold tabular-nums text-[#1C1C1E] outline-none"
+                    /> */}
+
+                    <input
+                        type="text"
+                        inputMode="numeric"
+                        value={
+                            variant.price
+                                ? variant.price.toLocaleString("en-US")
+                                : ""
+                        }
+                        onChange={(e) => {
+                            const rawValue = e.target.value.replace(/,/g, "");
+
+                            // Only allow digits
+                            if (!/^\d*$/.test(rawValue)) return;
+
+                            onFieldChange("price", Number(rawValue) || 0);
+                        }}
+                        placeholder="۰"
+                        className="bg-transparent text-[13.5px] font-semibold tabular-nums text-[#1C1C1E] outline-none"
                     />
+
                 </label>
 
                 <label className="flex flex-col gap-1 rounded-2xl bg-black/[0.04] px-3 py-2">

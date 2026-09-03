@@ -263,7 +263,7 @@ export default function HomeContent({ products, categories, isAdmin }: HomeConte
                 <HomeHeader isAdmin={isAdmin} />
 
                 {/* Main content */}
-                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-10 pt-5 min-h-dvh">
+                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-32 pt-5 min-h-dvh">
                     {/* Stories */}
                     <section className="mb-6">
                         <Stories />
