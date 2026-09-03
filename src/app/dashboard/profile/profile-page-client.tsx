@@ -99,7 +99,7 @@ export function ProfilePageClient({
                         </DrawerContent>
                     </Drawer>
 
-                    <BackButton />
+                    <BackButton size="big" />
                 </header>
 
                 {/* Tabs */}

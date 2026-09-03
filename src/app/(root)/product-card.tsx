@@ -414,9 +414,17 @@ export function ProductCard({ product }: ProductCardProps) {
                         </div>
 
                         {/* Discount badge */}
-                        {product.hasDiscount && discountPercent > 0 && (
+                        {/* {product.hasDiscount && discountPercent > 0 && (
                             <div className="absolute left-3 top-3 z-10 flex h-7 min-w-7 items-center justify-center rounded-full bg-[#c0392b] px-2 shadow-sm">
                                 <span className="text-[11px] font-bold text-white">
+                                    {discountPercent}%
+                                </span>
+                            </div>
+                        )} */}
+
+                        {product.hasDiscount && discountPercent > 0 && (
+                            <div className="absolute left-3 top-3 z-10 flex h-7 min-w-7 items-center justify-center rounded-full border border-white/50 bg-white/25 px-2 text-black/70 shadow-[0_4px_15px_rgba(0,0,0,0.08)] backdrop-blur-xl">
+                                <span className="text-[11px] font-bold">
                                     {discountPercent}%
                                 </span>
                             </div>
