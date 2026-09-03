@@ -4,7 +4,15 @@ export default function robots(): MetadataRoute.Robots {
     return {
         rules: {
             userAgent: "*",
-            disallow: "/admin/",
+            allow: "/",
+            disallow: [
+                "/admin/",
+                "/cart/",
+                "/checkout/",
+                "/dashboard/",
+                "/favorites/",
+                "/notifications/",
+            ],
         },
         sitemap: "https://dorabagz.ir/sitemap.xml",
     };
