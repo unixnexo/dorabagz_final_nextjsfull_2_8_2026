@@ -15,6 +15,14 @@ import type {
   ProductVariantDTO,
 } from "@/types/product";
 import { computeVariantDiscount, type DiscountGroupForPricing } from "@/lib/discount-pricing";
+export type ProductReviewStatsMap = Map<
+  string,
+  {
+    reviewCount: number;
+    averageRating: number;
+  }
+>;
+
 
 type FullProduct = Product & {
   category: Category | null;
@@ -34,9 +42,15 @@ type FullProduct = Product & {
  * in src/server/discount/pricing-service.ts) or discounts silently won't
  * show up.
  */
+// export function toProductListItemDTO(
+//   product: FullProduct,
+//   discountGroups: DiscountGroupForPricing[] = []
+// ): ProductListItemDTO {
 export function toProductListItemDTO(
   product: FullProduct,
-  discountGroups: DiscountGroupForPricing[] = []
+  discountGroups: DiscountGroupForPricing[] = [],
+  favoritedProductIds: Set<string> = new Set(),
+  reviewStats: ProductReviewStatsMap = new Map()
 ): ProductListItemDTO {
   const mainImage = product.images.find((i) => i.isMain) ?? product.images[0] ?? null;
   const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
@@ -49,8 +63,17 @@ export function toProductListItemDTO(
     })
   );
 
+  // const originalPrices = pricedVariants.map((p) => p.originalPrice);
+  // const discountedPrices = pricedVariants.map((p) => p.discountedPrice);
+
+  // return {
   const originalPrices = pricedVariants.map((p) => p.originalPrice);
   const discountedPrices = pricedVariants.map((p) => p.discountedPrice);
+
+  const stats = reviewStats.get(product.id) ?? {
+    reviewCount: 0,
+    averageRating: 0,
+  };
 
   return {
     id: product.id,
@@ -66,8 +89,14 @@ export function toProductListItemDTO(
     maxPrice: originalPrices.length ? Math.max(...originalPrices) : 0,
     minDiscountedPrice: discountedPrices.length ? Math.min(...discountedPrices) : 0,
     maxDiscountedPrice: discountedPrices.length ? Math.max(...discountedPrices) : 0,
+    // hasDiscount: pricedVariants.some((p) => p.hasDiscount),
+    // totalStock,
     hasDiscount: pricedVariants.some((p) => p.hasDiscount),
     totalStock,
+
+    isFavorited: favoritedProductIds.has(product.id),
+    reviewCount: stats.reviewCount,
+    averageRating: stats.averageRating,
   };
 }
 
@@ -138,3 +167,5 @@ export const fullProductInclude = {
   options: { include: { values: true } },
   variants: { include: { optionValues: { include: { optionValue: { include: { option: true } } } } } },
 } as const;
+
+
