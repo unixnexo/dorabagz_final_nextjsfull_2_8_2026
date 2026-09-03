@@ -105,7 +105,7 @@ export function OrderBuyerDialog({ userId }: OrderBuyerDialogProps) {
                                                 {user.stats.totalSpent.toLocaleString("fa-IR")}
                                             </p>
                                             <p className="mt-1 text-[11px] text-[#8E8E93]">
-                                                مجموع خرید (تومان)
+                                                مجموع خرید (تومن)
                                             </p>
                                         </div>
                                     </div>

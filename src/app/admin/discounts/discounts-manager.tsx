@@ -79,7 +79,7 @@
 //                 {g.isActive ? "فعال" : "غیرفعال"}
 //               </span>
 //               <p style={{ margin: "4px 0" }}>
-//                 {g.type === "PERCENT" ? `${g.value}٪ تخفیف` : `${g.value.toLocaleString("fa-IR")} تومان تخفیف`}
+//                 {g.type === "PERCENT" ? `${g.value}٪ تخفیف` : `${g.value.toLocaleString("fa-IR")} تومن تخفیف`}
 //                 {g.startAt && ` | از ${new Date(g.startAt).toLocaleString("fa-IR")}`}
 //                 {g.endAt && ` | تا ${new Date(g.endAt).toLocaleString("fa-IR")}`}
 //               </p>
@@ -212,10 +212,10 @@
 //         style={{ display: "block", width: "100%", margin: "8px 0", padding: 8 }}
 //       >
 //         <option value="PERCENT">درصدی</option>
-//         <option value="FIXED">مبلغ ثابت (تومان)</option>
+//         <option value="FIXED">مبلغ ثابت (تومن)</option>
 //       </select>
 
-//       <label htmlFor="value">{type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}</label>
+//       <label htmlFor="value">{type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومن)"}</label>
 //       <input
 //         id="value"
 //         type="number"

@@ -220,7 +220,7 @@
 //                       item.price * item.quantity
 //                     ).toLocaleString("fa-IR")}{" "}
 //                     <span className="text-[10px] font-normal text-black/40">
-//                       تومان
+//                       تومن
 //                     </span>
 //                   </p>
 //                 </div>
@@ -273,7 +273,7 @@
 //                 {couponPreview.valid
 //                   ? `کد تخفیف اعمال شد؛ ${couponPreview.discountAmount.toLocaleString(
 //                     "fa-IR"
-//                   )} تومان تخفیف`
+//                   )} تومن تخفیف`
 //                   : couponPreview.error}
 //               </div>
 //             )}
@@ -384,7 +384,7 @@
 //             </span>
 
 //             <span>
-//               {cart.totalPrice.toLocaleString("fa-IR")} تومان
+//               {cart.totalPrice.toLocaleString("fa-IR")} تومن
 //             </span>
 //           </div>
 
@@ -394,7 +394,7 @@
 
 //               <span>
 //                 -{" "}
-//                 {discount.toLocaleString("fa-IR")} تومان
+//                 {discount.toLocaleString("fa-IR")} تومن
 //               </span>
 //             </div>
 //           )}
@@ -412,7 +412,7 @@
 //               </span>
 
 //               <span className="mr-1 text-[11px] text-black/40">
-//                 تومان
+//                 تومن
 //               </span>
 //             </div>
 //           </div>
@@ -436,7 +436,7 @@
 //                 <p className="truncate text-[17px] font-bold">
 //                   {total.toLocaleString("fa-IR")}{" "}
 //                   <span className="text-[10px] font-normal text-black/40">
-//                     تومان
+//                     تومن
 //                   </span>
 //                 </p>
 //               </div>
@@ -624,7 +624,7 @@ export function CheckoutForm() {
       setCouponPreview(result.data);
       if (result.data.valid) {
         toast.success(
-          `کد تخفیف اعمال شد؛ ${result.data.discountAmount.toLocaleString("fa-IR")} تومان تخفیف`
+          `کد تخفیف اعمال شد؛ ${result.data.discountAmount.toLocaleString("fa-IR")} تومن تخفیف`
         );
       } else {
         toast.error(result.data.error);
@@ -754,7 +754,7 @@ export function CheckoutForm() {
 
                   <p className="mt-3 text-[13px] font-bold">
                     {(item.price * item.quantity).toLocaleString("fa-IR")}{" "}
-                    <span className="text-[10px] font-normal text-black/40">تومان</span>
+                    <span className="text-[10px] font-normal text-black/40">تومن</span>
                   </p>
                 </div>
               </div>
@@ -803,7 +803,7 @@ export function CheckoutForm() {
                   {couponPreview.valid
                     ? `کد تخفیف اعمال شد؛ ${couponPreview.discountAmount.toLocaleString(
                       "fa-IR"
-                    )} تومان تخفیف`
+                    )} تومن تخفیف`
                     : couponPreview.error}
                 </motion.div>
               )}
@@ -887,7 +887,7 @@ export function CheckoutForm() {
           <div className="rounded-[28px] bg-white p-5">
             <div className="flex justify-between text-[13px]">
               <span className="text-black/45">جمع محصولات</span>
-              <span>{cart.totalPrice.toLocaleString("fa-IR")} تومان</span>
+              <span>{cart.totalPrice.toLocaleString("fa-IR")} تومن</span>
             </div>
 
             <AnimatePresence>
@@ -899,7 +899,7 @@ export function CheckoutForm() {
                   className="flex justify-between overflow-hidden text-[13px] text-green-600"
                 >
                   <span>تخفیف</span>
-                  <span>- {discount.toLocaleString("fa-IR")} تومان</span>
+                  <span>- {discount.toLocaleString("fa-IR")} تومن</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -921,7 +921,7 @@ export function CheckoutForm() {
                     {total.toLocaleString("fa-IR")}
                   </motion.span>
                 </AnimatePresence>
-                <span className="mr-1 text-[11px] text-black/40">تومان</span>
+                <span className="mr-1 text-[11px] text-black/40">تومن</span>
               </div>
             </div>
           </div>
@@ -936,7 +936,7 @@ export function CheckoutForm() {
               <p className="text-black/40">مبلغ قابل پرداخت</p>
               <p className="truncate text-xl font-bold">
                 {total.toLocaleString("fa-IR")}{" "}
-                <span className="text-sm font-normal text-black/40">تومان</span>
+                <span className="text-sm font-normal text-black/40">تومن</span>
               </p>
             </div>
 
@@ -1040,7 +1040,7 @@ function RedirectingOverlay({ amount }: { amount: number }) {
         >
           مبلغ{" "}
           <span className="font-semibold text-black/70">
-            {amount.toLocaleString("fa-IR")} تومان
+            {amount.toLocaleString("fa-IR")} تومن
           </span>{" "}
           برای پرداخت به درگاه بانکی ارسال می‌شود
           <br />

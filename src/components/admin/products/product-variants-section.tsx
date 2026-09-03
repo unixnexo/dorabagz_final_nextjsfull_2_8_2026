@@ -64,12 +64,12 @@ export function ProductVariantsSection({
                                                     {variant.price.toLocaleString("fa-IR")}
                                                 </span>
                                                 <span className="font-semibold tabular-nums text-[#FF3B30]">
-                                                    {variant.discountedPrice.toLocaleString("fa-IR")} تومان
+                                                    {variant.discountedPrice.toLocaleString("fa-IR")} تومن
                                                 </span>
                                             </>
                                         ) : (
                                             <span className="font-semibold tabular-nums text-[#1C1C1E]">
-                                                {variant.price.toLocaleString("fa-IR")} تومان
+                                                {variant.price.toLocaleString("fa-IR")} تومن
                                             </span>
                                         )}
                                     </div>

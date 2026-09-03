@@ -73,7 +73,7 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                             <span className="block truncate text-[14px] font-bold">
                                 {item.price.toLocaleString("fa-IR")}
                             </span>
-                            <span className="text-[10px] text-black/40">تومان</span>
+                            <span className="text-[10px] text-black/40">تومن</span>
                         </div> */}
 
                         <div className="min-w-0">
@@ -91,7 +91,7 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
                                     </motion.span>
                                 </AnimatePresence>
                             </span>
-                            <span className="text-[10px] text-black/40">تومان</span>
+                            <span className="text-[10px] text-black/40">تومن</span>
                         </div>
 
                         {/* Quantity */}

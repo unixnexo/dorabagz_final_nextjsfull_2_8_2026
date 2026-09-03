@@ -23,8 +23,8 @@ export function ProductDetailView({ product }: { product: ProductDetailDTO }) {
                 const min = Math.min(...prices);
                 const max = Math.max(...prices);
                 return min === max
-                    ? `${min.toLocaleString("fa-IR")} تومان`
-                    : `${min.toLocaleString("fa-IR")} - ${max.toLocaleString("fa-IR")} تومان`;
+                    ? `${min.toLocaleString("fa-IR")} تومن`
+                    : `${min.toLocaleString("fa-IR")} - ${max.toLocaleString("fa-IR")} تومن`;
             })();
 
     const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);

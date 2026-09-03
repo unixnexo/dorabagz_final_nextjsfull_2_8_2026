@@ -232,7 +232,7 @@ export function OrderActions({
               >
                 مبلغ{" "}
                 <span className="font-semibold text-black/70">
-                  {totalAmount.toLocaleString("fa-IR")} تومان
+                  {totalAmount.toLocaleString("fa-IR")} تومن
                 </span>{" "}
                 برای پرداخت به درگاه بانکی ارسال می‌شود
                 <br />

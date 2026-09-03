@@ -167,7 +167,7 @@ export function CouponFormSheet({
                         />
                     </FormField>
 
-                    <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}>
+                    <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومن)"}>
                         {/* <TextInput
                             type="number"
                             inputMode="numeric"
@@ -195,7 +195,7 @@ export function CouponFormSheet({
                     </FormField>
 
                     {type === "PERCENT" && (
-                        <FormField label="حداکثر مبلغ تخفیف (تومان، اختیاری)">
+                        <FormField label="حداکثر مبلغ تخفیف (تومن، اختیاری)">
                             {/* <TextInput
                                 type="number"
                                 inputMode="numeric"
@@ -231,7 +231,7 @@ export function CouponFormSheet({
                         <CouponCategoryPicker selectedIds={categoryIds} onChange={setCategoryIds} />
                     )}
 
-                    <FormField label="حداقل مبلغ سفارش (تومان، اختیاری)">
+                    <FormField label="حداقل مبلغ سفارش (تومن، اختیاری)">
                         {/* <TextInput
                             type="number"
                             inputMode="numeric"

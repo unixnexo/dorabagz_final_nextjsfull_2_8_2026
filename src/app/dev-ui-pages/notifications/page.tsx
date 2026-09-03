@@ -62,7 +62,7 @@ const initialNotifications: Notification[] = [
         id: 4,
         type: "wallet",
         title: "پرداخت شما انجام شد",
-        description: "مبلغ ۲,۵۰۰,۰۰۰ تومان با موفقیت پرداخت شد.",
+        description: "مبلغ ۲,۵۰۰,۰۰۰ تومن با موفقیت پرداخت شد.",
         date: "۲۶ مرداد",
         time: "۱۴:۰۸",
         unread: false,

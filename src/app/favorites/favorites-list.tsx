@@ -63,15 +63,15 @@
 //                   </span>
 //                   <span style={{ color: "#c0392b", fontWeight: "bold" }}>
 //                     {fav.minDiscountedPrice === fav.maxDiscountedPrice
-//                       ? `${fav.minDiscountedPrice.toLocaleString("fa-IR")} تومان`
-//                       : `${fav.minDiscountedPrice.toLocaleString("fa-IR")} - ${fav.maxDiscountedPrice.toLocaleString("fa-IR")} تومان`}
+//                       ? `${fav.minDiscountedPrice.toLocaleString("fa-IR")} تومن`
+//                       : `${fav.minDiscountedPrice.toLocaleString("fa-IR")} - ${fav.maxDiscountedPrice.toLocaleString("fa-IR")} تومن`}
 //                   </span>
 //                 </p>
 //               ) : (
 //                 <p>
 //                   {fav.minPrice === fav.maxPrice
-//                     ? `${fav.minPrice.toLocaleString("fa-IR")} تومان`
-//                     : `${fav.minPrice.toLocaleString("fa-IR")} - ${fav.maxPrice.toLocaleString("fa-IR")} تومان`}
+//                     ? `${fav.minPrice.toLocaleString("fa-IR")} تومن`
+//                     : `${fav.minPrice.toLocaleString("fa-IR")} - ${fav.maxPrice.toLocaleString("fa-IR")} تومن`}
 //                 </p>
 //               )}
 //               <p>{fav.totalStock > 0 ? `موجودی: ${fav.totalStock}` : "ناموجود"}</p>

@@ -11,8 +11,8 @@
 // }) {
 //     const priceLabel =
 //         product.minPrice === product.maxPrice
-//             ? `${product.minPrice.toLocaleString("fa-IR")} تومان`
-//             : `${product.minPrice.toLocaleString("fa-IR")} - ${product.maxPrice.toLocaleString("fa-IR")} تومان`;
+//             ? `${product.minPrice.toLocaleString("fa-IR")} تومن`
+//             : `${product.minPrice.toLocaleString("fa-IR")} - ${product.maxPrice.toLocaleString("fa-IR")} تومن`;
 
 //     return (
 //         <div
@@ -110,8 +110,8 @@ export function ProductListCard({
 }) {
     const priceLabel =
         product.minPrice === product.maxPrice
-            ? `${product.minPrice.toLocaleString("fa-IR")} تومان`
-            : `${product.minPrice.toLocaleString("fa-IR")} - ${product.maxPrice.toLocaleString("fa-IR")} تومان`;
+            ? `${product.minPrice.toLocaleString("fa-IR")} تومن`
+            : `${product.minPrice.toLocaleString("fa-IR")} - ${product.maxPrice.toLocaleString("fa-IR")} تومن`;
 
     return (
         <div

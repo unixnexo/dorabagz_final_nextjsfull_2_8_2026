@@ -161,7 +161,7 @@ export function CartView() {
                                 </span>
 
                                 <span className="font-medium">
-                                    {totalPrice.toLocaleString("fa-IR")} تومان
+                                    {totalPrice.toLocaleString("fa-IR")} تومن
                                 </span>
                             </div>
 
@@ -178,7 +178,7 @@ export function CartView() {
                                     </span>
 
                                     <span className="mr-1 text-[12px] text-black/45">
-                                        تومان
+                                        تومن
                                     </span>
                                 </div>
                             </div>
@@ -273,7 +273,7 @@ function CartItem({
                             </span>
 
                             <span className="text-[10px] text-black/40">
-                                تومان
+                                تومن
                             </span>
                         </div>
 

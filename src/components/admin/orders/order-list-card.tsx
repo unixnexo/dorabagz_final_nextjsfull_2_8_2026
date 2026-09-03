@@ -19,7 +19,7 @@ export function OrderListCard({ order }: { order: OrderListItemDTO }) {
                 </div>
 
                 <p className="mt-1.5 text-[15px] font-bold tabular-nums text-[#1C1C1E]">
-                    {order.totalAmount.toLocaleString("fa-IR")} تومان
+                    {order.totalAmount.toLocaleString("fa-IR")} تومن
                 </p>
 
                 <div className="mt-1.5 flex items-center gap-3 text-[11.5px] text-[#8E8E93]">

@@ -151,7 +151,7 @@
 //                   .map(([k, v]) => `${k}: ${v}`)
 //                   .join(" / ") || "-"}
 //               </td>
-//               <td>{item.price.toLocaleString("fa-IR")} تومان</td>
+//               <td>{item.price.toLocaleString("fa-IR")} تومن</td>
 //               <td>
 //                 <input
 //                   type="number"
@@ -165,7 +165,7 @@
 //                 />
 //                 {item.stock < item.quantity && <p style={{ color: "red", fontSize: 12 }}>موجودی کافی نیست</p>}
 //               </td>
-//               <td>{(item.price * item.quantity).toLocaleString("fa-IR")} تومان</td>
+//               <td>{(item.price * item.quantity).toLocaleString("fa-IR")} تومن</td>
 //               <td>
 //                 <button onClick={() => onRemove(item.variantId)}>حذف</button>
 //               </td>
@@ -174,7 +174,7 @@
 //         </tbody>
 //       </table>
 
-//       <h2 style={{ marginTop: 16 }}>جمع کل: {totalPrice.toLocaleString("fa-IR")} تومان</h2>
+//       <h2 style={{ marginTop: 16 }}>جمع کل: {totalPrice.toLocaleString("fa-IR")} تومن</h2>
 
 //       {/* /checkout is a future module */}
 //       <Link href="/checkout">

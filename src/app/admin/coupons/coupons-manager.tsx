@@ -83,7 +83,7 @@
 //               <tr key={c.id}>
 //                 <td>{c.code}</td>
 //                 <td>{c.type === "PERCENT" ? "درصدی" : "مبلغ ثابت"}</td>
-//                 <td>{c.type === "PERCENT" ? `${c.value}%` : `${c.value.toLocaleString("fa-IR")} تومان`}</td>
+//                 <td>{c.type === "PERCENT" ? `${c.value}%` : `${c.value.toLocaleString("fa-IR")} تومن`}</td>
 //                 <td>
 //                   {c.scope === "ENTIRE_CART"
 //                     ? "کل سبد خرید"
@@ -221,10 +221,10 @@
 //         style={{ display: "block", width: "100%", margin: "8px 0", padding: 8 }}
 //       >
 //         <option value="PERCENT">درصدی</option>
-//         <option value="FIXED">مبلغ ثابت (تومان)</option>
+//         <option value="FIXED">مبلغ ثابت (تومن)</option>
 //       </select>
 
-//       <label htmlFor="value">{type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}</label>
+//       <label htmlFor="value">{type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومن)"}</label>
 //       <input
 //         id="value"
 //         type="number"
@@ -236,7 +236,7 @@
 //       {/* maxDiscountAmount only makes sense for PERCENT — hidden for FIXED */}
 //       {type === "PERCENT" && (
 //         <>
-//           <label htmlFor="maxDiscount">حداکثر مبلغ تخفیف (تومان، اختیاری)</label>
+//           <label htmlFor="maxDiscount">حداکثر مبلغ تخفیف (تومن، اختیاری)</label>
 //           <input
 //             id="maxDiscount"
 //             type="number"
@@ -303,7 +303,7 @@
 //         </div>
 //       )}
 
-//       <label htmlFor="minOrder">حداقل مبلغ سفارش (تومان، اختیاری)</label>
+//       <label htmlFor="minOrder">حداقل مبلغ سفارش (تومن، اختیاری)</label>
 //       <input
 //         id="minOrder"
 //         type="number"

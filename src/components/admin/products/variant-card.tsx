@@ -35,7 +35,7 @@
 //             <div className="mt-2.5 grid grid-cols-2 gap-2">
 //                 <label className="flex flex-col gap-1 rounded-2xl bg-black/[0.04] px-3 py-2">
 //                     <span className="text-[10.5px] font-medium text-[#8E8E93]">
-//                         قیمت (تومان)
+//                         قیمت (تومن)
 //                     </span>
 //                     <input
 //                         type="number"
@@ -120,7 +120,7 @@ export function VariantCard({
             <div className="mt-2.5 grid grid-cols-2 gap-2">
                 <label className="flex flex-col gap-1 rounded-2xl bg-black/[0.04] px-3 py-2">
                     <span className="text-[10.5px] font-medium text-[#8E8E93]">
-                        قیمت (تومان)
+                        قیمت (تومن)
                     </span>
                     <input
                         type="number"

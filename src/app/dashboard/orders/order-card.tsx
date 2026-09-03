@@ -43,7 +43,7 @@ export function OrderCard({ order }: { order: OrderListItemDTO }) {
 
                         <p className="mt-1 text-[15px] font-bold">
                             {order.totalAmount.toLocaleString("fa-IR")}
-                            <span className="mr-1 text-[11px] font-normal text-black/40">تومان</span>
+                            <span className="mr-1 text-[11px] font-normal text-black/40">تومن</span>
                         </p>
                     </div>
 

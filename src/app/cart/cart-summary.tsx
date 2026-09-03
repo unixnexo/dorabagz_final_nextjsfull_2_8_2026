@@ -31,7 +31,7 @@ export function CartSummary({
         <section className="mt-5 rounded-[28px] bg-white p-5">
             {/* <div className="flex items-center justify-between text-[14px]">
                 <span className="text-black/50">جمع محصولات</span>
-                <span className="font-medium">{totalPrice.toLocaleString("fa-IR")} تومان</span>
+                <span className="font-medium">{totalPrice.toLocaleString("fa-IR")} تومن</span>
             </div> */}
 
             <div className="flex items-center justify-between text-[14px]">
@@ -46,7 +46,7 @@ export function CartSummary({
                             transition={{ type: "spring", stiffness: 400, damping: 32 }}
                             className="inline-block"
                         >
-                            {totalPrice.toLocaleString("fa-IR")} تومان
+                            {totalPrice.toLocaleString("fa-IR")} تومن
                         </motion.span>
                     </AnimatePresence>
                 </span>
@@ -60,7 +60,7 @@ export function CartSummary({
                     <span className="text-[21px] font-bold tracking-tight">
                         {totalPrice.toLocaleString("fa-IR")}
                     </span>
-                    <span className="mr-1 text-[12px] text-black/45">تومان</span>
+                    <span className="mr-1 text-[12px] text-black/45">تومن</span>
                 </div>
             </div> */}
 
@@ -81,7 +81,7 @@ export function CartSummary({
                             </motion.span>
                         </AnimatePresence>
                     </span>
-                    <span className="mr-1 text-[12px] text-black/45">تومان</span>
+                    <span className="mr-1 text-[12px] text-black/45">تومن</span>
                 </div>
             </div>
 

@@ -116,19 +116,19 @@
 //               </td>
 //               <td>{item.optionSummary ?? "-"}</td>
 //               <td>{item.quantity}</td>
-//               <td>{(item.unitPrice * item.quantity).toLocaleString("fa-IR")} تومان</td>
+//               <td>{(item.unitPrice * item.quantity).toLocaleString("fa-IR")} تومن</td>
 //             </tr>
 //           ))}
 //         </tbody>
 //       </table>
 
-//       <p>جمع جزء: {order.subtotal.toLocaleString("fa-IR")} تومان</p>
+//       <p>جمع جزء: {order.subtotal.toLocaleString("fa-IR")} تومن</p>
 //       {order.discountAmount > 0 && (
 //         <p>
-//           تخفیف {order.couponCode ? `(${order.couponCode})` : ""}: {order.discountAmount.toLocaleString("fa-IR")}- تومان
+//           تخفیف {order.couponCode ? `(${order.couponCode})` : ""}: {order.discountAmount.toLocaleString("fa-IR")}- تومن
 //         </p>
 //       )}
-//       <h3>مبلغ پرداخت شده: {order.totalAmount.toLocaleString("fa-IR")} تومان</h3>
+//       <h3>مبلغ پرداخت شده: {order.totalAmount.toLocaleString("fa-IR")} تومن</h3>
 
 //       <h2>آدرس ارسال</h2>
 //       <p>

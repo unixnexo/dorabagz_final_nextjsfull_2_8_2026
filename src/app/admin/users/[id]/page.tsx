@@ -45,7 +45,7 @@
 //       <section style={{ marginBottom: 24 }}>
 //         <h2>خلاصه</h2>
 //         <p>تعداد سفارشات: {user.stats.totalOrders} (فعلاً ۰ — بعد از ماژول سفارشات فعال می‌شود)</p>
-//         <p>مجموع خرید: {user.stats.totalSpent} تومان (فعلاً ۰)</p>
+//         <p>مجموع خرید: {user.stats.totalSpent} تومن (فعلاً ۰)</p>
 //         <p>آی‌پی آخرین ورود: {user.ipAddress ?? "-"}</p>
 //         <p>تلاش‌های ناموفق OTP: {user.failedOtpAttempts}</p>
 //         <p>قفل تا: {user.lockedUntil ?? "قفل نیست"}</p>
@@ -391,7 +391,7 @@ function formatNumber(value: number) {
 }
 
 function formatCurrency(value: number) {
-  return `${formatNumber(value)} تومان`;
+  return `${formatNumber(value)} تومن`;
 }
 
 function formatDateTime(value: string) {

@@ -7,7 +7,7 @@
 // /**
 //  * Price display with two states:
 //  *  - No variant selected yet + multiple variants: shows a range
-//  *    ("شروع قیمت از X تا Y تومان") built from each variant's EFFECTIVE
+//  *    ("شروع قیمت از X تا Y تومن") built from each variant's EFFECTIVE
 //  *    price (discounted price if it has one, else base price). If the
 //  *    range collapses to a single value (min === max), shows just that
 //  *    price instead of a range.
@@ -47,14 +47,14 @@
 //                     >
 //                         {selectedVariant.hasDiscount && (
 //                             <span className="text-base font-medium text-muted-foreground line-through">
-//                                 {selectedVariant.price.toLocaleString("fa-IR")} تومان
+//                                 {selectedVariant.price.toLocaleString("fa-IR")} تومن
 //                             </span>
 //                         )}
 //                         <span className="text-2xl font-extrabold text-primary">
 //                             {(selectedVariant.hasDiscount ? selectedVariant.discountedPrice : selectedVariant.price).toLocaleString(
 //                                 "fa-IR"
 //                             )}{" "}
-//                             تومان
+//                             تومن
 //                         </span>
 //                     </motion.div>
 //                 ) : range ? (
@@ -67,11 +67,11 @@
 //                     >
 //                         {range.min === range.max ? (
 //                             <span className="text-2xl font-extrabold text-primary">
-//                                 {range.min.toLocaleString("fa-IR")} تومان
+//                                 {range.min.toLocaleString("fa-IR")} تومن
 //                             </span>
 //                         ) : (
 //                             <span className="text-lg font-bold text-primary">
-//                                 شروع قیمت از {range.min.toLocaleString("fa-IR")} تا {range.max.toLocaleString("fa-IR")} تومان
+//                                 شروع قیمت از {range.min.toLocaleString("fa-IR")} تا {range.max.toLocaleString("fa-IR")} تومن
 //                             </span>
 //                         )}
 //                     </motion.div>
@@ -100,7 +100,7 @@ import type { ProductVariantDTO } from "@/types/product";
 /**
  * Price display with two states:
  *  - No variant selected yet + multiple variants: shows a range
- *    ("شروع قیمت از X تا Y تومان") built from each variant's EFFECTIVE
+ *    ("شروع قیمت از X تا Y تومن") built from each variant's EFFECTIVE
  *    price (discounted price if it has one, else base price). If the
  *    range collapses to a single value (min === max), shows just that
  *    price instead of a range.
@@ -137,14 +137,14 @@ export function ProductPrice({
                     >
                         {selectedVariant.hasDiscount && (
                             <span className="text-base font-medium text-muted-foreground line-through">
-                                {selectedVariant.price.toLocaleString("fa-IR")} تومان
+                                {selectedVariant.price.toLocaleString("fa-IR")} تومن
                             </span>
                         )}
                         <span className="text-2xl font-extrabold text-primary">
                             {(selectedVariant.hasDiscount ? selectedVariant.discountedPrice : selectedVariant.price).toLocaleString(
                                 "fa-IR"
                             )}{" "}
-                            تومان
+                            تومن
                         </span>
                     </motion.div>
                 ) : range ? (
@@ -157,11 +157,11 @@ export function ProductPrice({
                     >
                         {!range.isRange ? (
                             <span className="text-2xl font-extrabold text-primary">
-                                {range.min.toLocaleString("fa-IR")} تومان
+                                {range.min.toLocaleString("fa-IR")} تومن
                             </span>
                         ) : (
                             <span className="text-lg font-bold text-primary">
-                                شروع قیمت از {range.min.toLocaleString("fa-IR")} تا {range.max.toLocaleString("fa-IR")} تومان
+                                شروع قیمت از {range.min.toLocaleString("fa-IR")} تا {range.max.toLocaleString("fa-IR")} تومن
                             </span>
                         )}
                     </motion.div>

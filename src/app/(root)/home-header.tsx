@@ -160,7 +160,7 @@
 //                                         />
 
 //                                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-//                                             تومان
+//                                             تومن
 //                                         </span>
 //                                     </div>
 
@@ -177,7 +177,7 @@
 //                                         />
 
 //                                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-//                                             تومان
+//                                             تومن
 //                                         </span>
 //                                     </div>
 //                                 </div>
@@ -508,7 +508,7 @@ export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
                                         />
 
                                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                                            تومان
+                                            تومن
                                         </span>
                                     </div>
 
@@ -525,7 +525,7 @@ export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
                                         />
 
                                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-                                            تومان
+                                            تومن
                                         </span>
                                     </div>
                                 </div>

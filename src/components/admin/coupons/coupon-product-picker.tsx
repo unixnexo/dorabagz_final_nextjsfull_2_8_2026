@@ -134,8 +134,8 @@ export function CouponProductPicker({
                             const isSelected = selectedIds.includes(p.id);
                             const priceLabel =
                                 p.minPrice === p.maxPrice
-                                    ? `${p.minPrice.toLocaleString("fa-IR")} تومان`
-                                    : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومان`;
+                                    ? `${p.minPrice.toLocaleString("fa-IR")} تومن`
+                                    : `${p.minPrice.toLocaleString("fa-IR")} - ${p.maxPrice.toLocaleString("fa-IR")} تومن`;
 
                             return (
                                 <button

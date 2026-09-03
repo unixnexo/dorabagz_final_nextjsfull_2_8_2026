@@ -84,7 +84,7 @@
 //                     <Link href={`/dashboard/orders/${order.id}`}>{order.id.slice(0, 8)}...</Link>
 //                   </td>
 //                   <td>{order.itemCount}</td>
-//                   <td>{order.totalAmount.toLocaleString("fa-IR")} تومان</td>
+//                   <td>{order.totalAmount.toLocaleString("fa-IR")} تومن</td>
 //                   <td>{STATUS_LABELS[order.status]}</td>
 //                   <td>{new Date(order.createdAt).toLocaleDateString("fa-IR")}</td>
 //                 </tr>

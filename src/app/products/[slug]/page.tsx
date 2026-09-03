@@ -51,8 +51,8 @@
 //   const range = getPriceRange(product.variants);
 //   const priceText = range
 //     ? range.isRange
-//       ? `از ${range.min.toLocaleString("fa-IR")} تا ${range.max.toLocaleString("fa-IR")} تومان`
-//       : `${range.min.toLocaleString("fa-IR")} تومان`
+//       ? `از ${range.min.toLocaleString("fa-IR")} تا ${range.max.toLocaleString("fa-IR")} تومن`
+//       : `${range.min.toLocaleString("fa-IR")} تومن`
 //     : null;
 
 //   const parts = [product.title];
@@ -281,8 +281,8 @@ function buildFallbackDescription(product: {
   const range = getPriceRange(product.variants);
   const priceText = range
     ? range.isRange
-      ? `از ${range.min.toLocaleString("fa-IR")} تا ${range.max.toLocaleString("fa-IR")} تومان`
-      : `${range.min.toLocaleString("fa-IR")} تومان`
+      ? `از ${range.min.toLocaleString("fa-IR")} تا ${range.max.toLocaleString("fa-IR")} تومن`
+      : `${range.min.toLocaleString("fa-IR")} تومن`
     : null;
 
   const parts = [product.title];

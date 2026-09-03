@@ -115,7 +115,7 @@ export default function Page() {
           </h1>
 
           <p className="text-2xl font-extrabold text-primary">
-            ۲,۴۹۰,۰۰۰ تومان
+            ۲,۴۹۰,۰۰۰ تومن
           </p>
         </div>
 

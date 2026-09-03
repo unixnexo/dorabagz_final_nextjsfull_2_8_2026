@@ -28,25 +28,25 @@
 //                             {item.quantity.toLocaleString("fa-IR")}×
 //                         </span>
 //                         <span className="shrink-0 text-[13px] font-semibold tabular-nums text-[#1C1C1E]">
-//                             {(item.unitPrice * item.quantity).toLocaleString("fa-IR")} تومان
+//                             {(item.unitPrice * item.quantity).toLocaleString("fa-IR")} تومن
 //                         </span>
 //                     </li>
 //                 ))}
 //             </ul>
 
 //             <div className="space-y-1.5 border-t border-[#E5E5EA] px-4 py-3.5">
-//                 <TotalsRow label="جمع جزء" value={`${order.subtotal.toLocaleString("fa-IR")} تومان`} />
+//                 <TotalsRow label="جمع جزء" value={`${order.subtotal.toLocaleString("fa-IR")} تومن`} />
 //                 {order.discountAmount > 0 && (
 //                     <TotalsRow
 //                         label={`تخفیف${order.couponCode ? ` (${order.couponCode})` : ""}`}
-//                         value={`${order.discountAmount.toLocaleString("fa-IR")}- تومان`}
+//                         value={`${order.discountAmount.toLocaleString("fa-IR")}- تومن`}
 //                         muted
 //                     />
 //                 )}
 //                 <div className="flex items-center justify-between pt-1">
 //                     <span className="text-[14px] font-bold text-[#1C1C1E]">مبلغ کل</span>
 //                     <span className="text-[15px] font-bold tabular-nums text-[#0A7D5C]">
-//                         {order.totalAmount.toLocaleString("fa-IR")} تومان
+//                         {order.totalAmount.toLocaleString("fa-IR")} تومن
 //                     </span>
 //                 </div>
 //             </div>
@@ -174,7 +174,7 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
                                 {(item.unitPrice * item.quantity).toLocaleString(
                                     "fa-IR"
                                 )}{" "}
-                                تومان
+                                تومن
                             </span>
                         </li>
                     ))}
@@ -183,13 +183,13 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
                 <div className="space-y-1.5 border-t border-[#E5E5EA] px-4 py-3.5">
                     <TotalsRow
                         label="جمع جزء"
-                        value={`${order.subtotal.toLocaleString("fa-IR")} تومان`}
+                        value={`${order.subtotal.toLocaleString("fa-IR")} تومن`}
                     />
 
                     {order.discountAmount > 0 && (
                         <TotalsRow
                             label={`تخفیف${order.couponCode ? ` (${order.couponCode})` : ""}`}
-                            value={`${order.discountAmount.toLocaleString("fa-IR")}- تومان`}
+                            value={`${order.discountAmount.toLocaleString("fa-IR")}- تومن`}
                             muted
                         />
                     )}
@@ -200,7 +200,7 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
                         </span>
 
                         <span className="text-[15px] font-bold tabular-nums text-[#0A7D5C]">
-                            {order.totalAmount.toLocaleString("fa-IR")} تومان
+                            {order.totalAmount.toLocaleString("fa-IR")} تومن
                         </span>
                     </div>
                 </div>

@@ -89,14 +89,14 @@ export function ProductActions({
             {selectedVariant.hasDiscount ? (
               <>
                 <span style={{ textDecoration: "line-through", color: "#999", marginLeft: 8 }}>
-                  {selectedVariant.price.toLocaleString("fa-IR")} تومان
+                  {selectedVariant.price.toLocaleString("fa-IR")} تومن
                 </span>
                 <span style={{ color: "#c0392b", fontWeight: "bold" }}>
-                  {selectedVariant.discountedPrice.toLocaleString("fa-IR")} تومان
+                  {selectedVariant.discountedPrice.toLocaleString("fa-IR")} تومن
                 </span>
               </>
             ) : (
-              <>قیمت: {selectedVariant.price.toLocaleString("fa-IR")} تومان</>
+              <>قیمت: {selectedVariant.price.toLocaleString("fa-IR")} تومن</>
             )}
             {" | "}موجودی: {selectedVariant.stock}
           </p>

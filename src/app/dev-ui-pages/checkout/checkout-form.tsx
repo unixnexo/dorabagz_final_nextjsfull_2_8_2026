@@ -220,7 +220,7 @@ export function CheckoutForm() {
                                             item.price * item.quantity
                                         ).toLocaleString("fa-IR")}{" "}
                                         <span className="text-[10px] font-normal text-black/40">
-                                            تومان
+                                            تومن
                                         </span>
                                     </p>
                                 </div>
@@ -273,7 +273,7 @@ export function CheckoutForm() {
                                 {couponPreview.valid
                                     ? `کد تخفیف اعمال شد؛ ${couponPreview.discountAmount.toLocaleString(
                                         "fa-IR"
-                                    )} تومان تخفیف`
+                                    )} تومن تخفیف`
                                     : couponPreview.error}
                             </div>
                         )}
@@ -384,7 +384,7 @@ export function CheckoutForm() {
                         </span>
 
                         <span>
-                            {cart.totalPrice.toLocaleString("fa-IR")} تومان
+                            {cart.totalPrice.toLocaleString("fa-IR")} تومن
                         </span>
                     </div>
 
@@ -394,7 +394,7 @@ export function CheckoutForm() {
 
                             <span>
                                 -{" "}
-                                {discount.toLocaleString("fa-IR")} تومان
+                                {discount.toLocaleString("fa-IR")} تومن
                             </span>
                         </div>
                     )}
@@ -412,7 +412,7 @@ export function CheckoutForm() {
                             </span>
 
                             <span className="mr-1 text-[11px] text-black/40">
-                                تومان
+                                تومن
                             </span>
                         </div>
                     </div>
@@ -435,7 +435,7 @@ export function CheckoutForm() {
                             <p className="truncate text-[16px] font-bold">
                                 {total.toLocaleString("fa-IR")}{" "}
                                 <span className="text-[10px] font-normal text-black/40">
-                                    تومان
+                                    تومن
                                 </span>
                             </p>
                         </div>

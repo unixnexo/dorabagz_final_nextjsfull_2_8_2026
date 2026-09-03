@@ -147,7 +147,7 @@ export function DiscountFormSheet({
                         />
                     </FormField>
 
-                    <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومان)"}>
+                    <FormField label={type === "PERCENT" ? "درصد تخفیف (۱ تا ۱۰۰)" : "مبلغ تخفیف (تومن)"}>
                         {/* <TextInput
                             type="number"
                             inputMode="numeric"

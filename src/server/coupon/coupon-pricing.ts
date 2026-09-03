@@ -74,7 +74,7 @@ export function priceCoupon(
   if (coupon.minOrderAmount !== null && cartTotal < coupon.minOrderAmount) {
     return {
       valid: false,
-      error: `حداقل مبلغ سفارش برای این کد تخفیف ${coupon.minOrderAmount.toLocaleString("fa-IR")} تومان است.`,
+      error: `حداقل مبلغ سفارش برای این کد تخفیف ${coupon.minOrderAmount.toLocaleString("fa-IR")} تومن است.`,
     };
   }
 

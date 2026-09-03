@@ -1,5 +1,5 @@
 export function toman(n: number) {
-    return `${n.toLocaleString("fa-IR")} تومان`;
+    return `${n.toLocaleString("fa-IR")} تومن`;
 }
 
 export function faNumber(n: number) {
