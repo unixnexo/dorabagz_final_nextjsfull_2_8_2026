@@ -3,6 +3,9 @@
 // import { getCurrentUser } from "@/server/user/get-current-user";
 // import HomeContent from "./homecontent";
 // import { Metadata } from "next";
+// import type { PaginatedResult } from "@/types/user";
+// import type { ProductListItemDTO } from "@/types/product";
+// import NotificationPermissionDialog from "@/components/notification-permission-dialog";
 
 // export const metadata: Metadata = {
 //     title: {
@@ -49,6 +52,14 @@
 //     },
 // };
 
+// const EMPTY_RESULT: PaginatedResult<ProductListItemDTO> = {
+//     items: [],
+//     page: 1,
+//     pageSize: 20,
+//     totalItems: 0,
+//     totalPages: 1,
+// };
+
 // export default async function HomePage({
 //     searchParams,
 // }: {
@@ -64,29 +75,33 @@
 //             categoryId: params.categoryId,
 //             minPrice: params.minPrice,
 //             maxPrice: params.maxPrice,
+//             // URL values are always strings ("1"/"0") or absent — turn
+//             // them into real booleans here so productListQuerySchema's
+//             // z.coerce.boolean() (which would treat "0" as truthy) never
+//             // sees the raw string.
+//             inStock: params.inStock === "1",
+//             hasDiscount: params.hasDiscount === "1",
+//             sort: params.sort,
 //         }),
 //         getCategoryTreeAction(),
 //         getCurrentUser(),
 //     ]);
 
-//     const products = productsResult.success ? productsResult.data.items : [];
+//     const products = productsResult.success ? productsResult.data : EMPTY_RESULT;
 //     const categories = categoriesResult.success ? categoriesResult.data : [];
 
 //     return (
-//         <HomeContent
-//             products={products}
-//             categories={categories}
-//             isAdmin={user?.role === "ADMIN"}
-//         />
-//     );
-// }
+//         <>
+//             <HomeContent
+//                 products={products}
+//                 categories={categories}
+//                 isAdmin={user?.role === "ADMIN"}
+//             />
 
-
-
-
-
-
-
+//             <NotificationPermissionDialog />
+//         </>
+//     )
+// };
 
 
 
@@ -96,6 +111,7 @@
 import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import { getCurrentUser } from "@/server/user/get-current-user";
+import { getCartAction } from "@/server/cart/actions";
 import HomeContent from "./homecontent";
 import { Metadata } from "next";
 import type { PaginatedResult } from "@/types/user";
@@ -185,16 +201,22 @@ export default async function HomePage({
     const products = productsResult.success ? productsResult.data : EMPTY_RESULT;
     const categories = categoriesResult.success ? categoriesResult.data : [];
 
+    // Only fetch the cart for logged-in users — guests' count comes from
+    // localStorage client-side, no server call needed for them.
+    const cartResult = user ? await getCartAction() : null;
+    const initialCartCount = cartResult?.success ? cartResult.data.totalItems : undefined;
+
     return (
         <>
             <HomeContent
                 products={products}
                 categories={categories}
                 isAdmin={user?.role === "ADMIN"}
+                isLoggedIn={!!user}
+                initialCartCount={initialCartCount}
             />
 
             <NotificationPermissionDialog />
         </>
     )
 };
-

@@ -9,6 +9,8 @@ import { BottomNav } from "@/components/bottom-nav";
 import { SearchCommand } from "@/components/search-command";
 import BackButton from "@/components/BackButton";
 import type { CartItemDTO } from "@/types/cart";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type CartShellProps = {
     items: CartItemDTO[];
@@ -36,6 +38,7 @@ export function CartShell({
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
     const outOfStockVariantIds = items.filter((i) => i.quantity > i.stock).map((i) => i.variantId);
     const hasOutOfStockItems = outOfStockVariantIds.length > 0;
+    const router = useRouter();
 
     async function handleRemoveOutOfStockItems() {
         for (const variantId of outOfStockVariantIds) {
@@ -56,9 +59,19 @@ export function CartShell({
                 </header>
 
                 {isGuest && !isLoading && (
-                    <div className="mb-4 rounded-2xl bg-amber-50 px-4 py-3 text-[12px] leading-5 text-amber-700">
-                        وارد نشده‌اید — این سبد خرید در مرورگر شما ذخیره می‌شود. برای تکمیل خرید ابتدا وارد حساب
-                        کاربری خود شوید.
+                    <div className="mb-4 flex flex-col gap-3 rounded-2xl bg-amber-50 px-4 py-3 text-[12px] leading-5 text-amber-700">
+                        <p>
+                            این سبد خرید در مرورگر شما ذخیره می‌شود. برای تکمیل خرید ابتدا وارد حساب
+                            کاربری خود شوید.
+                        </p>
+
+                        <Button
+                            type="button"
+                            onClick={() => router.push("/login")}
+                            className="w-full h-10"
+                        >
+                            ورود
+                        </Button>
                     </div>
                 )}
 
@@ -106,7 +119,8 @@ export function CartShell({
             </div>
 
             <SearchCommand open={searchOpen} onOpenChange={setSearchOpen} />
-            <BottomNav searchOpen={searchOpen} onSearchClick={() => setSearchOpen(true)} />
+            {/* <BottomNav searchOpen={searchOpen} onSearchClick={() => setSearchOpen(true)} /> */}
+            <BottomNav searchOpen={searchOpen} onSearchClick={() => setSearchOpen(true)} isLoggedIn={isLoggedIn} />
         </main>
     );
 }

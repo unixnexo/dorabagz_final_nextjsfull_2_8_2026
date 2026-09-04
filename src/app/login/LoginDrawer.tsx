@@ -22,7 +22,8 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { requestOtpAction, verifyOtpAction } from "@/server/auth/actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
-import { mergeGuestCartAction } from "@/server/cart/actions";
+import { getCartAction, mergeGuestCartAction } from "@/server/cart/actions";
+import { useCartCountStore } from "@/store/cart-count-store";
 
 type Step = "phone" | "otp";
 
@@ -90,11 +91,7 @@ export default function LoginDrawer() {
     //     if (otp.length !== 6) return;
 
     //     setIsSubmitting(true);
-    //     const guestItems = useGuestCartStore.getState().items;
-    //     const result = await verifyOtpAction(
-    //         { phoneNumber: toPhoneNumber(phone), code: otp },
-    //         { items: guestItems }
-    //     );
+    //     const result = await verifyOtpAction({ phoneNumber: toPhoneNumber(phone), code: otp });
     //     setIsSubmitting(false);
 
     //     if (!result.success) {
@@ -102,14 +99,20 @@ export default function LoginDrawer() {
     //         return;
     //     }
 
+    //     // Merge guest cart AFTER login succeeds — separate action, not a
+    //     // second argument to verifyOtpAction.
+    //     const guestItems = useGuestCartStore.getState().items;
+    //     if (guestItems.length > 0) {
+    //         await mergeGuestCartAction({ items: guestItems });
+    //     }
+
     //     useGuestCartStore.getState().clear();
-    //     // toast.success("خوش اومدی!");
     //     setOpen(false);
     //     router.push("/");
     //     router.refresh();
     // };
 
-    const submitOtp = async () => {
+        const submitOtp = async () => {
         if (otp.length !== 6) return;
 
         setIsSubmitting(true);
@@ -129,23 +132,21 @@ export default function LoginDrawer() {
         }
 
         useGuestCartStore.getState().clear();
+
+        // Seed the cart-count badge with the real DB total right after
+        // login (covers both a merged guest cart and a pre-existing DB
+        // cart from a previous session) — this is trigger point #1,
+        // "call getCartAction once when the user logs in and gets
+        // redirected to the main root".
+        const cartResult = await getCartAction();
+        if (cartResult.success) {
+            useCartCountStore.getState().setCount(cartResult.data.totalItems);
+        }
+
         setOpen(false);
         router.push("/");
         router.refresh();
     };
-
-    // const resendCode = async () => {
-    //     const result = await requestOtpAction({
-    //         phoneNumber: toPhoneNumber(phone),
-    //     });
-
-    //     if (!result.success) {
-    //         toast.error(result.error);
-    //         return;
-    //     }
-
-    //     toast.success("کد مجدد ارسال شد");
-    // };
 
     const resendCode = async () => {
         if (resendSeconds > 0) return;

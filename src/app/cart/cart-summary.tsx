@@ -91,19 +91,19 @@ export function CartSummary({
                 </p>
             )}
 
-            {/* <Button
-                type="button"
-                onClick={handleContinue}
-                disabled={!isLoggedIn}
-                className="mt-5 h-13 w-full rounded-[18px] text-[15px] font-semibold disabled:opacity-40"
-            > */}
             <Button
                 type="button"
-                onClick={handleContinue}
-                disabled={!isLoggedIn}
+                onClick={() => {
+                    if (!isLoggedIn) {
+                        router.push("/login");
+                        return;
+                    }
+
+                    handleContinue();
+                }}
                 className="mt-5 w-full"
             >
-                ادامه فرآیند خرید
+                {isLoggedIn ? "ادامه فرآیند خرید" : "ورود"}
             </Button>
         </section>
     );
