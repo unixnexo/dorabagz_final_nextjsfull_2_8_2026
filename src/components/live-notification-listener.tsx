@@ -42,7 +42,8 @@ export function LiveNotificationListener() {
                             type="button"
                             onClick={() => {
                                 toast.dismiss(t.id);
-                                router.push(payload.linkUrl || "/notifications");
+                                // router.push(payload.linkUrl || "/notifications");
+                                router.push("/notifications");
                             }}
                             className="mt-2 text-[13px] font-medium text-blue-600"
                         >

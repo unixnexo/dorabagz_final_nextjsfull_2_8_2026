@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Bell, CircleHelp } from "lucide-react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { NotificationBellButton } from "@/components/notification-bell-button";
 
 export function ProfilePageClient({
     user,
@@ -31,7 +32,7 @@ export function ProfilePageClient({
 
                 {/* Header */}
                 <header className="mb-6 px-1 space-x-2 space-x-reverse">
-                    <Button
+                    {/* <Button
                         asChild
                         variant="ghost"
                         size="icon"
@@ -40,7 +41,8 @@ export function ProfilePageClient({
                         <Link href="/notifications">
                             <Bell className="!size-6 text-black/70" />
                         </Link>
-                    </Button>
+                    </Button> */}
+                    <NotificationBellButton className="size-14 rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]" />
 
                     {/* Help */}
                     <Drawer>

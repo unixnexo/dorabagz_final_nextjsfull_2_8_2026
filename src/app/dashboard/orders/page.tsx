@@ -61,6 +61,7 @@ import { Bell, CircleHelp } from "lucide-react";
 import { SearchCommand } from "@/components/search-command";
 import { BottomNav } from "@/components/bottom-nav";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { NotificationBellButton } from "@/components/notification-bell-button";
 
 export default async function MyOrdersPage() {
   const user = await getCurrentUser();
@@ -75,7 +76,7 @@ export default async function MyOrdersPage() {
         <header className="px-4 pb-4 pt-4">
           {/* Header */}
           <header className="mb-6 px-1 space-x-2 space-x-reverse">
-            <Button
+            {/* <Button
               asChild
               variant="ghost"
               size="icon"
@@ -84,7 +85,8 @@ export default async function MyOrdersPage() {
               <Link href="/notifications">
                 <Bell className="!size-6 text-black/70" />
               </Link>
-            </Button>
+            </Button> */}
+            <NotificationBellButton className="size-14 rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]" />
 
             {/* Help */}
             <Drawer>
