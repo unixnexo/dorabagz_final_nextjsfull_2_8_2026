@@ -223,7 +223,7 @@ self.addEventListener("push", (event) => {
       // src/hooks/use-live-notifications.ts, which listens for this.
       self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
         for (const client of clientList) {
-          client.postMessage({ type: "PUSH_NOTIFICATION", title, body, linkUrl });
+          client.postMessage({ type: "PUSH_RECEIVED", title, body, linkUrl });
         }
       }),
     ])
