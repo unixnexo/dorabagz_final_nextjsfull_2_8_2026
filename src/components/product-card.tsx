@@ -83,6 +83,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 export type ProductCardProduct = {
     id: number | string;
@@ -254,9 +255,9 @@ export function ProductCard({ product, isFavorite: controlledFavorite, onToggleF
 
     if (product.slug) {
         return (
-            <a href={`/products/${product.slug}`} className="block">
+            <Link href={`/products/${product.slug}`} className="block">
                 {CardInner}
-            </a>
+            </Link>
         );
     }
 
