@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { LiveNotificationListener } from "@/components/live-notification-listener";
 
 const iranSans = localFont({
   src: "../fonts/iransans.woff2",
@@ -110,6 +111,7 @@ export default function RootLayout({
               }}
             />
             <ServiceWorkerRegistration />
+            <LiveNotificationListener />
             <ImpersonationBanner />
             {children}
             {modal}

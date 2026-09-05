@@ -147,15 +147,27 @@ import { ProductCard } from "./product-card";
 import { useProductFilters, hasActiveFilters } from "@/lib/use-product-filters";
 import type { PaginatedResult } from "@/types/user";
 
+// type HomeContentProps = {
+//     products: PaginatedResult<ProductListItemDTO>;
+//     categories: CategoryTreeDTO[];
+//     isAdmin: boolean;
+//     isLoggedIn: boolean;
+//     initialCartCount?: number;
+// };
+
+// export default function HomeContent({ products, categories, isAdmin, isLoggedIn, initialCartCount }: HomeContentProps) {
+
 type HomeContentProps = {
     products: PaginatedResult<ProductListItemDTO>;
     categories: CategoryTreeDTO[];
     isAdmin: boolean;
     isLoggedIn: boolean;
     initialCartCount?: number;
+    initialUnreadCount?: number;
 };
 
-export default function HomeContent({ products, categories, isAdmin, isLoggedIn, initialCartCount }: HomeContentProps) {
+export default function HomeContent({ products, categories, isAdmin, isLoggedIn, initialCartCount, initialUnreadCount }: HomeContentProps) {
+
     const [searchOpen, setSearchOpen] = useState(false);
     const { filters, applyFilters, clearFilters } = useProductFilters();
 
@@ -166,7 +178,8 @@ export default function HomeContent({ products, categories, isAdmin, isLoggedIn,
         <main className="min-h-dvh pt-[88px] text-[#171717]">
             <div className="min-h-dvg w-full overflow-hidden">
                 {/* Header */}
-                <HomeHeader isAdmin={isAdmin} />
+                {/* <HomeHeader isAdmin={isAdmin} /> */}
+                <HomeHeader isAdmin={isAdmin} isLoggedIn={isLoggedIn} initialUnreadCount={initialUnreadCount} />
 
                 {/* Main content */}
                 <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-32 pt-5 min-h-dvh">

@@ -1,6 +1,7 @@
 // import { listProductsAction } from "@/server/product/actions";
 // import { getCategoryTreeAction } from "@/server/category/actions";
 // import { getCurrentUser } from "@/server/user/get-current-user";
+// import { getCartAction } from "@/server/cart/actions";
 // import HomeContent from "./homecontent";
 // import { Metadata } from "next";
 // import type { PaginatedResult } from "@/types/user";
@@ -90,12 +91,19 @@
 //     const products = productsResult.success ? productsResult.data : EMPTY_RESULT;
 //     const categories = categoriesResult.success ? categoriesResult.data : [];
 
+//     // Only fetch the cart for logged-in users — guests' count comes from
+//     // localStorage client-side, no server call needed for them.
+//     const cartResult = user ? await getCartAction() : null;
+//     const initialCartCount = cartResult?.success ? cartResult.data.totalItems : undefined;
+
 //     return (
 //         <>
 //             <HomeContent
 //                 products={products}
 //                 categories={categories}
 //                 isAdmin={user?.role === "ADMIN"}
+//                 isLoggedIn={!!user}
+//                 initialCartCount={initialCartCount}
 //             />
 
 //             <NotificationPermissionDialog />
@@ -108,10 +116,14 @@
 
 
 
+
+
+
 import { listProductsAction } from "@/server/product/actions";
 import { getCategoryTreeAction } from "@/server/category/actions";
 import { getCurrentUser } from "@/server/user/get-current-user";
 import { getCartAction } from "@/server/cart/actions";
+import { getUnreadNotificationCountAction } from "@/server/notification/actions";
 import HomeContent from "./homecontent";
 import { Metadata } from "next";
 import type { PaginatedResult } from "@/types/user";
@@ -206,6 +218,9 @@ export default async function HomePage({
     const cartResult = user ? await getCartAction() : null;
     const initialCartCount = cartResult?.success ? cartResult.data.totalItems : undefined;
 
+    const unreadResult = user ? await getUnreadNotificationCountAction() : null;
+    const initialUnreadCount = unreadResult?.success ? unreadResult.data : undefined;
+
     return (
         <>
             <HomeContent
@@ -214,9 +229,11 @@ export default async function HomePage({
                 isAdmin={user?.role === "ADMIN"}
                 isLoggedIn={!!user}
                 initialCartCount={initialCartCount}
+                initialUnreadCount={initialUnreadCount}
             />
 
             <NotificationPermissionDialog />
         </>
     )
 };
+

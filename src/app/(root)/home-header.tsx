@@ -318,8 +318,21 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useNumberInput } from "@/lib/use-number-input";
 import { useProductFilters, type SortOption } from "@/lib/use-product-filters";
+import { useUnreadNotificationsCount } from "@/hooks/use-unread-notifications-count";
 
-export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
+// export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
+//     const { filters, applyFilters } = useProductFilters();
+
+export function HomeHeader({
+    isAdmin = false,
+    isLoggedIn = false,
+    initialUnreadCount,
+}: {
+    isAdmin?: boolean;
+    isLoggedIn?: boolean;
+    initialUnreadCount?: number;
+}) {
+    const { count: unreadCount } = useUnreadNotificationsCount(isLoggedIn, initialUnreadCount);
     const { filters, applyFilters } = useProductFilters();
 
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -406,7 +419,7 @@ export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
                     </Button>
                 )}
 
-                <Button
+                {/* <Button
                     asChild
                     variant="ghost"
                     size="icon"
@@ -415,7 +428,25 @@ export function HomeHeader({ isAdmin = false }: { isAdmin?: boolean }) {
                     <Link href="/notifications">
                         <Bell className="!size-6 text-black/70" />
                     </Link>
+                </Button> */}
+
+                <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="relative size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                >
+                    <Link href="/notifications">
+                        <Bell className="!size-6 text-black/70" />
+
+                        {unreadCount > 0 && (
+                            <span className="absolute right-2.5 top-2.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-neutral-300 px-1 text-[10px] font-bold leading-none text-neutral-800">
+                                {unreadCount > 99 ? "99+" : unreadCount}
+                            </span>
+                        )}
+                    </Link>
                 </Button>
+
             </div>
 
             {/* Right side actions */}
