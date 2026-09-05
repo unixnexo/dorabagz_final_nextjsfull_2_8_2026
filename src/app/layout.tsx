@@ -100,6 +100,7 @@ export default function RootLayout({
       <body className="font-sans">
         <div className="mx-auto max-w-[500px] w-full" data-vaul-drawer-wrapper>
           <QueryProvider>
+
             <Toaster
               position="top-center"
               toastOptions={{
@@ -113,8 +114,11 @@ export default function RootLayout({
             <ServiceWorkerRegistration />
             <LiveNotificationListener />
             <ImpersonationBanner />
+
             {children}
+
             {modal}
+
           </QueryProvider>
         </div>
       </body>
