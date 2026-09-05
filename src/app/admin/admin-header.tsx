@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Bell, Home } from "lucide-react";
 import { LogoutButton } from "@/components/logout-button";
+import { NotificationBellButton } from "@/components/notification-bell-button";
 
 export function AdminHeader() {
     const pathname = usePathname();
@@ -29,7 +30,7 @@ export function AdminHeader() {
                         </Link>
                     </Button>
                     <LogoutButton variant="icon" />
-                    <Button
+                    {/* <Button
                         asChild
                         variant="ghost"
                         size="icon"
@@ -38,7 +39,11 @@ export function AdminHeader() {
                         <Link href="/notifications">
                             <Bell className="!size-[18px] text-black/70" />
                         </Link>
-                    </Button>
+                    </Button> */}
+                    <NotificationBellButton
+                        className="flex size-11 items-center justify-center rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-90 active:bg-white/80"
+                        iconSize="sm"
+                    />
                     <BackButton fixed={false} />
                 </div>
             </div>
