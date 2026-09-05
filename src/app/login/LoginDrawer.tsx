@@ -23,12 +23,13 @@ import Image from "next/image";
 import { requestOtpAction, verifyOtpAction } from "@/server/auth/actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
 import { getCartAction, mergeGuestCartAction } from "@/server/cart/actions";
-import { useCartCountStore } from "@/store/cart-count-store";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Step = "phone" | "otp";
 
 export default function LoginDrawer() {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [open, setOpen] = useState(false);
     const [step, setStep] = useState<Step>("phone");
@@ -107,12 +108,24 @@ export default function LoginDrawer() {
     //     }
 
     //     useGuestCartStore.getState().clear();
+
+    //     // Seed the cart-count badge with the real DB total right after
+    //     // login (covers both a merged guest cart and a pre-existing DB
+    //     // cart from a previous session) — this is trigger point #1,
+    //     // "call getCartAction once when the user logs in and gets
+    //     // redirected to the main root".
+    //     const cartResult = await getCartAction();
+    //     if (cartResult.success) {
+    //         useCartCountStore.getState().setCount(cartResult.data.totalItems);
+    //     }
+
     //     setOpen(false);
     //     router.push("/");
     //     router.refresh();
     // };
 
-        const submitOtp = async () => {
+
+    const submitOtp = async () => {
         if (otp.length !== 6) return;
 
         setIsSubmitting(true);
@@ -133,20 +146,18 @@ export default function LoginDrawer() {
 
         useGuestCartStore.getState().clear();
 
-        // Seed the cart-count badge with the real DB total right after
-        // login (covers both a merged guest cart and a pre-existing DB
-        // cart from a previous session) — this is trigger point #1,
-        // "call getCartAction once when the user logs in and gets
-        // redirected to the main root".
-        const cartResult = await getCartAction();
-        if (cartResult.success) {
-            useCartCountStore.getState().setCount(cartResult.data.totalItems);
-        }
+        // Invalidate the shared ["cart"] query (same key useCartCount and
+        // /cart both read) so the bottom-nav badge on the page we're
+        // about to land on fetches the real, post-merge total itself —
+        // this is trigger point #1, "call getCartAction once when the
+        // user logs in and gets redirected to the main root".
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
 
         setOpen(false);
         router.push("/");
         router.refresh();
     };
+
 
     const resendCode = async () => {
         if (resendSeconds > 0) return;

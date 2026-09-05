@@ -9,10 +9,21 @@
 //     Heart,
 //     ShoppingCart,
 // } from "lucide-react";
+// import { useCartCount } from "@/hooks/use-cart-count";
 
 // type BottomNavProps = {
 //     searchOpen: boolean;
 //     onSearchClick: () => void;
+//     /** Whether the current visitor is logged in. Only actually varies on
+//      *  "/" and "/cart" — every other page BottomNav appears on already
+//      *  requires login server-side, so this defaults to true there and
+//      *  those call sites don't need to pass it. Pass it explicitly from
+//      *  "/" (HomeContent) and "/cart" (CartShell), threaded down from
+//      *  getCurrentUser() in the server page. */
+//     isLoggedIn?: boolean;
+//     /** Optional server-fetched cart total (see useCartCount) to avoid a
+//      *  flash of "0" on first paint for a logged-in user. */
+//     initialCartCount?: number;
 // };
 
 // const navItems = [
@@ -44,8 +55,11 @@
 // export function BottomNav({
 //     searchOpen,
 //     onSearchClick,
+//     isLoggedIn = true,
+//     initialCartCount,
 // }: BottomNavProps) {
 //     const pathname = usePathname();
+//     const { count: cartCount } = useCartCount(isLoggedIn, initialCartCount);
 
 //     return (
 //         <nav
@@ -64,6 +78,8 @@
 //                                 : pathname.startsWith(item.href!);
 
 //                     const Icon = item.icon;
+//                     const isCartItem = item.href === "/cart";
+//                     const showBadge = isCartItem && cartCount > 0;
 
 //                     const content = (
 //                         <>
@@ -99,6 +115,25 @@
 //                                         }`}
 //                                     strokeWidth={isActive ? 2 : 1.7}
 //                                 />
+
+//                                 {showBadge && (
+//                                     <motion.span
+//                                         key={cartCount}
+//                                         initial={{ scale: 0.6, opacity: 0 }}
+//                                         animate={{ scale: 1, opacity: 1 }}
+//                                         transition={{
+//                                             type: "spring",
+//                                             stiffness: 500,
+//                                             damping: 20,
+//                                         }}
+//                                         className={`absolute -top-1.5 -right-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none ${isActive
+//                                             ? "bg-black text-white"
+//                                             : "bg-red-500 text-white"
+//                                             }`}
+//                                     >
+//                                         {cartCount > 99 ? "99+" : cartCount}
+//                                     </motion.span>
+//                                 )}
 //                             </motion.div>
 //                         </>
 //                     );
@@ -130,6 +165,14 @@
 //         </nav>
 //     );
 // }
+
+
+
+
+
+
+
+
 
 
 
@@ -268,8 +311,8 @@ export function BottomNav({
                                             damping: 20,
                                         }}
                                         className={`absolute -top-1.5 -right-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none ${isActive
-                                            ? "bg-black text-white"
-                                            : "bg-red-500 text-white"
+                                            ? "bg-neutral-700 text-white"
+                                            : "bg-neutral-300 text-neutral-800"
                                             }`}
                                     >
                                         {cartCount > 99 ? "99+" : cartCount}
@@ -306,4 +349,5 @@ export function BottomNav({
         </nav>
     );
 }
+
 

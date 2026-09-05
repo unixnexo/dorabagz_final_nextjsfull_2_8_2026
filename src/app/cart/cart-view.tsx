@@ -1,5 +1,6 @@
 // "use client";
 
+// import { useEffect } from "react";
 // import { useQuery, useQueryClient } from "@tanstack/react-query";
 // import {
 //     getCartAction,
@@ -9,6 +10,7 @@
 // } from "@/server/cart/actions";
 // import { hydrateGuestCartAction } from "@/server/cart/guest-actions";
 // import { useGuestCartStore } from "@/store/guest-cart-store";
+// import { useCartCountStore } from "@/store/cart-count-store";
 // import { CartShell } from "./cart-shell";
 
 // export function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -21,6 +23,7 @@
 // // ---------------------------------------------------------------------------
 // function LoggedInCart() {
 //     const queryClient = useQueryClient();
+//     const setCartCount = useCartCountStore((s) => s.setCount);
 
 //     const { data, isLoading, isError } = useQuery({
 //         queryKey: ["cart"],
@@ -30,6 +33,14 @@
 //             return result.data;
 //         },
 //     });
+
+//     // Trigger point #2: on /cart mount (and again after every mutation,
+//     // since those invalidate + refetch this same query) — keeps the
+//     // bottom-nav badge exactly in sync with what's shown on this page,
+//     // without a second server round-trip.
+//     useEffect(() => {
+//         if (data) setCartCount(data.totalItems);
+//     }, [data, setCartCount]);
 
 //     async function handleQuantityChange(variantId: string, quantity: number) {
 //         await updateCartItemQuantityAction({ variantId, quantity });
@@ -115,9 +126,15 @@
 
 
 
+
+
+
+
+
+
+
 "use client";
 
-import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     getCartAction,
@@ -127,7 +144,6 @@ import {
 } from "@/server/cart/actions";
 import { hydrateGuestCartAction } from "@/server/cart/guest-actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
-import { useCartCountStore } from "@/store/cart-count-store";
 import { CartShell } from "./cart-shell";
 
 export function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -136,11 +152,12 @@ export function CartView({ isLoggedIn }: { isLoggedIn: boolean }) {
 }
 
 // ---------------------------------------------------------------------------
-// Logged-in: cart lives in the DB.
+// Logged-in: cart lives in the DB. Uses the same ["cart"] query key that
+// useCartCount (bottom nav badge) subscribes to — no separate syncing
+// needed, TanStack Query's cache is the single source of truth.
 // ---------------------------------------------------------------------------
 function LoggedInCart() {
     const queryClient = useQueryClient();
-    const setCartCount = useCartCountStore((s) => s.setCount);
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ["cart"],
@@ -150,14 +167,6 @@ function LoggedInCart() {
             return result.data;
         },
     });
-
-    // Trigger point #2: on /cart mount (and again after every mutation,
-    // since those invalidate + refetch this same query) — keeps the
-    // bottom-nav badge exactly in sync with what's shown on this page,
-    // without a second server round-trip.
-    useEffect(() => {
-        if (data) setCartCount(data.totalItems);
-    }, [data, setCartCount]);
 
     async function handleQuantityChange(variantId: string, quantity: number) {
         await updateCartItemQuantityAction({ variantId, quantity });
@@ -233,4 +242,5 @@ function GuestCart() {
         />
     );
 }
+
 
