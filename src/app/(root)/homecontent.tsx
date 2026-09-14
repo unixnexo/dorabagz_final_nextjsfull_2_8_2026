@@ -182,7 +182,7 @@ export default function HomeContent({ products, categories, isAdmin, isLoggedIn,
                 <HomeHeader isAdmin={isAdmin} isLoggedIn={isLoggedIn} initialUnreadCount={initialUnreadCount} />
 
                 {/* Main content */}
-                <div className="relative z-30 rounded-t-[32px] bg-[#f1f2f3] px-4 pb-32 pt-5 min-h-dvh">
+                <div className="relative z-30 rounded-t-[32px] bg-brand-secondary px-4 pb-32 pt-5 min-h-dvh">
                     {/* Stories */}
                     <section className="mb-6">
                         <Stories />

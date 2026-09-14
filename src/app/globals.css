@@ -4,6 +4,12 @@
 
 @layer base {
   :root {
+    /* Custom brand colors */
+    --brand-primary: 203 76% 18%;
+    /* #0D3150 */
+    --brand-secondary: 47 37% 87%; 
+    /* #ECE7D1 */
+
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;

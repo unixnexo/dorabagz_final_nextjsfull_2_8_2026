@@ -399,10 +399,10 @@ export function HomeHeader({
                     asChild
                     variant="ghost"
                     size="icon"
-                    className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                    className="size-14 rounded-3xl bg-brand-secondary hover:bg-brand-secondary/70"
                 >
                     <Link href="/dashboard/profile">
-                        <UserRound className="!size-6 text-black/70" />
+                        <UserRound className="!size-6 text-black/60" />
                     </Link>
                 </Button>
 
@@ -411,7 +411,7 @@ export function HomeHeader({
                         asChild
                         variant="ghost"
                         size="icon"
-                        className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                        className="size-14 rounded-3xl bg-brand-secondary hover:bg-brand-secondary/70"
                     >
                         <Link href="/admin">
                             <Headset className="!size-6 text-black/70" />
@@ -434,7 +434,7 @@ export function HomeHeader({
                     asChild
                     variant="ghost"
                     size="icon"
-                    className="relative size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                    className="relative size-14 rounded-3xl bg-brand-secondary hover:bg-brand-secondary/70"
                 >
                     <Link href="/notifications">
                         <Bell className="!size-6 text-black/70" />
@@ -457,7 +457,7 @@ export function HomeHeader({
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="relative size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                            className="relative size-14 rounded-3xl bg-brand-secondary hover:bg-brand-secondary/70"
                         >
                             <SlidersHorizontal className="!size-6 text-black/70" />
                             {(filters.inStock ||
@@ -611,7 +611,7 @@ export function HomeHeader({
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"
+                            className="size-14 rounded-3xl bg-brand-secondary hover:bg-brand-secondary/70"
                         >
                             <CircleHelp className="!size-6 text-black/70" />
                         </Button>
