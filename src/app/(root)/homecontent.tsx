@@ -212,7 +212,7 @@ export default function HomeContent({ products, categories, isAdmin, isLoggedIn,
                             <button
                                 type="button"
                                 onClick={clearFilters}
-                                className="flex items-center gap-1 text-[13px] font-medium text-[#c0392b]"
+                                className="flex items-start gap-1 text-[13px] font-medium text-[#c0392b]"
                             >
                                 <X className="size-4" />
                                 حذف
