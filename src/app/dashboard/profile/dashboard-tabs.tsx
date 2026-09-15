@@ -48,7 +48,7 @@ export function DashboardTabs({
                                         stiffness: 450,
                                         damping: 32,
                                     }}
-                                    className="absolute inset-0 rounded-[17px] bg-[#f1f2f3]"
+                                    className="absolute inset-0 rounded-[17px] bg-brand-secondary"
                                 />
                             )}
 

@@ -69,7 +69,7 @@ export default function LoginPage() {
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/site/login_bg.png')" }}
+        style={{ backgroundImage: "url('/site/login.jpg')" }}
       />
 
       {/* Optional subtle overlay */}
@@ -82,7 +82,7 @@ export default function LoginPage() {
         <LoginDrawer />
       </div>
 
-      <BackButton href="/" />
+      <BackButton href="/" bgClass="bg-brand-primary text-muted" />
     </main>
   );
 }

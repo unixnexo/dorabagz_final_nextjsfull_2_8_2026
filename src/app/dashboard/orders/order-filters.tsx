@@ -59,7 +59,7 @@ function StatusFilterPill({
         <button
             type="button"
             onClick={onClick}
-            className={`shrink-0 rounded-full px-4 py-2.5 text-[13px] font-medium transition-all active:scale-95 ${active ? "bg-[#171717] text-white" : "bg-white text-black/50"
+            className={`shrink-0 rounded-full px-4 py-2.5 text-[13px] font-medium transition-all active:scale-95 ${active ? "bg-brand-primary text-white" : "bg-white text-black/50"
                 }`}
         >
             {children}

@@ -206,7 +206,7 @@ export default function LoginDrawer() {
         <Drawer open={open} onOpenChange={handleOpenChange}>
             {/* Bottom Login Section */}
             <div className="mt-auto w-full px-5 pb-7">
-                <div className="mb-5 flex items-center gap-3">
+                {/* <div className="mb-5 flex items-center gap-3">
                     <Image
                         src="/site/logo.jpg"
                         alt="درا بگز"
@@ -214,6 +214,27 @@ export default function LoginDrawer() {
                         height={100}
                         priority
                         className="size-24 shrink-0 rounded-2xl object-cover"
+                    />
+
+                    <div className="min-w-0 text-right">
+                        <h2 className="font-bold text-[#171717]">
+                            به درا بگز خوش اومدی
+                        </h2>
+
+                        <p className="mt-1 text-sm leading-5 text-black/45">
+                            برای خرید اول وارد شو
+                        </p>
+                    </div>
+                </div> */}
+
+                <div className="mb-5 flex items-center gap-3 absolute top-4 right-2">
+                    <Image
+                        src="/site/logo.jpg"
+                        alt="درا بگز"
+                        width={100}
+                        height={100}
+                        priority
+                        className="size-16 shrink-0 rounded-2xl object-cover"
                     />
 
                     <div className="min-w-0 text-right">

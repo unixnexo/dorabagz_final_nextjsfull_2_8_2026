@@ -212,7 +212,7 @@ export function ProfileForm({
           opacity: 1,
           y: 0,
         }}
-        className="overflow-hidden rounded-[28px] bg-white"
+        className="overflow-hidden rounded-[28px] bg-brand-secondary"
       >
         <div className="flex items-center gap-4 p-5">
           <div className="relative flex size-[64px] shrink-0 items-center justify-center overflow-hidden rounded-[21px] bg-[#f1f2f3]">
@@ -272,7 +272,7 @@ export function ProfileForm({
         transition={{
           delay: 0.05,
         }}
-        className="rounded-[28px] bg-white p-5"
+        className="rounded-[28px] bg-brand-secondary p-5"
       >
         <div className="mb-5 flex items-center gap-3">
           <div className="flex size-[43px] items-center justify-center rounded-[15px] bg-[#f1f2f3]">

@@ -86,7 +86,7 @@ export default async function MyOrdersPage() {
                 <Bell className="!size-6 text-black/70" />
               </Link>
             </Button> */}
-            <NotificationBellButton className="size-14 rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]" />
+            <NotificationBellButton className="size-14 rounded-2xl border border-brand-secondary/60 bg-brand-secondary text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]" />
 
             {/* Help */}
             <Drawer>
@@ -94,7 +94,7 @@ export default async function MyOrdersPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-14 rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]"
+                  className="size-14 rounded-2xl border border-brand-secondary/60 bg-brand-secondary text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl hover:bg-[#eeeeee]"
                 >
                   <CircleHelp className="!size-6 text-black/70" />
                 </Button>
@@ -145,7 +145,7 @@ export default async function MyOrdersPage() {
               </DrawerContent>
             </Drawer>
 
-            <BackButton />
+            <BackButton size="big" />
           </header>
 
           <DashboardTabs active="orders" />

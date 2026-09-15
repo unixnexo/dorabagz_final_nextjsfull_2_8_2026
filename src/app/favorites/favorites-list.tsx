@@ -120,6 +120,7 @@ import BackButton from "@/components/BackButton";
 import { SearchCommand } from "@/components/search-command";
 import { BottomNav } from "@/components/bottom-nav";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Heart } from "lucide-react";
 
 export function FavoritesList() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -273,8 +274,8 @@ export function FavoritesList() {
               ) : (
                 <div className="flex min-h-[55vh] items-center justify-center">
                   <div className="text-center">
-                    <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-[22px] bg-white">
-                      <span className="text-2xl">♡</span>
+                    <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-[22px] bg-brand-secondary">
+                      <span className="text-2xl"><Heart /></span>
                     </div>
                     <h2 className="text-[16px] font-semibold">هنوز محصولی اضافه نکردی</h2>
                     <p className="mt-1 text-[13px] text-black/45">
