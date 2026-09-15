@@ -30,17 +30,23 @@ export function AdminNavSheet() {
             </SheetTrigger>
 
             {/* RTL layout -> the leading edge is the right side */}
-            <SheetContent
+            {/* <SheetContent
                 side="right"
                 className="w-[86%] max-w-[360px] rounded-r-none rounded-l-3xl border-0 bg-[#F2F2F7] p-0"
+            > */}
+            <SheetContent
+                side="right"
+                className="flex h-dvh max-h-dvh w-[86%] max-w-[360px] flex-col overflow-hidden rounded-r-none rounded-l-3xl border-0 bg-[#F2F2F7] p-0"
             >
-                <SheetHeader className="px-6 pb-2 pt-8 text-right">
+                {/* <SheetHeader className="px-6 pb-2 pt-8 text-right"> */}
+                <SheetHeader className="shrink-0 px-6 pb-2 pt-8 text-right">
                     <SheetTitle className="absolute right-4 top-4 text-right text-[22px] font-bold text-[#1C1C1E]">
                         پنل مدیریت درا بگز
                     </SheetTitle>
                 </SheetHeader>
 
-                <nav className="mt-8 px-4">
+                {/* <nav className="mt-8 px-4"> */}
+                <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-6">
                     <ul className="overflow-hidden rounded-3xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
                         {ADMIN_NAV_ITEMS.map((item, index) => {
                             // const isActive = pathname.startsWith(item.href);

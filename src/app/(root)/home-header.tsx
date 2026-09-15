@@ -471,7 +471,7 @@ export function HomeHeader({
                     </DrawerTrigger>
 
                     <DrawerContent
-                        className="mx-auto max-w-[500px] rounded-t-[32px] border-0 bg-muted px-4"
+                        className="mx-auto max-w-[500px] rounded-t-[32px] border-0 bg-muted px-4 max-h-[90dvh]"
                     >
                         <DrawerHeader className="px-1 pb-5 pt-3">
                             <DrawerTitle className="text-right text-[20px] font-bold">
@@ -479,7 +479,7 @@ export function HomeHeader({
                             </DrawerTitle>
                         </DrawerHeader>
 
-                        <div className="max-h-[60vh] space-y-7 overflow-auto px-2 pb-4">
+                        <div className="max-h-[60dvh] space-y-7 overflow-auto px-2 pb-4">
                             {/* Sort */}
                             <section>
                                 <h3 className="mb-3 text-[15px] font-semibold">

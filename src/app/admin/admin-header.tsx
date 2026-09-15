@@ -30,21 +30,11 @@ export function AdminHeader() {
                         </Link>
                     </Button>
                     <LogoutButton variant="icon" />
-                    {/* <Button
-                        asChild
-                        variant="ghost"
-                        size="icon"
-                        className="flex size-11 items-center justify-center rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-90 active:bg-white/80"
-                    >
-                        <Link href="/notifications">
-                            <Bell className="!size-[18px] text-black/70" />
-                        </Link>
-                    </Button> */}
                     <NotificationBellButton
                         className="flex size-11 items-center justify-center rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-90 active:bg-white/80"
                         iconSize="sm"
                     />
-                    <BackButton fixed={false} />
+                    <BackButton fixed={false} bgClass="bg-white" />
                 </div>
             </div>
         </header>

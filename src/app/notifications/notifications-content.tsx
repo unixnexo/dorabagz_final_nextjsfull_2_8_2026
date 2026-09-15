@@ -640,7 +640,7 @@ export default function NotificationsContent() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="flex min-h-[50vh] flex-col items-center justify-center text-center"
                         >
-                            <div className="flex size-20 items-center justify-center rounded-[28px] bg-white">
+                            <div className="flex size-20 items-center justify-center rounded-[28px] bg-brand-secondary">
                                 <Bell className="size-8 text-black/40" />
                             </div>
 
