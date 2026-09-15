@@ -32,8 +32,8 @@ export function DiscountGroupCard({
     return (
         <div className="rounded-3xl bg-white p-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
             <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0A7D5C]/[0.08]">
-                    <Percent className="h-4.5 w-4.5 text-[#0A7D5C]" strokeWidth={2.25} />
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary/[0.08]">
+                    <Percent className="h-4.5 w-4.5 text-brand-primary" strokeWidth={2.25} />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -110,7 +110,7 @@ export function DiscountGroupCard({
                     {group.categoryIds.map((id, i) => (
                         <span
                             key={id}
-                            className="flex items-center gap-1 rounded-full bg-[#0A7D5C]/[0.08] py-1 pl-1 pr-2.5 text-[11px] text-[#0A7D5C]"
+                            className="flex items-center gap-1 rounded-full bg-brand-primary/[0.08] py-1 pl-1 pr-2.5 text-[11px] text-brand-primary"
                         >
                             <Layers className="h-2.5 w-2.5" strokeWidth={2.25} />
                             {group.categoryTitles[i]}
@@ -118,7 +118,7 @@ export function DiscountGroupCard({
                                 type="button"
                                 onClick={() => onRemoveCategory(id)}
                                 aria-label="حذف از گروه"
-                                className="flex h-4 w-4 items-center justify-center rounded-full bg-[#0A7D5C]/15"
+                                className="flex h-4 w-4 items-center justify-center rounded-full bg-brand-primary/15"
                             >
                                 <X className="h-2.5 w-2.5" strokeWidth={2.5} />
                             </button>

@@ -31,7 +31,7 @@ export function FormStepFooter({
                     type="button"
                     onClick={onNext}
                     disabled={nextDisabled || isSubmitting}
-                    className="flex-[2] rounded-2xl bg-[#0A7D5C] py-3.5 text-[14.5px] font-semibold text-white active:opacity-90 disabled:opacity-50"
+                    className="flex-[2] rounded-2xl bg-brand-primary py-3.5 text-[14.5px] font-semibold text-white active:opacity-90 disabled:opacity-50"
                 >
                     {isSubmitting
                         ? "در حال ذخیره..."

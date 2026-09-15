@@ -27,7 +27,7 @@ export function FormStepIndicator({
                             onClick={() => onStepClick(index)}
                             className={cn(
                                 "h-[5px] flex-1 rounded-full transition-colors",
-                                isActive || isDone ? "bg-[#0A7D5C]" : "bg-black/[0.08]"
+                                isActive || isDone ? "bg-brand-primary" : "bg-black/[0.08]"
                             )}
                             aria-label={step.label}
                         />

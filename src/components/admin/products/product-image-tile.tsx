@@ -19,7 +19,7 @@ export function ProductImageTile({
                 alt=""
                 className={cn(
                     "h-20 w-20 rounded-2xl object-cover",
-                    image.isMain && "ring-2 ring-[#0A7D5C] ring-offset-2 ring-offset-[#F2F2F7]"
+                    image.isMain && "ring-2 ring-brand-primary ring-offset-2 ring-offset-[#F2F2F7]"
                 )}
             />
 
@@ -29,7 +29,7 @@ export function ProductImageTile({
                 aria-label="انتخاب به عنوان تصویر اصلی"
                 className={cn(
                     "absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.2)]",
-                    image.isMain ? "bg-[#0A7D5C]" : "bg-white"
+                    image.isMain ? "bg-brand-primary" : "bg-white"
                 )}
             >
                 <Star

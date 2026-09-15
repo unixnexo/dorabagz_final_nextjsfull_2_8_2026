@@ -20,7 +20,7 @@ export const STATUS_LABEL: Record<DiscountStatus, string> = {
 };
 
 export const STATUS_COLOR: Record<DiscountStatus, { bg: string; text: string }> = {
-    active: { bg: "bg-[#0A7D5C]/10", text: "text-[#0A7D5C]" },
+    active: { bg: "bg-brand-primary/10", text: "text-brand-primary" },
     scheduled: { bg: "bg-[#FF9F0A]/10", text: "text-[#FF9F0A]" },
     expired: { bg: "bg-black/[0.05]", text: "text-[#8E8E93]" },
     disabled: { bg: "bg-black/[0.05]", text: "text-[#8E8E93]" },

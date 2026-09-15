@@ -80,7 +80,7 @@ export function OrderBuyerDialog({ userId }: OrderBuyerDialogProps) {
                                         label="وضعیت حساب"
                                         value={user.isActive ? "فعال" : "غیرفعال"}
                                         valueClassName={
-                                            user.isActive ? "text-[#0A7D5C]" : "text-[#FF3B30]"
+                                            user.isActive ? "text-brand-primary" : "text-[#FF3B30]"
                                         }
                                         last
                                     />

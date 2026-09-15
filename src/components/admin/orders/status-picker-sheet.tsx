@@ -61,7 +61,7 @@ export function StatusPickerSheet({
                                         {STATUS_LABELS[status]}
                                     </span>
                                     {isActive && (
-                                        <Check className="mr-auto h-4 w-4 text-[#0A7D5C]" strokeWidth={2.5} />
+                                        <Check className="mr-auto h-4 w-4 text-brand-primary" strokeWidth={2.5} />
                                     )}
                                 </button>
                             </li>

@@ -210,9 +210,9 @@ const CARDS: DashboardCard[] = [
 
 const TONE_STYLES = {
   green: {
-    icon: "bg-[#0A7D5C]/10 text-[#0A7D5C]",
-    dot: "bg-[#0A7D5C]",
-    badge: "bg-[#0A7D5C]/10 text-[#0A7D5C]",
+    icon: "bg-brand-primary/10 text-brand-primary",
+    dot: "bg-brand-primary",
+    badge: "bg-brand-primary/10 text-brand-primary",
   },
   orange: {
     icon: "bg-[#F59E0B]/10 text-[#D97706]",
@@ -253,7 +253,7 @@ export default async function AdminDashboardPage() {
         {/* ================================================================ */}
 
         <header className="mb-6">
-          <div className="relative overflow-hidden rounded-[28px] bg-[#0A7D5C] px-5 py-6 shadow-[0_12px_30px_-14px_rgba(10,125,92,0.5)] sm:px-7 sm:py-7">
+          <div className="relative overflow-hidden rounded-[28px] bg-brand-primary px-5 py-6 shadow-[0_12px_30px_-14px_rgba(10,125,92,0.5)] sm:px-7 sm:py-7">
             {/* Decorative shapes */}
             <div className="pointer-events-none absolute -left-10 -top-16 h-40 w-40 rounded-full bg-white/[0.07]" />
             <div className="pointer-events-none absolute -bottom-20 right-10 h-44 w-44 rounded-full bg-white/[0.05]" />
@@ -330,13 +330,13 @@ export default async function AdminDashboardPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 rounded-full bg-[#0A7D5C]/10 px-2.5 py-1.5">
+              <div className="flex items-center gap-1.5 rounded-full bg-brand-primary/10 px-2.5 py-1.5">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0A7D5C]/50" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#0A7D5C]" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-primary/50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-primary" />
                 </span>
 
-                <span className="text-[10px] font-medium text-[#0A7D5C]">
+                <span className="text-[10px] font-medium text-brand-primary">
                   به‌روز
                 </span>
               </div>
@@ -555,7 +555,7 @@ function QuickStat({
 }) {
   return (
     <div className="flex flex-col items-center justify-center px-2 text-center">
-      <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-xl bg-[#0A7D5C]/10 text-[#0A7D5C]">
+      <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-xl bg-brand-primary/10 text-brand-primary">
         <Icon className="h-3.5 w-3.5" />
       </div>
 

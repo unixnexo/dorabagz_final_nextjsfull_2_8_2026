@@ -80,7 +80,7 @@ export function ProductVariantsSection({
                                         "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold tabular-nums " +
                                         (isOutOfStock
                                             ? "bg-[#FF3B30]/10 text-[#FF3B30]"
-                                            : "bg-[#0A7D5C]/10 text-[#0A7D5C]")
+                                            : "bg-brand-primary/10 text-brand-primary")
                                     }
                                 >
                                     {isOutOfStock

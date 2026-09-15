@@ -63,7 +63,7 @@ export function AdminNavSheet() {
                                             <span
                                                 className={cn(
                                                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-                                                    isActive ? "bg-[#0A7D5C]" : "bg-black/[0.05]"
+                                                    isActive ? "bg-brand-primary" : "bg-black/[0.05]"
                                                 )}
                                             >
                                                 <Icon
@@ -78,7 +78,7 @@ export function AdminNavSheet() {
                                                 className={cn(
                                                     "flex-1 text-[15px]",
                                                     isActive
-                                                        ? "font-semibold text-[#0A7D5C]"
+                                                        ? "font-semibold text-brand-primary"
                                                         : "text-[#1C1C1E]"
                                                 )}
                                             >

@@ -190,7 +190,7 @@ function CategoryFormBody({
             <button
                 type="submit"
                 disabled={isSaving || isUploading}
-                className="w-full rounded-2xl bg-[#0A7D5C] py-3.5 text-[14.5px] font-semibold text-white active:opacity-90 disabled:opacity-60"
+                className="w-full rounded-2xl bg-brand-primary py-3.5 text-[14.5px] font-semibold text-white active:opacity-90 disabled:opacity-60"
             >
                 {isSaving ? "در حال ذخیره..." : editing ? "ذخیره تغییرات" : "ایجاد دسته"}
             </button>

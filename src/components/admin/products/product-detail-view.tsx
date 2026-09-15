@@ -114,7 +114,7 @@ export function ProductDetailView({ product }: { product: ProductDetailDTO }) {
                 className={
                     "flex w-full items-center justify-center gap-1.5 rounded-2xl py-3 text-[13px] font-medium disabled:opacity-50 " +
                     (product.isDeleted
-                        ? "bg-[#0A7D5C]/10 text-[#0A7D5C] active:bg-[#0A7D5C]/15"
+                        ? "bg-brand-primary/10 text-brand-primary active:bg-brand-primary/15"
                         : "bg-[#FF3B30]/10 text-[#FF3B30] active:bg-[#FF3B30]/15")
                 }
             >

@@ -11,7 +11,7 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
 export const STATUS_STYLES: Record<OrderStatus, string> = {
     PENDING: "bg-[#FF9500]/12 text-[#B25E00]",
     CONFIRMED: "bg-[#0A84FF]/12 text-[#0064CC]",
-    COMPLETED: "bg-[#0A7D5C]/12 text-[#0A7D5C]",
+    COMPLETED: "bg-brand-primary/12 text-brand-primary",
     CANCELLED: "bg-[#FF3B30]/12 text-[#FF3B30]",
 };
 

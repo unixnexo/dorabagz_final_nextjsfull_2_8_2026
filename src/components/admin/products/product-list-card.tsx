@@ -77,12 +77,12 @@
 //                 className={
 //                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full " +
 //                     (product.isDeleted
-//                         ? "bg-[#0A7D5C]/10 active:bg-[#0A7D5C]/15"
+//                         ? "bg-brand-primary/10 active:bg-brand-primary/15"
 //                         : "bg-[#FF3B30]/10 active:bg-[#FF3B30]/15")
 //                 }
 //             >
 //                 {product.isDeleted ? (
-//                     <RotateCcw className="h-3.5 w-3.5 text-[#0A7D5C]" strokeWidth={2.25} />
+//                     <RotateCcw className="h-3.5 w-3.5 text-brand-primary" strokeWidth={2.25} />
 //                 ) : (
 //                     <Trash2 className="h-3.5 w-3.5 text-[#FF3B30]" strokeWidth={2.25} />
 //                 )}
@@ -185,12 +185,12 @@ export function ProductListCard({
                 className={
                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full " +
                     (product.isDeleted
-                        ? "bg-[#0A7D5C]/10 active:bg-[#0A7D5C]/15"
+                        ? "bg-brand-primary/10 active:bg-brand-primary/15"
                         : "bg-[#FF3B30]/10 active:bg-[#FF3B30]/15")
                 }
             >
                 {product.isDeleted ? (
-                    <RotateCcw className="h-3.5 w-3.5 text-[#0A7D5C]" strokeWidth={2.25} />
+                    <RotateCcw className="h-3.5 w-3.5 text-brand-primary" strokeWidth={2.25} />
                 ) : (
                     <Trash2 className="h-3.5 w-3.5 text-[#FF3B30]" strokeWidth={2.25} />
                 )}

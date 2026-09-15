@@ -41,7 +41,7 @@ export function TopCustomersList({
                     </div>
 
                     <div className="shrink-0 text-left">
-                        <p className="text-[12.5px] font-semibold tabular-nums text-[#0A7D5C]">
+                        <p className="text-[12.5px] font-semibold tabular-nums text-brand-primary">
                             {toman(c.totalSpent)}
                         </p>
                         <p className="text-[10.5px] tabular-nums text-[#8E8E93]">

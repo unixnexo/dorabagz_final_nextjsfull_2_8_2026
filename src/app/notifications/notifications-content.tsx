@@ -714,7 +714,7 @@ function NotificationPermission() {
                             repeat: enabled ? Infinity : 0,
                             repeatDelay: 2.5,
                         }}
-                        className="flex size-11 shrink-0 items-center justify-center rounded-[17px] bg-[#282E30]"
+                        className="flex size-11 shrink-0 items-center justify-center rounded-[17px] bg-brand-primary"
                     >
                         <Bell className="size-5 text-white" />
                     </motion.div>

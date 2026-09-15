@@ -74,7 +74,7 @@ function FilterPill({
             className={cn(
                 "shrink-0 rounded-full px-3.5 py-2 text-[12px] font-medium transition-colors",
                 active
-                    ? "bg-[#0A7D5C] text-white"
+                    ? "bg-brand-primary text-white"
                     : "bg-black/[0.05] text-[#636366] active:bg-black/[0.08]"
             )}
         >

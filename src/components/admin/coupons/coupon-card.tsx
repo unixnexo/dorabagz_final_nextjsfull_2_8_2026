@@ -49,10 +49,10 @@ export function CouponCard({
                 <button
                     type="button"
                     onClick={onEdit}
-                    className="flex w-[76px] shrink-0 flex-col items-center justify-center gap-0.5 border-l border-dashed border-black/[0.08] bg-[#0A7D5C]/[0.06] py-3"
+                    className="flex w-[76px] shrink-0 flex-col items-center justify-center gap-0.5 border-l border-dashed border-black/[0.08] bg-brand-primary/[0.06] py-3"
                 >
-                    <Ticket className="h-3.5 w-3.5 text-[#0A7D5C]" strokeWidth={2.25} />
-                    <span className="text-[14px] font-bold tabular-nums text-[#0A7D5C]">
+                    <Ticket className="h-3.5 w-3.5 text-brand-primary" strokeWidth={2.25} />
+                    <span className="text-[14px] font-bold tabular-nums text-brand-primary">
                         {valueLabel}
                     </span>
                 </button>

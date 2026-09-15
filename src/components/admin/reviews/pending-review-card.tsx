@@ -43,7 +43,7 @@ export function PendingReviewCard({
                     type="button"
                     onClick={onApprove}
                     disabled={isBusy}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#0A7D5C] py-2.5 text-[13px] font-semibold text-white active:opacity-90 disabled:opacity-60"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-brand-primary py-2.5 text-[13px] font-semibold text-white active:opacity-90 disabled:opacity-60"
                 >
                     <Check className="h-4 w-4" strokeWidth={2.5} />
                     تایید

@@ -216,7 +216,7 @@ export function AdminEditUserForm({
         className={cn(
           "flex w-full items-center justify-between rounded-2xl px-4 py-3.5 transition-colors",
           isActive
-            ? "bg-[#0A7D5C]/10"
+            ? "bg-brand-primary/10"
             : "bg-black/[0.05]"
         )}
       >
@@ -225,7 +225,7 @@ export function AdminEditUserForm({
             className={cn(
               "text-[13.5px] font-semibold",
               isActive
-                ? "text-[#0A7D5C]"
+                ? "text-brand-primary"
                 : "text-[#1C1C1E]"
             )}
           >
@@ -241,7 +241,7 @@ export function AdminEditUserForm({
           className={cn(
             "relative flex h-7 w-12 shrink-0 rounded-full p-1 transition-colors",
             isActive
-              ? "bg-[#0A7D5C]"
+              ? "bg-brand-primary"
               : "bg-[#C7C7CC]"
           )}
         >
@@ -265,7 +265,7 @@ export function AdminEditUserForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0A7D5C] py-3.5 text-[14px] font-semibold text-white transition-opacity active:opacity-90 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-primary py-3.5 text-[14px] font-semibold text-white transition-opacity active:opacity-90 disabled:opacity-60"
       >
         {isSubmitting ? (
           <>
@@ -333,7 +333,7 @@ function Field({
           className={cn(
             "h-12 w-full rounded-2xl bg-black/[0.05] px-11 text-[14px] text-[#1C1C1E] outline-none transition-colors",
             "placeholder:text-[#C7C7CC]",
-            "focus:bg-white focus:ring-2 focus:ring-[#0A7D5C]/15"
+            "focus:bg-white focus:ring-2 focus:ring-brand-primary/15"
           )}
         />
       </div>

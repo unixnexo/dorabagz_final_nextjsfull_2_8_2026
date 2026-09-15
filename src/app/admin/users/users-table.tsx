@@ -439,7 +439,7 @@ function UserAvatar({
                 "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl",
                 isLocked
                     ? "bg-[#FF3B30]/10"
-                    : "bg-[#0A7D5C]/10"
+                    : "bg-brand-primary/10"
             )}
         >
             {isLocked ? (
@@ -448,12 +448,12 @@ function UserAvatar({
                     strokeWidth={2}
                 />
             ) : fullName ? (
-                <span className="text-[15px] font-bold text-[#0A7D5C]">
+                <span className="text-[15px] font-bold text-brand-primary">
                     {getInitials(fullName)}
                 </span>
             ) : (
                 <CircleUserRound
-                    className="h-5 w-5 text-[#0A7D5C]"
+                    className="h-5 w-5 text-brand-primary"
                     strokeWidth={2}
                 />
             )}
@@ -467,14 +467,14 @@ function StatusPill({ active }: { active: boolean }) {
             className={cn(
                 "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[11px] font-medium",
                 active
-                    ? "bg-[#0A7D5C]/10 text-[#0A7D5C]"
+                    ? "bg-brand-primary/10 text-brand-primary"
                     : "bg-black/[0.05] text-[#8E8E93]"
             )}
         >
             <span
                 className={cn(
                     "h-1.5 w-1.5 rounded-full",
-                    active ? "bg-[#0A7D5C]" : "bg-[#AEAEB2]"
+                    active ? "bg-brand-primary" : "bg-[#AEAEB2]"
                 )}
             />
             {active ? "فعال" : "غیرفعال"}

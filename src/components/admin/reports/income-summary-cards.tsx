@@ -51,7 +51,7 @@ function SummaryCard({
             className={
                 "flex flex-col justify-between rounded-3xl p-3.5 " +
                 (emphasize
-                    ? "bg-[#0A7D5C] shadow-[0_8px_20px_-8px_rgba(10,125,92,0.55)]"
+                    ? "bg-brand-primary shadow-[0_8px_20px_-8px_rgba(10,125,92,0.55)]"
                     : "bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]")
             }
             style={{ minHeight: 112 }}

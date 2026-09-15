@@ -98,11 +98,13 @@ export function CategoryBar({ categories }: CategoryBarProps) {
         setOpenCategory(null);
     };
 
+    const hasSelectedCategory = filters.categoryId !== undefined;
+
     return (
         <>
             <div className="relative -mx-4">
-                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[#f1f2f3] to-transparent rounded-t-lg" />
-                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[#f1f2f3] to-transparent rounded-t-lg" />
+                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[#E3DDC4] to-transparent rounded-t-lg" />
+                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[#E3DDC4] to-transparent rounded-t-lg" />
 
                 <div
                     ref={scrollRef}
@@ -118,9 +120,15 @@ export function CategoryBar({ categories }: CategoryBarProps) {
                                 className="group flex w-[calc((100vw-57.5px)/4)] min-w-[calc((100vw-57.5px)/4)] max-w-[120px] flex-col items-center"
                             >
                                 <Card
-                                    className={`relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[22px] border-0 shadow-none transition-transform group-active:scale-95 ${
-                                        active ? "bg-black" : "bg-white"
-                                    }`}
+                                    // className={`relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[22px] border-0 shadow-none transition-transform group-active:scale-95 ${
+                                    //     active ? "bg-black" : "bg-white"
+                                    // }`}
+                                    className={`relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[22px] border-0 shadow-none transition-all duration-200 ${active
+                                            ? "scale-105 opacity-100 ring-black/10"
+                                            : hasSelectedCategory
+                                                ? "opacity-40 group-hover:opacity-60"
+                                                : "opacity-100"
+                                        }`}
                                 >
                                     <CategoryImage imageUrl={category.imageUrl} title={category.title} active={active} />
 
@@ -130,9 +138,8 @@ export function CategoryBar({ categories }: CategoryBarProps) {
                                         immediately */}
                                     {category.children.length > 0 && (
                                         <span
-                                            className={`absolute bottom-1.5 flex h-[14px] items-center rounded-full px-1.5 text-[9px] font-bold ${
-                                                active ? "bg-white text-black" : "bg-black/80 text-white"
-                                            }`}
+                                            className={`absolute bottom-1.5 flex h-[14px] items-center rounded-full px-1.5 text-[9px] font-bold ${active ? "bg-white text-black" : "bg-black/80 text-white"
+                                                }`}
                                         >
                                             {category.children.length}+
                                         </span>
@@ -167,9 +174,8 @@ export function CategoryBar({ categories }: CategoryBarProps) {
                                 className="flex flex-col items-center"
                             >
                                 <Card
-                                    className={`flex aspect-square w-full items-center justify-center overflow-hidden rounded-[20px] border-0 shadow-none transition-transform active:scale-95 ${
-                                        filters.categoryId === openCategory.id ? "bg-black" : "bg-white"
-                                    }`}
+                                    className={`flex aspect-square w-full items-center justify-center overflow-hidden rounded-[20px] border-0 shadow-none transition-transform active:scale-95 ${filters.categoryId === openCategory.id ? "bg-black" : "bg-white"
+                                        }`}
                                 >
                                     <CategoryImage
                                         imageUrl={openCategory.imageUrl}
@@ -190,9 +196,8 @@ export function CategoryBar({ categories }: CategoryBarProps) {
                                     className="flex flex-col items-center"
                                 >
                                     <Card
-                                        className={`flex aspect-square w-full items-center justify-center overflow-hidden rounded-[20px] border-0 shadow-none transition-transform active:scale-95 ${
-                                            filters.categoryId === child.id ? "bg-black" : "bg-white"
-                                        }`}
+                                        className={`flex aspect-square w-full items-center justify-center overflow-hidden rounded-[20px] border-0 shadow-none transition-transform active:scale-95 ${filters.categoryId === child.id ? "bg-black" : "bg-white"
+                                            }`}
                                     >
                                         <CategoryImage
                                             imageUrl={child.imageUrl}

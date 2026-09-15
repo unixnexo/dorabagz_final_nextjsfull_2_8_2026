@@ -62,7 +62,7 @@ export function OptionCard({
                 <button
                     type="button"
                     onClick={onAddValue}
-                    className="flex items-center gap-1 rounded-full bg-[#0A7D5C]/10 px-3 py-2 text-[12.5px] font-medium text-[#0A7D5C]"
+                    className="flex items-center gap-1 rounded-full bg-brand-primary/10 px-3 py-2 text-[12.5px] font-medium text-brand-primary"
                 >
                     <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
                     مقدار

@@ -45,7 +45,7 @@
 //                 )}
 //                 <div className="flex items-center justify-between pt-1">
 //                     <span className="text-[14px] font-bold text-[#1C1C1E]">مبلغ کل</span>
-//                     <span className="text-[15px] font-bold tabular-nums text-[#0A7D5C]">
+//                     <span className="text-[15px] font-bold tabular-nums text-brand-primary">
 //                         {order.totalAmount.toLocaleString("fa-IR")} تومن
 //                     </span>
 //                 </div>
@@ -147,7 +147,7 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
                                 {item.productSlug ? (
                                     <Link
                                         href={`/products/${item.productSlug}`}
-                                        className="block truncate text-[13.5px] font-medium text-[#1C1C1E] transition-colors hover:text-[#0A7D5C] hover:underline"
+                                        className="block truncate text-[13.5px] font-medium text-[#1C1C1E] transition-colors hover:text-brand-primary hover:underline"
                                     >
                                         {item.productTitle}
                                     </Link>
@@ -199,7 +199,7 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
                             مبلغ کل
                         </span>
 
-                        <span className="text-[15px] font-bold tabular-nums text-[#0A7D5C]">
+                        <span className="text-[15px] font-bold tabular-nums text-brand-primary">
                             {order.totalAmount.toLocaleString("fa-IR")} تومن
                         </span>
                     </div>

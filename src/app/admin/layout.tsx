@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     return (
         <div dir="rtl" className="min-h-dvh bg-[#F2F2F7]">
             <Toaster
-                position="top-center"
+                position="bottom-center"
                 toastOptions={{
                     duration: 4000,
                     style: {

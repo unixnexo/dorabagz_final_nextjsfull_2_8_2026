@@ -42,7 +42,7 @@ export function TopProductsList({
                         </p>
                     </div>
 
-                    <span className="shrink-0 text-[12.5px] font-semibold tabular-nums text-[#0A7D5C]">
+                    <span className="shrink-0 text-[12.5px] font-semibold tabular-nums text-brand-primary">
                         {toman(p.revenue)}
                     </span>
                 </li>

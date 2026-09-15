@@ -174,7 +174,7 @@ function UserProfileHeader({
             "flex h-16 w-16 shrink-0 items-center justify-center rounded-[22px]",
             isLocked
               ? "bg-[#FF3B30]/10"
-              : "bg-[#0A7D5C]/10",
+              : "bg-brand-primary/10",
           ].join(" ")}
         >
           {isLocked ? (
@@ -183,12 +183,12 @@ function UserProfileHeader({
               strokeWidth={2}
             />
           ) : initials ? (
-            <span className="text-[21px] font-bold text-[#0A7D5C]">
+            <span className="text-[21px] font-bold text-brand-primary">
               {initials}
             </span>
           ) : (
             <UserRound
-              className="h-7 w-7 text-[#0A7D5C]"
+              className="h-7 w-7 text-brand-primary"
               strokeWidth={1.9}
             />
           )}
@@ -204,7 +204,7 @@ function UserProfileHeader({
               className={[
                 "rounded-full px-2.5 py-1 text-[10.5px] font-medium",
                 user.isActive
-                  ? "bg-[#0A7D5C]/10 text-[#0A7D5C]"
+                  ? "bg-brand-primary/10 text-brand-primary"
                   : "bg-black/[0.05] text-[#8E8E93]",
               ].join(" ")}
             >
@@ -253,9 +253,9 @@ function StatCard({
 }) {
   return (
     <div className="rounded-3xl bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#0A7D5C]/10">
+      <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-primary/10">
         <Icon
-          className="h-4.5 w-4.5 text-[#0A7D5C]"
+          className="h-4.5 w-4.5 text-brand-primary"
           strokeWidth={2}
         />
       </div>
@@ -332,7 +332,7 @@ function SecurityCard({
           valueClassName={
             lockedUntil
               ? "text-[#FF3B30]"
-              : "text-[#0A7D5C]"
+              : "text-brand-primary"
           }
         />
       </div>

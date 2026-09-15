@@ -70,7 +70,7 @@ export function RangeReportCard({
 
                             <div className="h-2 flex-1 overflow-hidden rounded-full bg-black/[0.05]">
                                 <div
-                                    className="h-full rounded-full bg-[#0A7D5C]"
+                                    className="h-full rounded-full bg-brand-primary"
                                     style={{
                                         width: `${Math.max((point.income / maxIncome) * 100, 4)}%`,
                                     }}

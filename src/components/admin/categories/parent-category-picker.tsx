@@ -56,7 +56,7 @@ function Pill({
             className={cn(
                 "rounded-full px-3.5 py-2 text-[12.5px] font-medium transition-colors",
                 active
-                    ? "bg-[#0A7D5C] text-white"
+                    ? "bg-brand-primary text-white"
                     : "bg-black/[0.05] text-[#1C1C1E] active:bg-black/[0.08]"
             )}
         >

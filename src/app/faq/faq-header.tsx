@@ -27,7 +27,7 @@ export function FAQHeader() {
             <Link href="/contact">
                 <motion.button
                     whileTap={{ scale: 0.94 }}
-                    className="mt-3.5 flex h-9 items-center gap-1 rounded-full bg-black px-4 text-[11px] font-medium text-white shadow-sm transition-transform"
+                    className="mt-3.5 flex h-9 items-center gap-1 rounded-full bg-brand-primary px-4 text-[11px] font-medium text-white shadow-sm transition-transform"
                 >
                     تماس با پشتیبانی
                     <ArrowLeft size={12} />
