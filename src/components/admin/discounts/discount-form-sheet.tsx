@@ -117,7 +117,7 @@ export function DiscountFormSheet({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent side="bottom" className="max-h-[92vh] overflow-y-auto rounded-t-3xl px-4 pb-6 pt-4">
+            <SheetContent side="bottom" className="max-h-[90dvh] overflow-y-auto rounded-t-3xl px-4 pb-6 pt-4">
                 <SheetHeader className="mb-4 text-right">
                     <SheetTitle className="text-[15px] font-semibold text-[#1C1C1E]">
                         {editing ? "ویرایش گروه تخفیف" : "گروه تخفیف جدید"}

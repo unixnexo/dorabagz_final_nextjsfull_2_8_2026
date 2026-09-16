@@ -69,7 +69,7 @@ export function CouponUserPicker({
             )}
 
             <Sheet open={pickerOpen} onOpenChange={setPickerOpen}>
-                <SheetContent side="bottom" className="max-h-[80vh] rounded-t-3xl px-4 pb-6 pt-4">
+                <SheetContent side="bottom" className="max-h-[80dvh] rounded-t-3xl px-4 pb-6 pt-4">
                     <SheetHeader className="mb-3 text-right">
                         <SheetTitle className="text-[15px] font-semibold text-[#1C1C1E]">
                             انتخاب کاربر

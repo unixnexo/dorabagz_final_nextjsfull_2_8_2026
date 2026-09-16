@@ -89,14 +89,14 @@ export function CouponCategoryPicker({
             )}
 
             <Sheet open={pickerOpen} onOpenChange={setPickerOpen}>
-                <SheetContent side="bottom" className="max-h-[80vh] rounded-t-3xl px-4 pb-6 pt-4">
+                <SheetContent side="bottom" className="max-h-[80dvh] rounded-t-3xl px-4 pb-6 pt-4">
                     <SheetHeader className="mb-3 text-right">
                         <SheetTitle className="text-[15px] font-semibold text-[#1C1C1E]">
                             انتخاب دسته‌بندی‌ها
                         </SheetTitle>
                     </SheetHeader>
 
-                    <div className="max-h-[60vh] space-y-3 overflow-y-auto">
+                    <div className="max-h-[60dvh] space-y-3 overflow-y-auto">
                         {isLoading && (
                             <div className="space-y-1.5">
                                 {[0, 1, 2, 3].map((i) => (
