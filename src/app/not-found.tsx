@@ -41,13 +41,21 @@ export default function NotFound() {
 
                 {/* Actions */}
                 <div className="mt-7 grid grid-cols-2 gap-3">
-                    <button
+                    {/* <button
                         onClick={() => router.push("/")}
                         className="flex h-14 items-center justify-center gap-2 rounded-full bg-[#282E30] text-[14px] font-semibold text-white transition active:scale-[0.98]"
                     >
                         <Home className="size-[18px]" />
                         صفحه اصلی
-                    </button>
+                    </button> */}
+
+                    <a
+                        href="/"
+                        className="flex h-14 items-center justify-center gap-2 rounded-full bg-[#282E30] text-[14px] font-semibold text-white transition active:scale-[0.98]"
+                    >
+                        <Home className="size-[18px]" />
+                        صفحه اصلی
+                    </a>
 
                     <button
                         onClick={() => router.back()}
