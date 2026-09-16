@@ -4,7 +4,7 @@ import { COURIER_LABELS } from "./courier-labels";
 
 export function OrderAddressCard({ order }: { order: OrderDetailDTO }) {
     return (
-        <div className="space-y-3 rounded-[25px] bg-white p-4">
+        <div className="space-y-3 rounded-[25px] bg-brand-secondary p-4">
             <div className="flex items-start gap-3">
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f1f2f3]">
                     <MapPin className="size-4 text-black/60" />

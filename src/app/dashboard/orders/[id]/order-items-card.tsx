@@ -12,7 +12,7 @@ export function OrderItemsCard({ order }: { order: OrderDetailDTO }) {
 
     return (
         <>
-            <div className="overflow-hidden rounded-[25px] bg-white">
+            <div className="overflow-hidden rounded-[25px] bg-brand-secondary">
                 <ul>
                     {order.items.map((item, index) => (
                         <li

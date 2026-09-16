@@ -17,7 +17,7 @@ export function OrderCard({ order }: { order: OrderListItemDTO }) {
         >
             <Link
                 href={`/dashboard/orders/${order.id}`}
-                className="group block rounded-[25px] bg-white p-4 transition-transform active:scale-[0.985]"
+                className="group block rounded-[25px] bg-brand-secondary p-4 transition-transform active:scale-[0.985]"
             >
                 <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">

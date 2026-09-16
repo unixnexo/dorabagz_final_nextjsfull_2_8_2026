@@ -21,7 +21,7 @@ export function OrderPaymentCard({
     paymentRefId: string | null;
 }) {
     return (
-        <div className="flex items-center gap-3 rounded-[25px] bg-white p-4">
+        <div className="flex items-center gap-3 rounded-[25px] bg-brand-secondary p-4">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f1f2f3]">
                 <Receipt className="size-4 text-black/60" />
             </div>

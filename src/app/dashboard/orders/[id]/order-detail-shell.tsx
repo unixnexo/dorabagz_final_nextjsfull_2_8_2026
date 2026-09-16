@@ -39,7 +39,7 @@ export function OrderDetailShell({ order, success, stockIssue }: OrderDetailShel
                 {stockIssue && <StockIssueBanner />}
                 {success && !stockIssue && <PaymentSuccessBanner />}
 
-                <FadeIn delay={0} className="mb-4 flex items-center justify-between rounded-[25px] bg-white p-4">
+                <FadeIn delay={0} className="mb-4 flex items-center justify-between rounded-[25px] bg-brand-secondary p-4">
                     <span className="text-[13px] font-medium text-black/50">وضعیت سفارش</span>
                     <OrderStatusBadge status={order.status} />
                 </FadeIn>
