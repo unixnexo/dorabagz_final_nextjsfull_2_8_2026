@@ -708,7 +708,7 @@ export function CheckoutForm() {
       >
         {/* Header */}
         <header className="fixed inset-x-0 top-0 z-40 mx-auto flex h-[88px] max-w-[500px] items-center justify-between bg-[#f1f2f3] px-4 pt-4">
-          <BackButton />
+          <BackButton bgClass="bg-white" />
 
           <div className="text-right">
             <h1 className="text-[21px] font-bold tracking-tight">تسویه حساب</h1>

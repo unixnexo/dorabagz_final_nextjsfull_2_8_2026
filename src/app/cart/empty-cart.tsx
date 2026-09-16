@@ -6,7 +6,7 @@ import { ShoppingCart } from "lucide-react";
 
 export function EmptyCart() {
     return (
-        <div className="flex min-h-[60dvh] items-center justify-center">
+        <div className="flex min-h-[60vh] items-center justify-center">
             <div className="text-center">
                 <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-[22px] bg-brand-secondary">
                     <span className="text-[27px]"><ShoppingCart /></span>

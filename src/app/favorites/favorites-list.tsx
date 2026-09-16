@@ -176,7 +176,7 @@ export function FavoritesList() {
             <p className="mt-0.5 text-[13px] text-black/45">محصولاتی که دوست داری</p>
           </div>
 
-          <BackButton fixed={false} />
+          <BackButton fixed={false} bgClass="bg-white" />
         </div>
 
         {isLoading && (

@@ -51,7 +51,7 @@ export function CartShell({
             <div className="mx-auto min-h-screen w-full max-w-[500px] px-4 pb-36 pt-[92px]">
                 {/* Header */}
                 <header className="fixed inset-x-0 top-0 z-50 mx-auto flex h-[88px] max-w-[500px] items-start justify-between bg-[#f1f2f3] px-4 pt-4">
-                    <BackButton />
+                    <BackButton bgClass="bg-white" />
                     <div className="text-right">
                         <h1 className="text-[21px] font-bold tracking-tight">سبد خرید</h1>
                         <p className="mt-0.5 text-[13px] text-black/45">{totalItems} کالا در سبد شما</p>
