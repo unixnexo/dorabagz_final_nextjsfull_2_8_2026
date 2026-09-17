@@ -944,7 +944,7 @@ export function CheckoutForm() {
       </motion.form>
 
       {/* Fixed payment CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-[#f1f2f3]/90 px-4 pb-[calc(env(safe-area-inset-bottom)+16px)] pt-3 backdrop-blur-xl">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/[0.05] bg-[#f1f2f3]/90 px-4 pb-[calc(env(safe-area-inset-bottom)+20px)] pt-3 backdrop-blur-xl">
         <div className="mx-auto max-w-[500px]">
           <div className="mb-2 flex items-center justify-between px-1">
             <div className="min-w-0">
