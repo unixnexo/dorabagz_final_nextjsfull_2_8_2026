@@ -66,10 +66,16 @@ export default function LoginPage() {
       className="relative flex min-h-dvh flex-col overflow-hidden bg-[#f1f2f3]"
     >
       {/* Login background */}
-      <div
+      {/* <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/site/login.jpg')" }}
+        style={{ backgroundImage: "url('/site/login.webp')" }}
+      /> */}
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-cover bg-[position:100%_center] sm:bg-[position:35%_center] md:bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/site/login.webp')" }}
       />
 
       {/* Optional subtle overlay */}
