@@ -40,7 +40,7 @@ export function ProfilePageClient({
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-14 rounded-2xl border border-brand-secondary/60 bg-brand-secondary text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl"
+                                className="size-14 hover:bg-brand-secondary active:bg-brand-secondary rounded-2xl border border-brand-secondary/60 bg-brand-secondary text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl"
                             >
                                 <CircleHelp className="!size-6 text-black/70" />
                             </Button>

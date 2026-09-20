@@ -94,9 +94,16 @@ export async function GET(request: NextRequest) {
         // transaction can read/modify this variant's stock until this
         // transaction commits or rolls back. This is what makes the
         // stock check + deduct pair atomic across concurrent checkouts.
+
+        // FOR POSTGRESQL
+        // const rows = await tx.$queryRaw<{ id: string; stock: number }[]>`
+        //   SELECT id, stock FROM "ProductVariant" WHERE id = ${item.variantId} FOR UPDATE
+        // `;
+
         const rows = await tx.$queryRaw<{ id: string; stock: number }[]>`
-          SELECT id, stock FROM "ProductVariant" WHERE id = ${item.variantId} FOR UPDATE
-        `;
+  SELECT id, stock FROM \`ProductVariant\` WHERE id = ${item.variantId} FOR UPDATE
+`;
+
         const variant = rows[0];
 
         if (!variant || variant.stock < item.quantity) {
