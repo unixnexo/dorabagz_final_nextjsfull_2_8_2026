@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: ReactNode }) {
     return (
         <div dir="rtl" className="min-h-dvh bg-[#F2F2F7]">
-            <Toaster
+            {/* <Toaster
                 position="bottom-center"
                 toastOptions={{
                     duration: 4000,
@@ -27,7 +27,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                         direction: "rtl",
                     },
                 }}
-            />
+            /> */}
             <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col">
                 <AdminHeader />
                 <main className="flex-1 px-4 pb-10">{children}</main>

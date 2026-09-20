@@ -171,9 +171,6 @@
 
 
 
-
-
-
 // Run with: npm run prisma:seed
 
 import { PrismaClient } from "@prisma/client";
@@ -188,8 +185,13 @@ async function main() {
     const adminPhone = "09174571027";
 
     const admin = await prisma.user.upsert({
-        where: { phoneNumber: adminPhone },
-        update: { role: "ADMIN" },
+        where: {
+            phoneNumber: adminPhone,
+        },
+        update: {
+            role: "ADMIN",
+            fullName: "مدیر سیستم",
+        },
         create: {
             phoneNumber: adminPhone,
             role: "ADMIN",
@@ -197,7 +199,9 @@ async function main() {
         },
     });
 
-    console.log("✅ Admin user ready:", admin.phoneNumber);
+    console.log("✅ Admin user ready:");
+    console.log("   Phone:", admin.phoneNumber);
+    console.log("   Role:", admin.role);
 }
 
 main()
@@ -209,4 +213,3 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
-
