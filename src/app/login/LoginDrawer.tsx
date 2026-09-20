@@ -57,6 +57,7 @@ export default function LoginDrawer() {
             return;
         }
 
+        (document.activeElement as HTMLElement)?.blur();
         setResendSeconds(120);
         setDirection(1);
         setStep("otp");
@@ -107,6 +108,7 @@ export default function LoginDrawer() {
         // user logs in and gets redirected to the main root".
         queryClient.invalidateQueries({ queryKey: ["cart"] });
 
+        (document.activeElement as HTMLElement)?.blur();
         setOpen(false);
         router.push("/");
         router.refresh();
@@ -132,7 +134,6 @@ export default function LoginDrawer() {
         setOpen(value);
 
         if (!value) {
-            // Reset when drawer closes
             setTimeout(() => {
                 setStep("phone");
                 setOtp("");
@@ -155,8 +156,32 @@ export default function LoginDrawer() {
         }),
     };
 
+    // useEffect(() => {
+    //     if (!open) return;
+
+    //     const vv = window.visualViewport;
+    //     if (!vv) return;
+
+    //     let timeout: ReturnType<typeof setTimeout>;
+
+    //     const forceRepaint = () => {
+    //         clearTimeout(timeout);
+    //         timeout = setTimeout(() => {
+    //             window.scrollTo(0, 1);
+    //             requestAnimationFrame(() => window.scrollTo(0, 0));
+    //         }, 50);
+    //     };
+
+    //     vv.addEventListener("resize", forceRepaint);
+    //     return () => {
+    //         vv.removeEventListener("resize", forceRepaint);
+    //         clearTimeout(timeout);
+    //     };
+    // }, [open]);
+
     return (
-        <Drawer open={open} onOpenChange={handleOpenChange}>
+        // <Drawer open={open} onOpenChange={handleOpenChange}>
+        <Drawer open={open} onOpenChange={handleOpenChange} shouldScaleBackground={false}>
             {/* Bottom Login Section */}
             <div className="mt-auto w-full px-5 pb-7">
                 {/* <div className="mb-5 flex items-center gap-3">
@@ -213,9 +238,12 @@ export default function LoginDrawer() {
             {/* Drawer */}
             <DrawerContent
                 dir="rtl"
-                className="mx-auto w-full max-w-[500px]"
+                // className="mx-auto w-full max-w-[500px]"
+                className={`mx-auto flex max-h-[90dvh] ${step !== "phone" ? "min-h-[55vh]" : ""
+                    } w-full max-w-[500px] flex-col`}
             >
-                <div className="overflow-hidden px-5 pb-8">
+                {/* <div className="overflow-hidden px-5 pb-8"> */}
+                <motion.div layout className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-5 pb-8">
                     <AnimatePresence mode="wait" initial={false}>
                         <motion.div
                             key={step}
@@ -386,7 +414,8 @@ export default function LoginDrawer() {
                             </motion.div>
                         )}
                     </AnimatePresence>
-                </div>
+                    {/* </div> */}
+                </motion.div>
             </DrawerContent>
         </Drawer>
     );

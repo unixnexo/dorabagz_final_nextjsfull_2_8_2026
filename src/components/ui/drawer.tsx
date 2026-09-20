@@ -13,7 +13,7 @@ const Drawer = ({
   <DrawerPrimitive.Root
     shouldScaleBackground={shouldScaleBackground}
     setBackgroundColorOnScale={setBackgroundColorOnScale}
-    repositionInputs={false}
+    // repositionInputs={false}
     {...props}
   />
 )
