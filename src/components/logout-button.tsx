@@ -44,14 +44,14 @@ export function LogoutButton({
           <Button
             variant="ghost"
             size="icon"
-            className="flex size-11 items-center justify-center rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-90 active:bg-white/80"
+            className="flex size-11 items-center justify-center rounded-2xl border border-white/60 bg-white/50 text-black/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200"
           >
             <LogOut className="!size-[18px] text-black/70" />
           </Button>
         ) : (
           <Button
             variant="destructive"
-            className="gap-2 text-white w-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/70 hover:text-black active:scale-95"
+            className="gap-2 text-white w-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200"
           >
             <LogOut className="size-4" />
             خروج از حساب

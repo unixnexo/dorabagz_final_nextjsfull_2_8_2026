@@ -46,7 +46,7 @@ function ContactItem({
 
     const content = (
         <div className="flex items-center gap-4">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand-secondary text-foreground">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-white">
                 {icon}
             </div>
 
@@ -111,7 +111,7 @@ function ContactSection({
 }) {
     return (
         <Card className="overflow-hidden rounded-[28px] border-border/60 bg-card shadow-sm">
-            <CardContent className="p-5 sm:p-6">
+            <CardContent className="p-5 sm:p-6 bg-brand-secondary">
                 <div className="mb-5 flex items-start gap-4">
                     <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-muted">
                         {icon}

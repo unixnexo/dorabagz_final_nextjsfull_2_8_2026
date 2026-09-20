@@ -109,7 +109,7 @@ export function NotificationBellButton({
             asChild
             variant="ghost"
             size="icon"
-            className={`relative ${className ?? "size-14 rounded-3xl bg-muted hover:bg-[#eeeeee]"}`}
+            className={`relative ${className ?? "size-14 rounded-3xl bg-muted"}`}
         >
             <Link href="/notifications">
                 <Bell className={`${bellClassName} text-black/70`} />

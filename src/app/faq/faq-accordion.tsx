@@ -99,14 +99,13 @@ export function FAQAccordion() {
                     >
                         <AccordionItem
                             value={faq.id}
-                            className="overflow-hidden rounded-[11px] border-0 bg-white px-3.5 data-[state=open]:rounded-[11px]"
+                            className="overflow-hidden rounded-[11px] border-0 bg-brand-secondary px-3.5 data-[state=open]:rounded-[11px]"
                         >
                             <AccordionTrigger
                                 className="
                                     min-h-[54px]
                                     py-2.5
                                     text-right
-                                    text-sm
                                     font-normal
                                     leading-5
                                     no-underline
@@ -125,7 +124,6 @@ export function FAQAccordion() {
                                 className="
                                     pb-3
                                     pt-0
-                                    text-[10px]
                                     leading-[1.9]
                                     text-black/60
                                 "
