@@ -47,7 +47,7 @@ export function OverlayShell({ slug, children }: { slug: string; children: React
             {!isClosing && (
                 <motion.div
                     key={`overlay-${slug}`}
-                    className="fixed inset-0 z-50 overflow-y-auto bg-background"
+                    className="fixed inset-0 z-50 overflow-y-auto bg-background overflow-x-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

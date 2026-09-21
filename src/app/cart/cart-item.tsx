@@ -28,7 +28,7 @@ export function CartItem({ item, onIncrease, onDecrease, onRemove }: CartItemPro
 
     return (
         <Card
-            className={`overflow-hidden rounded-[28px] border-0 bg-white p-3 shadow-none transition-opacity ${isOutOfStock ? "opacity-50" : ""
+            className={`overflow-hidden rounded-[28px] border-0 bg-brand-secondary p-3 shadow-none transition-opacity ${isOutOfStock ? "opacity-50" : ""
                 }`}
         >
             {isOutOfStock && (

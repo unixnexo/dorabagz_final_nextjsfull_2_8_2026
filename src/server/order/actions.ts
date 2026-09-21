@@ -88,9 +88,9 @@ export async function repayOrderAction(
   });
   if (!order) return { success: false, error: "سفارش یافت نشد." };
 
-  // if (order.status !== "PENDING") {
-  //   return { success: false, error: "این سفارش قابل پرداخت مجدد نیست." };
-  // }
+  if (order.status !== "PENDING") {
+    return { success: false, error: "این سفارش قابل پرداخت مجدد نیست." };
+  }
 
   if (order.payment?.status === "SUCCESS") {
     return { success: false, error: "پرداخت این سفارش انجام شده و در حال بررسی است." };

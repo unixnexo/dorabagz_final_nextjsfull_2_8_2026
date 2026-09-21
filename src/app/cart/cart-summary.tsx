@@ -28,7 +28,7 @@ export function CartSummary({
     }
 
     return (
-        <section className="mt-5 rounded-[28px] bg-white p-5">
+        <section className="mt-5 rounded-[28px] bg-brand-secondary p-5">
             {/* <div className="flex items-center justify-between text-[14px]">
                 <span className="text-black/50">جمع محصولات</span>
                 <span className="font-medium">{totalPrice.toLocaleString("fa-IR")} تومن</span>

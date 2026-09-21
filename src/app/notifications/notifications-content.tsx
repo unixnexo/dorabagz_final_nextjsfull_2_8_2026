@@ -218,88 +218,6 @@ export default function NotificationsContent() {
 /* -------------------------------------------------------------------------- */
 /* Notification permission                                                   */
 /* -------------------------------------------------------------------------- */
-
-// function NotificationPermission() {
-//     const { permission, isSubscribed, isLoading, subscribe, unsubscribe } = usePushNotifications();
-
-//     if (permission === "unsupported") {
-//         return (
-//             <motion.section
-//                 initial={{ opacity: 0, y: 15 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 className="rounded-[25px] bg-white p-4"
-//             >
-//                 <p className="text-[12.5px] text-muted-foreground">
-//                     مرورگر شما از اعلان‌های وب پشتیبانی نمی‌کند.
-//                 </p>
-//             </motion.section>
-//         );
-//     }
-
-//     if (permission === "denied") {
-//         return (
-//             <motion.section
-//                 initial={{ opacity: 0, y: 15 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 className="rounded-[25px] bg-white p-4"
-//             >
-//                 <p className="text-[12.5px] text-muted-foreground">
-//                     اعلان‌ها مسدود شده‌اند. برای فعال‌سازی، دسترسی اعلان را از تنظیمات مرورگر تغییر دهید.
-//                 </p>
-//             </motion.section>
-//         );
-//     }
-
-//     const enabled = isSubscribed;
-
-//     return (
-//         <motion.section
-//             initial={{ opacity: 0, y: 15 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.05 }}
-//             className="rounded-[25px] bg-white p-4"
-//         >
-//             <div className="flex items-center justify-between gap-4">
-//                 <div className="flex min-w-0 items-center gap-3">
-//                     <motion.div
-//                         animate={{ scale: enabled ? [1, 1.06, 1] : 1 }}
-//                         transition={{
-//                             duration: 1.8,
-//                             repeat: enabled ? Infinity : 0,
-//                             repeatDelay: 2.5,
-//                         }}
-//                         className="flex size-11 shrink-0 items-center justify-center rounded-[17px] bg-brand-primary"
-//                     >
-//                         <Bell className="size-5 text-white" />
-//                     </motion.div>
-
-//                     <div className="min-w-0">
-//                         <h3 className="text-[14px] font-semibold">اعلان‌ها</h3>
-
-//                         <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
-//                             {enabled ? "اعلان‌ها برای شما فعال هستند" : "اعلان‌ها برای شما غیرفعال هستند"}
-//                         </p>
-//                     </div>
-//                 </div>
-
-//                 <Switch
-//                     checked={enabled}
-//                     disabled={isLoading}
-//                     onCheckedChange={(value) => {
-//                         if (value) {
-//                             subscribe();
-//                         } else {
-//                             unsubscribe();
-//                         }
-//                     }}
-//                     className="shrink-0"
-//                 />
-//             </div>
-//         </motion.section>
-//     );
-// }
-
-
 function NotificationPermission() {
     const {
         permission,
@@ -528,7 +446,6 @@ function NotificationPermission() {
 }
 
 
-
 /* -------------------------------------------------------------------------- */
 /* Notification card                                                          */
 /* -------------------------------------------------------------------------- */
@@ -549,28 +466,26 @@ function NotificationCard({
             layout
             initial={{ opacity: 0, y: 18, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.94, height: 0, marginBottom: 0 }}
+            exit={{
+                opacity: 0,
+                scale: 0.94,
+                height: 0,
+                marginBottom: 0,
+            }}
             transition={{
                 type: "spring",
                 stiffness: 420,
                 damping: 30,
                 delay: Math.min(index * 0.035, 0.2),
             }}
-            drag="x"
-            dragDirectionLock
-            dragConstraints={{ left: -90, right: 90 }}
-            dragElastic={0.18}
-            onDragEnd={(_, info) => {
-                if (Math.abs(info.offset.x) > 55) {
-                    onRead();
-                }
-            }}
             whileTap={{ scale: 0.985 }}
             onClick={onClick}
             className="relative touch-pan-y"
         >
             <motion.div
-                animate={{ x: !notification.isRead ? [0, -1.5, 0] : 0 }}
+                animate={{
+                    x: !notification.isRead ? [0, -1.5, 0] : 0,
+                }}
                 transition={{
                     duration: 2.5,
                     repeat: !notification.isRead ? Infinity : 0,
@@ -600,7 +515,11 @@ function NotificationCard({
                 <div className="flex gap-3.5 p-4">
                     {/* Icon */}
                     <motion.div
-                        animate={{ scale: !notification.isRead ? [1, 1.04, 1] : 1 }}
+                        animate={{
+                            scale: !notification.isRead
+                                ? [1, 1.04, 1]
+                                : 1,
+                        }}
                         transition={{
                             duration: 2,
                             repeat: !notification.isRead ? Infinity : 0,
@@ -608,14 +527,19 @@ function NotificationCard({
                         }}
                         className="flex size-11 shrink-0 items-center justify-center rounded-[16px] bg-[#f1f2f3] text-black"
                     >
-                        <Bell className="size-[20px]" strokeWidth={1.8} />
+                        <Bell
+                            className="size-[20px]"
+                            strokeWidth={1.8}
+                        />
                     </motion.div>
 
                     {/* Content */}
                     <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
                             <h3
-                                className={`text-[14px] leading-6 ${!notification.isRead ? "font-bold" : "font-medium"
+                                className={`text-[14px] leading-6 ${!notification.isRead
+                                        ? "font-bold"
+                                        : "font-medium"
                                     }`}
                             >
                                 {notification.title}
@@ -623,8 +547,14 @@ function NotificationCard({
 
                             {!notification.isRead && (
                                 <motion.span
-                                    initial={{ opacity: 0, scale: 0.7 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    initial={{
+                                        opacity: 0,
+                                        scale: 0.7,
+                                    }}
+                                    animate={{
+                                        opacity: 1,
+                                        scale: 1,
+                                    }}
                                     className="mt-1.5 size-2 shrink-0 rounded-full bg-black"
                                 />
                             )}
@@ -635,26 +565,15 @@ function NotificationCard({
                         </p>
 
                         <div className="mt-2.5 flex items-center gap-2 text-[11px] text-black/35">
-                            <span>{new Date(notification.createdAt).toLocaleString("fa-IR")}</span>
+                            <span>
+                                {new Date(
+                                    notification.createdAt
+                                ).toLocaleString("fa-IR")}
+                            </span>
                         </div>
                     </div>
                 </div>
-
-                {/* Swipe hint area */}
-                <AnimatePresence>
-                    {!notification.isRead && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 0.35 }}
-                            transition={{ delay: 1 }}
-                            className="pointer-events-none absolute bottom-2 left-4 text-[9px] text-black/30"
-                        >
-                            برای خواندن بکشید
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </motion.div>
         </motion.div>
     );
 }
-
