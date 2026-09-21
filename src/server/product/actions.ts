@@ -94,22 +94,25 @@ export async function listProductsAction(
 
   const categoryIds = categoryId ? await getCategoryIdsIncludingChildren(categoryId) : undefined;
 
+    const variantWhere = {
+    ...(minPrice !== undefined || maxPrice !== undefined
+      ? {
+          price: {
+            ...(minPrice !== undefined ? { gte: minPrice } : {}),
+            ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+          },
+        }
+      : {}),
+    ...(inStock ? { stock: { gt: 0 } } : {}),
+  };
+
   const where = {
     isDeleted: false,
     ...(categoryIds ? { categoryId: { in: categoryIds } } : {}),
     ...(search
       ? { OR: [{ title: { contains: search } }, { productCode: { contains: search } }] }
       : {}),
-    ...(minPrice !== undefined || maxPrice !== undefined
-      ? {
-        variants: {
-          some: {
-            ...(minPrice !== undefined ? { price: { gte: minPrice } } : {}),
-            ...(maxPrice !== undefined ? { price: { lte: maxPrice } } : {}),
-          },
-        },
-      }
-      : {}),
+    ...(Object.keys(variantWhere).length > 0 ? { variants: { some: variantWhere } } : {}),
   };
 
   const discountGroups = await getActiveDiscountGroupsForPricing();
@@ -142,7 +145,7 @@ export async function listProductsAction(
       )
     );
 
-    if (inStock) mapped = mapped.filter((p) => p.totalStock > 0);
+    // if (inStock) mapped = mapped.filter((p) => p.totalStock > 0);
     if (hasDiscount) mapped = mapped.filter((p) => p.hasDiscount);
 
     return {
@@ -179,7 +182,7 @@ export async function listProductsAction(
     )
   );
 
-  if (inStock) mapped = mapped.filter((p) => p.totalStock > 0);
+  // if (inStock) mapped = mapped.filter((p) => p.totalStock > 0);
   if (hasDiscount) mapped = mapped.filter((p) => p.hasDiscount);
 
   mapped.sort((a, b) => (sort === "cheap" ? a.minPrice - b.minPrice : b.minPrice - a.minPrice));

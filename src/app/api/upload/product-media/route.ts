@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
   if (!isVideo && !isImage) {
     return NextResponse.json({ error: "فرمت فایل پشتیبانی نمی‌شود." }, { status: 400 });
   }
+  
 
   const buffer = Buffer.from(await file.arrayBuffer());
 

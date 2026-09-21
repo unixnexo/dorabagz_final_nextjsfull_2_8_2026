@@ -984,7 +984,7 @@ model ProductImage {
 model ProductSpecification {
   id    String @id @default(cuid())
   key   String
-  value String
+  value String @db.Text
   sortOrder Int @default(0)
 
   productId String
@@ -1294,7 +1294,7 @@ model OrderItem {
   variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
 
   productTitle  String // snapshot
-  optionSummary String? // snapshot, e.g. "Size: SM / Color: Red"
+  optionSummary String? @db.Text // snapshot, e.g. "Size: SM / Color: Red"
   unitPrice     Int // snapshot, Toman
   quantity      Int
 
@@ -1341,7 +1341,7 @@ model PushSubscription {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  endpoint String @unique
+  endpoint String @unique @db.VarChar(512)
   p256dh   String // encryption key, part of the browser's subscription object
   auth     String // auth secret, part of the browser's subscription object
 

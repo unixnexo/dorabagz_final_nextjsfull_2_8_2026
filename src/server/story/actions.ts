@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getEffectiveIdentity } from "@/server/auth/session";
-import { toStoryDTO, fullStoryInclude } from "./story-mapper";
+import { toStoryDTO, storyInclude } from "./story-mapper";
 import { orderStoriesForViewer } from "@/lib/story-ordering";
 import type { ActionResult } from "@/server/auth/actions";
 import type { StoryDTO } from "@/types/story";
@@ -19,7 +19,7 @@ export async function listActiveStoriesAction(): Promise<ActionResult<StoryDTO[]
 
   const stories = await prisma.story.findMany({
     where: { isDeleted: false, expiresAt: { gt: new Date() } },
-    include: fullStoryInclude,
+    include: storyInclude(identity?.userId ?? null),
     orderBy: { createdAt: "desc" },
   });
 

@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/server/auth/session";
 import { storyFormSchema, updateStorySchema } from "@/lib/validations/story";
-import { toAdminStoryDTO, fullStoryInclude } from "./story-mapper";
+import { toAdminStoryDTO, storyInclude } from "./story-mapper";
 import type { ActionResult } from "@/server/auth/actions";
 import type { AdminStoryDTO } from "@/types/story";
 
@@ -21,7 +21,7 @@ export async function adminListStoriesAction(): Promise<ActionResult<AdminStoryD
 
   const stories = await prisma.story.findMany({
     where: { isDeleted: false },
-    include: fullStoryInclude,
+    include: storyInclude(null),
     orderBy: { createdAt: "desc" },
   });
 
@@ -48,7 +48,7 @@ export async function createStoryAction(input: unknown): Promise<ActionResult<Ad
       expiresAt,
       products: { create: data.linkedProductIds.map((productId) => ({ productId })) },
     },
-    include: fullStoryInclude,
+    include: storyInclude(null),
   });
 
   return { success: true, data: toAdminStoryDTO(story) };
@@ -80,7 +80,7 @@ export async function updateStoryAction(input: unknown): Promise<ActionResult<Ad
       expiresAt,
       products: { create: data.linkedProductIds.map((productId) => ({ productId })) },
     },
-    include: fullStoryInclude,
+    include: storyInclude(null),
   });
 
   return { success: true, data: toAdminStoryDTO(story) };

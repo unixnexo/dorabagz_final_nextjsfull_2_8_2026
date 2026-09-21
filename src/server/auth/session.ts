@@ -8,6 +8,7 @@ import {
   IMPERSONATION_COOKIE_NAME,
   IMPERSONATION_EXPIRY_HOURS,
 } from "./constants";
+import { prisma } from "@/lib/prisma";
 
 const secretKey = new TextEncoder().encode(env.JWT_SECRET);
 
@@ -61,11 +62,26 @@ export async function clearSessionCookie() {
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
+// export async function getSession(): Promise<SessionPayload | null> {
+//   const cookieStore = await cookies();
+//   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+//   if (!token) return null;
+//   return verifySessionToken(token);
+// }
+
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
-  return verifySessionToken(token);
+  const payload = await verifySessionToken(token);
+  if (!payload) return null;
+  // The JWT lives 30 days. Trust the DB for role + active flag, not the token.
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId },
+    select: { role: true, isActive: true },
+  });
+  if (!user || !user.isActive) return null;
+  return { userId: payload.userId, role: user.role };
 }
 
 // ---------------------------------------------------------------------------
@@ -127,17 +143,33 @@ export async function getEffectiveIdentity(): Promise<{
   role: "USER" | "ADMIN";
   isImpersonating: boolean;
 } | null> {
+  // const impersonation = await getImpersonation();
+  // if (impersonation) {
+  //   return {
+  //     userId: impersonation.userId,
+  //     role: impersonation.role,
+  //     isImpersonating: true,
+  //   };
+  // }
+  // const session = await getSession();
+  // if (session) {
+  //   return { userId: session.userId, role: session.role, isImpersonating: false };
+  // }
+  // return null;
+
   const impersonation = await getImpersonation();
   if (impersonation) {
-    return {
-      userId: impersonation.userId,
-      role: impersonation.role,
-      isImpersonating: true,
-    };
+    const real = await getSession(); // the impersonator must still be a live admin
+    if (!real || real.role !== "ADMIN") return null;
+    const target = await prisma.user.findUnique({
+      where: { id: impersonation.userId },
+      select: { isActive: true },
+    });
+    if (!target?.isActive) return null;
+    return { userId: impersonation.userId, role: "USER", isImpersonating: true };
   }
   const session = await getSession();
-  if (session) {
-    return { userId: session.userId, role: session.role, isImpersonating: false };
-  }
+  if (session) return { userId: session.userId, role: session.role, isImpersonating: false };
   return null;
+
 }

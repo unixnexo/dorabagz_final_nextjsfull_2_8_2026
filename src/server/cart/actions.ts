@@ -48,8 +48,11 @@ export async function addToCartAction(input: unknown): Promise<ActionResult<Cart
   const parsed = addToCartSchema.safeParse(input);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
 
-  const variant = await prisma.productVariant.findUnique({ where: { id: parsed.data.variantId } });
-  if (!variant) return { success: false, error: "نوع محصول یافت نشد." };
+  const variant = await prisma.productVariant.findUnique({
+    where: { id: parsed.data.variantId },
+    include: { product: { select: { isDeleted: true } } },
+  });
+  if (!variant || variant.product.isDeleted) return { success: false, error: "نوع محصول یافت نشد." };
 
   const existing = await prisma.cartItem.findUnique({
     where: { userId_variantId: { userId: identity.userId, variantId: variant.id } },

@@ -72,10 +72,13 @@ export async function getIncomeReport(input: ReportRangeInput): Promise<IncomeRe
   // Bucket orders by day or month label.
   const buckets = new Map<string, { income: number; orderCount: number }>();
   for (const order of orders) {
-    const label =
-      granularity === "DAY"
-        ? order.createdAt.toISOString().slice(0, 10) // "2026-08-09"
-        : order.createdAt.toISOString().slice(0, 7); // "2026-08"
+    // const label =
+    //   granularity === "DAY"
+    //     ? order.createdAt.toISOString().slice(0, 10) // "2026-08-09"
+    //     : order.createdAt.toISOString().slice(0, 7); // "2026-08"
+
+    const day = order.createdAt.toLocaleDateString("en-CA", { timeZone: "Asia/Tehran" }); // 2026-08-10
+    const label = granularity === "DAY" ? day : day.slice(0, 7);
 
     const bucket = buckets.get(label) ?? { income: 0, orderCount: 0 };
     bucket.income += order.totalAmount;

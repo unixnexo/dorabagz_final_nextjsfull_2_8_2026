@@ -60,6 +60,11 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
     };
   }
 
+  const unavailable = cartItems.find((i) => i.variant.product.isDeleted);
+  if (unavailable) {
+    return { success: false, error: `«${unavailable.variant.product.title}» دیگر موجود نیست. آن را از سبد حذف کنید.` };
+  }
+
   // Product discounts (Module 9) apply BEFORE coupons — every price used
   // below (coupon eligibility, order subtotal, snapshotted unitPrice) is
   // the EFFECTIVE price after any active discount group, never the raw
@@ -157,47 +162,68 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
   // Create the order + snapshot line items + (if a coupon was used) its
   // usage row, all in one transaction so we never end up with a half-
   // written order.
-  const order = await prisma.$transaction(async (tx) => {
-    const created = await tx.order.create({
-      data: {
-        userId: identity.userId,
-        status: "PENDING",
-        receiverFullName: address.receiverFullName,
-        receiverPhone: address.receiverPhone,
-        province: address.province,
-        city: address.city,
-        fullAddress: address.fullAddress,
-        postalCode: address.postalCode,
-        courierType,
-        subtotal,
-        discountAmount: finalDiscount,
-        totalAmount,
-        couponId,
-        items: {
-          create: cartItems.map((item) => {
-            const optionSummary = item.variant.optionValues
-              .map((link) => `${link.optionValue.option.name}: ${link.optionValue.value}`)
-              .join(" / ");
-            return {
-              variantId: item.variantId,
-              productTitle: item.variant.product.title,
-              optionSummary: optionSummary || null,
-              unitPrice: effectivePriceByVariantId.get(item.variantId) ?? item.variant.price,
-              quantity: item.quantity,
-            };
-          }),
+  // const order = await prisma.$transaction(async (tx) => {
+  const order = await prisma
+    .$transaction(async (tx) => {
+      const created = await tx.order.create({
+        data: {
+          userId: identity.userId,
+          status: "PENDING",
+          receiverFullName: address.receiverFullName,
+          receiverPhone: address.receiverPhone,
+          province: address.province,
+          city: address.city,
+          fullAddress: address.fullAddress,
+          postalCode: address.postalCode,
+          courierType,
+          subtotal,
+          discountAmount: finalDiscount,
+          totalAmount,
+          couponId,
+          items: {
+            create: cartItems.map((item) => {
+              const optionSummary = item.variant.optionValues
+                .map((link) => `${link.optionValue.option.name}: ${link.optionValue.value}`)
+                .join(" / ");
+              return {
+                variantId: item.variantId,
+                productTitle: item.variant.product.title,
+                optionSummary: optionSummary || null,
+                unitPrice: effectivePriceByVariantId.get(item.variantId) ?? item.variant.price,
+                quantity: item.quantity,
+              };
+            }),
+          },
         },
-      },
+      });
+
+      // if (couponId) {
+      //   await tx.couponUsage.create({
+      //     data: { couponId, userId: identity.userId, orderId: created.id },
+      //   });
+      // }
+
+      // return created;
+
+      if (couponId) {
+        await tx.couponUsage.create({
+          data: { couponId, userId: identity.userId, orderId: created.id },
+        });
+      }
+
+      // Double-submit guard: only the request that actually deletes the cart rows
+      // may create an order. A concurrent duplicate deletes 0 rows and rolls back.
+      const cleared = await tx.cartItem.deleteMany({ where: { userId: identity.userId } });
+      if (cleared.count !== cartItems.length) throw new Error("CART_CHANGED");
+
+      return created;
+    })
+    .catch((err) => {
+      if (err instanceof Error && err.message === "CART_CHANGED") return null;
+      throw err;
     });
 
-    if (couponId) {
-      await tx.couponUsage.create({
-        data: { couponId, userId: identity.userId, orderId: created.id },
-      });
-    }
-
-    return created;
-  });
+  if (!order) return { success: false, error: "سبد خرید تغییر کرد. لطفاً دوباره تلاش کنید." };
 
   // Heads-up to admin if this order's coupon use just exhausted its total
   // usage limit (your "first N people" case) — informational only, doesn't
@@ -216,9 +242,21 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
     callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/payment/callback?orderId=${order.id}`,
   });
 
+  // if (!paymentResult.success) {
+  //   // Order stays PENDING with no Payment row — user can retry from
+  //   // /dashboard/orders (see repayOrderAction).
+  //   return { success: false, error: paymentResult.error };
+  // }
+
   if (!paymentResult.success) {
-    // Order stays PENDING with no Payment row — user can retry from
-    // /dashboard/orders (see repayOrderAction).
+    // Undo it all: drop the orphan order (cascades items + coupon usage) and restore the cart.
+    await prisma.$transaction([
+      prisma.cartItem.createMany({
+        data: cartItems.map((i) => ({ userId: identity.userId, variantId: i.variantId, quantity: i.quantity })),
+        skipDuplicates: true,
+      }),
+      prisma.order.delete({ where: { id: order.id } }),
+    ]);
     return { success: false, error: paymentResult.error };
   }
 
@@ -234,7 +272,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
   // Cart is cleared now, not after payment confirms — matches standard
   // e-commerce UX (the items are "spoken for" by this order attempt). If
   // payment fails, the order itself (not the cart) is where the user retries.
-  await prisma.cartItem.deleteMany({ where: { userId: identity.userId } });
+  // await prisma.cartItem.deleteMany({ where: { userId: identity.userId } });
 
   return { success: true, data: { orderId: order.id, paymentUrl: paymentResult.paymentUrl } };
 }

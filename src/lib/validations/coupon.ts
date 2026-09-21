@@ -47,7 +47,11 @@ export const updateCouponSchema = z.object({
   maxTotalUsage: z.number().int().min(1).nullable().optional(),
   assignedUserId: z.string().nullable().optional(),
   expiresAt: z.string().min(1),
-});
+})
+  .refine((d) => d.type !== "PERCENT" || d.value <= 100, {
+    message: "درصد تخفیف باید بین ۱ تا ۱۰۰ باشد",
+    path: ["value"],
+  });
 export type UpdateCouponInput = z.infer<typeof updateCouponSchema>;
 
 export const couponListQuerySchema = z.object({

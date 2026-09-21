@@ -16,6 +16,13 @@ import "server-only";
 const ZARINPAL_BASE_URL = process.env.ZARINPAL_BASE_URL ?? "https://sandbox.zarinpal.com";
 const MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID ?? "00000000-0000-0000-0000-000000000000"; // TODO: replace with your real sandbox merchant id
 
+function notConfigured() {
+  return (
+    process.env.NODE_ENV === "production" &&
+    (!process.env.ZARINPAL_BASE_URL || !process.env.ZARINPAL_MERCHANT_ID)
+  );
+}
+
 type RequestPaymentParams = {
   amountToman: number;
   description: string;
@@ -32,15 +39,20 @@ type VerifyPaymentParams = {
   authority: string;
 };
 
+// type VerifyPaymentResult =
+//   | { success: true; refId: string }
+//   | { success: false; error: string };
+
 type VerifyPaymentResult =
   | { success: true; refId: string }
-  | { success: false; error: string };
+  | { success: false; error: string; retryable?: boolean };
 
 /** Step 1 of checkout: ask ZarinPal for a payment "Authority" token, then
  *  redirect the user to paymentUrl to actually pay. */
 export async function requestZarinpalPayment(
   params: RequestPaymentParams
 ): Promise<RequestPaymentResult> {
+  if (notConfigured()) return { success: false, error: "درگاه پرداخت پیکربندی نشده است." };
   try {
     const res = await fetch(`${ZARINPAL_BASE_URL}/pg/v4/payment/request.json`, {
       method: "POST",
@@ -79,9 +91,11 @@ export async function requestZarinpalPayment(
 export async function verifyZarinpalPayment(
   params: VerifyPaymentParams
 ): Promise<VerifyPaymentResult> {
+  if (notConfigured()) return { success: false, error: "درگاه پرداخت پیکربندی نشده است." };
   try {
     const res = await fetch(`${ZARINPAL_BASE_URL}/pg/v4/payment/verify.json`, {
       method: "POST",
+      signal: AbortSignal.timeout(15000),
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         merchant_id: MERCHANT_ID,
@@ -100,6 +114,6 @@ export async function verifyZarinpalPayment(
 
     return { success: false, error: data?.errors?.message ?? "پرداخت تایید نشد" };
   } catch {
-    return { success: false, error: "خطا در تایید پرداخت" };
+    return { success: false, error: "خطا در تایید پرداخت", retryable: true };
   }
 }

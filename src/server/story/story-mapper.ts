@@ -3,7 +3,8 @@ import type { StoryDTO, AdminStoryDTO } from "@/types/story";
 
 type FullStory = Story & {
   products: (StoryProduct & { product: Product & { images: ProductImage[] } })[];
-  views: StoryView[];
+  views: StoryView[]; // only the viewer's own row
+  _count: { views: number };
 };
 
 export function toStoryDTO(story: FullStory, currentUserId: string | null): StoryDTO {
@@ -34,7 +35,7 @@ export function toAdminStoryDTO(story: FullStory): AdminStoryDTO {
     mediaUrl: story.mediaUrl,
     description: story.description,
     linkedProductIds: story.products.map((sp) => sp.productId),
-    seenCount: story.views.length, // one row per user, per schema's @@unique — already "once per user"
+    seenCount: story._count.views, // one row per user, per schema's @@unique — already "once per user"
     isExpired: story.expiresAt.getTime() < Date.now(),
     isDeleted: story.isDeleted,
     expiresAt: story.expiresAt.toISOString(),
@@ -44,7 +45,9 @@ export function toAdminStoryDTO(story: FullStory): AdminStoryDTO {
 }
 
 /** Standard include clause used everywhere we need a full story. */
-export const fullStoryInclude = {
-  products: { include: { product: { include: { images: true } } } },
-  views: true,
-} as const;
+export const storyInclude = (viewerId: string | null) =>
+  ({
+    products: { include: { product: { include: { images: true } } } },
+    views: { where: { userId: viewerId ?? "" } },
+    _count: { select: { views: true } },
+  }) as const;

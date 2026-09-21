@@ -34,5 +34,9 @@ export const updateDiscountGroupSchema = z.object({
   endAt: z.string().nullable().optional(),
   productIds: z.array(z.string()).default([]),
   categoryIds: z.array(z.string()).default([]),
-});
+})
+  .refine((d) => d.type !== "PERCENT" || d.value <= 100, {
+    message: "درصد تخفیف باید بین ۱ تا ۱۰۰ باشد",
+    path: ["value"],
+  });
 export type UpdateDiscountGroupInput = z.infer<typeof updateDiscountGroupSchema>;

@@ -24,6 +24,7 @@ import { requestOtpAction, verifyOtpAction } from "@/server/auth/actions";
 import { useGuestCartStore } from "@/store/guest-cart-store";
 import { getCartAction, mergeGuestCartAction } from "@/server/cart/actions";
 import { useQueryClient } from "@tanstack/react-query";
+import { normalizeDigits } from "@/lib/use-number-input";
 
 type Step = "phone" | "otp";
 
@@ -315,7 +316,7 @@ export default function LoginDrawer() {
                                             //     setPhone(value);
                                             // }}
                                             onChange={(e) => {
-                                                let value = e.target.value.replace(/\D/g, "");
+                                                let value = normalizeDigits(e.target.value).replace(/\D/g, "");
 
                                                 if (value.startsWith("09")) {
                                                     value = value.slice(1);

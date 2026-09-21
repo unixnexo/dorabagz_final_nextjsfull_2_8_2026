@@ -87,8 +87,13 @@ export async function repayOrderAction(
     include: { payment: true },
   });
   if (!order) return { success: false, error: "سفارش یافت نشد." };
-  if (order.status !== "PENDING") {
-    return { success: false, error: "این سفارش قابل پرداخت مجدد نیست." };
+
+  // if (order.status !== "PENDING") {
+  //   return { success: false, error: "این سفارش قابل پرداخت مجدد نیست." };
+  // }
+
+  if (order.payment?.status === "SUCCESS") {
+    return { success: false, error: "پرداخت این سفارش انجام شده و در حال بررسی است." };
   }
 
   const paymentResult = await requestZarinpalPayment({
@@ -123,14 +128,22 @@ export async function cancelMyOrderAction(orderId: string): Promise<ActionResult
   const identity = await getEffectiveIdentity();
   if (!identity) return { success: false, error: "ابتدا وارد شوید." };
 
-  const order = await prisma.order.findFirst({ where: { id: orderId, userId: identity.userId } });
-  if (!order) return { success: false, error: "سفارش یافت نشد." };
-  if (order.status !== "PENDING") {
-    return { success: false, error: "این سفارش قابل لغو نیست." };
-  }
-
-  await prisma.order.update({ where: { id: order.id }, data: { status: "CANCELLED" } });
+  const res = await prisma.order.updateMany({
+    where: { id: orderId, userId: identity.userId, status: "PENDING" },
+    data: { status: "CANCELLED" },
+  });
+  if (res.count === 0) return { success: false, error: "این سفارش قابل لغو نیست." };
+  await prisma.couponUsage.deleteMany({ where: { orderId } }); // give the coupon back
   return { success: true, data: { cancelled: true } };
+
+  // const order = await prisma.order.findFirst({ where: { id: orderId, userId: identity.userId } });
+  // if (!order) return { success: false, error: "سفارش یافت نشد." };
+  // if (order.status !== "PENDING") {
+  //   return { success: false, error: "این سفارش قابل لغو نیست." };
+  // }
+
+  // await prisma.order.update({ where: { id: order.id }, data: { status: "CANCELLED" } });
+  // return { success: true, data: { cancelled: true } };
 }
 
 // ---------------------------------------------------------------------------
@@ -152,12 +165,12 @@ export async function adminListOrdersAction(input: {
     ...(input.status ? { status: input.status } : {}),
     ...(input.search
       ? {
-          OR: [
-            { id: { contains: input.search } },
-            { receiverFullName: { contains: input.search } },
-            { receiverPhone: { contains: input.search } },
-          ],
-        }
+        OR: [
+          { id: { contains: input.search } },
+          { receiverFullName: { contains: input.search } },
+          { receiverPhone: { contains: input.search } },
+        ],
+      }
       : {}),
   };
 
@@ -204,6 +217,38 @@ export async function adminGetOrderAction(orderId: string): Promise<ActionResult
 // that's a manual inventory decision for admin, since a cancellation this
 // late usually means a refund conversation too).
 // ---------------------------------------------------------------------------
+// export async function adminUpdateOrderStatusAction(
+//   orderId: string,
+//   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED"
+// ): Promise<ActionResult<{ status: string }>> {
+//   const session = await getSession();
+//   if (!session || session.role !== "ADMIN") return { success: false, error: "دسترسی غیرمجاز." };
+
+//   const order = await prisma.order.update({ where: { id: orderId }, data: { status } });
+
+//   // Notify the customer for any status change that's actually meaningful
+//   // to them — not PENDING (that's the starting state, nothing "changed"
+//   // from their perspective yet).
+//   if (status === "CONFIRMED" || status === "COMPLETED" || status === "CANCELLED") {
+//     await notifyOrderStatusChanged(order.userId, order.id, order.id.slice(0, 8), status);
+//   }
+
+//   // Per your spec: nudge the buyer to review once the order is delivered.
+//   if (status === "COMPLETED") {
+//     await notifyPleaseReviewOrder(order.userId, order.id);
+//   }
+
+//   return { success: true, data: { status } };
+// }
+
+
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  PENDING: ["CANCELLED"],
+  CONFIRMED: ["COMPLETED", "CANCELLED"],
+  COMPLETED: [],
+  CANCELLED: [],
+};
+
 export async function adminUpdateOrderStatusAction(
   orderId: string,
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED"
@@ -211,19 +256,45 @@ export async function adminUpdateOrderStatusAction(
   const session = await getSession();
   if (!session || session.role !== "ADMIN") return { success: false, error: "دسترسی غیرمجاز." };
 
-  const order = await prisma.order.update({ where: { id: orderId }, data: { status } });
-
-  // Notify the customer for any status change that's actually meaningful
-  // to them — not PENDING (that's the starting state, nothing "changed"
-  // from their perspective yet).
-  if (status === "CONFIRMED" || status === "COMPLETED" || status === "CANCELLED") {
-    await notifyOrderStatusChanged(order.userId, order.id, order.id.slice(0, 8), status);
+  const order = await prisma.order.findUnique({ where: { id: orderId }, include: { items: true } });
+  if (!order) return { success: false, error: "سفارش یافت نشد." };
+  if (!ALLOWED_TRANSITIONS[order.status].includes(status)) {
+    return { success: false, error: "این تغییر وضعیت مجاز نیست." };
   }
 
-  // Per your spec: nudge the buyer to review once the order is delivered.
-  if (status === "COMPLETED") {
-    await notifyPleaseReviewOrder(order.userId, order.id);
+  try {
+    await prisma.$transaction(async (tx) => {
+      const flipped = await tx.order.updateMany({
+        where: { id: order.id, status: order.status },
+        data: { status },
+      });
+      if (flipped.count === 0) throw new Error("STALE");
+
+      if (status === "CANCELLED") {
+        if (order.status === "CONFIRMED") {
+          // stock was deducted when payment succeeded, so give it back
+          for (const item of order.items) {
+            if (!item.variantId) continue;
+            await tx.productVariant.update({
+              where: { id: item.variantId },
+              data: { stock: { increment: item.quantity } },
+            });
+          }
+        }
+        await tx.couponUsage.deleteMany({ where: { orderId: order.id } }); // free the coupon
+      }
+    });
+  } catch (err) {
+    if (err instanceof Error && err.message === "STALE") {
+      return { success: false, error: "وضعیت سفارش تغییر کرده است. صفحه را رفرش کنید." };
+    }
+    throw err;
   }
+
+  if (status === "COMPLETED" || status === "CANCELLED") {
+    notifyOrderStatusChanged(order.userId, order.id, order.id.slice(0, 8), status).catch(console.error);
+  }
+  if (status === "COMPLETED") notifyPleaseReviewOrder(order.userId, order.id).catch(console.error);
 
   return { success: true, data: { status } };
 }
