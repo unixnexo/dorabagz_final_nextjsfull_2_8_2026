@@ -89,7 +89,7 @@ CREATE TABLE `ProductImage` (
 CREATE TABLE `ProductSpecification` (
     `id` VARCHAR(191) NOT NULL,
     `key` VARCHAR(191) NOT NULL,
-    `value` VARCHAR(191) NOT NULL,
+    `value` TEXT NOT NULL,
     `sortOrder` INTEGER NOT NULL DEFAULT 0,
     `productId` VARCHAR(191) NOT NULL,
 
@@ -279,7 +279,7 @@ CREATE TABLE `OrderItem` (
     `orderId` VARCHAR(191) NOT NULL,
     `variantId` VARCHAR(191) NULL,
     `productTitle` VARCHAR(191) NOT NULL,
-    `optionSummary` VARCHAR(191) NULL,
+    `optionSummary` TEXT NULL,
     `unitPrice` INTEGER NOT NULL,
     `quantity` INTEGER NOT NULL,
 
@@ -307,7 +307,7 @@ CREATE TABLE `Payment` (
 CREATE TABLE `PushSubscription` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
-    `endpoint` VARCHAR(191) NOT NULL,
+    `endpoint` VARCHAR(512) NOT NULL,
     `p256dh` VARCHAR(191) NOT NULL,
     `auth` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
