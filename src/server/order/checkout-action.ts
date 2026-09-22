@@ -187,7 +187,7 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<Ch
                 .join(" / ");
               return {
                 variantId: item.variantId,
-                productTitle: item.variant.product.title,
+                productTitle: item.variant.product.title.slice(0, 191), // column is VARCHAR(191)
                 optionSummary: optionSummary || null,
                 unitPrice: effectivePriceByVariantId.get(item.variantId) ?? item.variant.price,
                 quantity: item.quantity,

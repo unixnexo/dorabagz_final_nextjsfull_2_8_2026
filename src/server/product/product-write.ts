@@ -81,7 +81,7 @@ export async function createProductWithRelations(input: ProductFormInput) {
     }
 
     return product.id;
-  });
+  }, { timeout: 30000, maxWait: 10000 }); // default 5s is too tight for many variants on a shared DB host
 }
 
 /**

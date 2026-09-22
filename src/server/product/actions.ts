@@ -94,14 +94,14 @@ export async function listProductsAction(
 
   const categoryIds = categoryId ? await getCategoryIdsIncludingChildren(categoryId) : undefined;
 
-    const variantWhere = {
+  const variantWhere = {
     ...(minPrice !== undefined || maxPrice !== undefined
       ? {
-          price: {
-            ...(minPrice !== undefined ? { gte: minPrice } : {}),
-            ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
-          },
-        }
+        price: {
+          ...(minPrice !== undefined ? { gte: minPrice } : {}),
+          ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+        },
+      }
       : {}),
     ...(inStock ? { stock: { gt: 0 } } : {}),
   };
@@ -255,8 +255,10 @@ export async function adminListProductsAction(
       ? {
         variants: {
           some: {
-            ...(minPrice !== undefined ? { price: { gte: minPrice } } : {}),
-            ...(maxPrice !== undefined ? { price: { lte: maxPrice } } : {}),
+            price: {
+              ...(minPrice !== undefined ? { gte: minPrice } : {}),
+              ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+            },
           },
         },
       }

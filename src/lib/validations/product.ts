@@ -1,64 +1,3 @@
-// import { z } from "zod";
-
-// const productImageSchema = z.object({
-//   url: z.string().min(1),
-//   isMain: z.boolean(),
-//   sortOrder: z.number().int().min(0),
-// });
-
-// const productSpecificationSchema = z.object({
-//   key: z.string().min(1, "کلید مشخصات نمی‌تواند خالی باشد"),
-//   value: z.string().min(1, "مقدار مشخصات نمی‌تواند خالی باشد"),
-//   sortOrder: z.number().int().min(0),
-// });
-
-// const productOptionSchema = z.object({
-//   name: z.string().min(1, "نام گزینه نمی‌تواند خالی باشد"), // e.g. "Size"
-//   values: z.array(z.string().min(1)).min(1, "حداقل یک مقدار لازم است"),
-// });
-
-// const productVariantSchema = z.object({
-//   price: z.number().int().min(0, "قیمت نمی‌تواند منفی باشد"),
-//   stock: z.number().int().min(0, "موجودی نمی‌تواند منفی باشد"),
-//   optionValues: z.record(z.string(), z.string()),
-// });
-
-// export const productFormSchema = z
-//   .object({
-//     title: z.string().min(1, "عنوان الزامی است").max(200),
-//     description: z.string().max(5000).optional(),
-//     categoryId: z.string().nullable().optional(),
-//     videoUrl: z.string().nullable().optional(),
-//     images: z.array(productImageSchema).max(6, "حداکثر ۱ عکس اصلی + ۵ عکس اضافی مجاز است"),
-//     specifications: z.array(productSpecificationSchema),
-//     options: z.array(productOptionSchema),
-//     variants: z.array(productVariantSchema).min(1, "حداقل یک نوع (variant) لازم است"),
-//   })
-//   .refine((data) => data.images.filter((i) => i.isMain).length <= 1, {
-//     message: "فقط یک عکس می‌تواند اصلی باشد",
-//     path: ["images"],
-//   });
-// export type ProductFormInput = z.infer<typeof productFormSchema>;
-
-// export const updateProductSchema = productFormSchema.and(z.object({ id: z.string().min(1) }));
-// export type UpdateProductInput = z.infer<typeof updateProductSchema>;
-
-// export const productListQuerySchema = z.object({
-//   page: z.coerce.number().int().min(1).default(1),
-//   pageSize: z.coerce.number().int().min(1).max(100).default(20),
-//   search: z.string().optional(), // matches title or productCode
-//   categoryId: z.string().optional(), // includes children of this category
-//   minPrice: z.coerce.number().int().min(0).optional(),
-//   maxPrice: z.coerce.number().int().min(0).optional(),
-// });
-// export type ProductListQuery = z.infer<typeof productListQuerySchema>;
-
-
-
-
-
-
-
 import { z } from "zod";
 
 const productImageSchema = z.object({
@@ -68,14 +7,16 @@ const productImageSchema = z.object({
 });
 
 const productSpecificationSchema = z.object({
-  key: z.string().min(1, "کلید مشخصات نمی‌تواند خالی باشد"),
-  value: z.string().min(1, "مقدار مشخصات نمی‌تواند خالی باشد"),
+  key: z.string().min(1, "کلید مشخصات نمی‌تواند خالی باشد").max(150, "کلید مشخصات نباید بیشتر از ۱۵۰ کاراکتر باشد"),
+  value: z.string().min(1, "مقدار مشخصات نمی‌تواند خالی باشد").max(1000, "مقدار مشخصات نباید بیشتر از ۱۰۰۰ کاراکتر باشد"),
   sortOrder: z.number().int().min(0),
 });
 
 const productOptionSchema = z.object({
-  name: z.string().min(1, "نام گزینه نمی‌تواند خالی باشد"), // e.g. "Size"
-  values: z.array(z.string().min(1)).min(1, "حداقل یک مقدار لازم است"),
+  name: z.string().min(1, "نام گزینه نمی‌تواند خالی باشد").max(50, "نام گزینه نباید بیشتر از ۵۰ کاراکتر باشد"), // e.g. "Size"
+  values: z
+    .array(z.string().min(1).max(50, "مقدار گزینه نباید بیشتر از ۵۰ کاراکتر باشد"))
+    .min(1, "حداقل یک مقدار لازم است"),
 });
 
 const productVariantSchema = z.object({
@@ -86,7 +27,7 @@ const productVariantSchema = z.object({
 
 export const productFormSchema = z
   .object({
-    title: z.string().min(1, "عنوان الزامی است").max(200),
+    title: z.string().min(1, "عنوان الزامی است").max(150, "عنوان نباید بیشتر از ۱۵۰ کاراکتر باشد"),
     description: z.string().max(5000).optional(),
     categoryId: z.string().nullable().optional(),
     videoUrl: z.string().nullable().optional(),

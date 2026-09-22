@@ -39,7 +39,7 @@ export async function requestOtpAction(
 
   const h = await headers();
   const ip = h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",").pop()?.trim() ?? "unknown";
-  if (!rateLimit(`otp:${ip}`, 5, 10 * 60 * 1000)) {
+  if (!rateLimit(`otp:${ip}`, 10, 10 * 60 * 1000)) {
     return { success: false, error: "تعداد درخواست‌ها زیاد است. چند دقیقه بعد تلاش کنید." };
   }
   // Find or create the user (register-on-first-OTP-request, per your spec).
@@ -105,6 +105,12 @@ export async function verifyOtpAction(
     return { success: false, error: parsed.error.issues[0].message };
   }
   const { phoneNumber, code } = parsed.data;
+
+  const h = await headers();
+  const ip = h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",").pop()?.trim() ?? "unknown";
+  if (!rateLimit(`verify:${ip}`, 30, 10 * 60 * 1000)) {
+    return { success: false, error: "تعداد تلاش‌ها زیاد است. چند دقیقه بعد تلاش کنید." };
+  }
 
   const user = await prisma.user.findUnique({ where: { phoneNumber } });
   if (!user) {
